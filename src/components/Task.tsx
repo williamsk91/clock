@@ -1,10 +1,14 @@
 import React, { FC } from "react";
 
+import { DatePicker } from "./DatePicker";
 import styled from "styled-components";
 
 interface IProp {
   done: boolean;
   setDone: (d: boolean) => void;
+
+  startDate?: Date;
+  setStartDate: (d?: Date) => void;
 
   text: string;
   setText: (t: string) => void;
@@ -14,7 +18,7 @@ interface IProp {
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const { done, setDone, text, setText } = props;
+  const { done, setDone, text, setText, startDate, setStartDate } = props;
 
   return (
     <Container>
@@ -33,14 +37,15 @@ export const Task: FC<IProp> = props => {
           }
         }}
       />
+      <DatePicker start={startDate} setStart={setStartDate} />
     </Container>
   );
 };
 
 const Container = styled.div`
   display: grid;
-  grid-template-areas: "box text";
-  grid-template-columns: 24px auto;
+  grid-template-areas: "box text date";
+  grid-template-columns: 24px 1fr auto;
 
   align-items: center;
 `;
