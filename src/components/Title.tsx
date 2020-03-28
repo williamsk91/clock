@@ -15,7 +15,6 @@ export enum TitleType {
 
 interface IProp {
   type: TitleType;
-  setType: (t: TitleType) => void;
 }
 
 /**
@@ -26,7 +25,7 @@ interface IProp {
  *
  */
 export const Title: FC<IProp> = props => {
-  const { type, setType } = props;
+  const { type } = props;
 
   return (
     <Container>

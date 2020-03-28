@@ -9,4 +9,6 @@ story.add("base", () => {
   return <Calendar tasks={getTasks()} />;
 });
 
-const getTasks = (): ITask[] => [{ id: "1", title: "Milk", start: new Date() }];
+const getTasks = (): ITask[] => [
+  { id: "1", done: false, title: "Milk", start: new Date() }
+];

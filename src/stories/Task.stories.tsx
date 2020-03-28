@@ -11,12 +11,13 @@ story.add("base", () => {
   const [start, setStart] = useState<Date | undefined>(new Date());
   return (
     <Task
+      id="taskId"
       done={done}
       setDone={setDone}
-      text={text}
-      setText={setText}
-      startDate={start}
-      setStartDate={setStart}
+      title={text}
+      setTitle={setText}
+      start={start}
+      setStart={setStart}
     />
   );
 });

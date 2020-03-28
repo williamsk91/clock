@@ -4,21 +4,22 @@ import { DatePicker } from "./DatePicker";
 import styled from "styled-components";
 
 interface IProp {
+  id: string;
   done: boolean;
   setDone: (d: boolean) => void;
 
-  startDate?: Date;
-  setStartDate: (d?: Date) => void;
+  start?: Date;
+  setStart: (d?: Date) => void;
 
-  text: string;
-  setText: (t: string) => void;
+  title: string;
+  setTitle: (t: string) => void;
 }
 
 /**
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const { done, setDone, text, setText, startDate, setStartDate } = props;
+  const { done, setDone, title, setTitle, start, setStart } = props;
 
   return (
     <Container>
@@ -29,15 +30,15 @@ export const Task: FC<IProp> = props => {
         }}
       />
       <Input
-        value={text}
-        onChange={e => setText(e.currentTarget.value)}
+        value={title}
+        onChange={e => setTitle(e.currentTarget.value)}
         onKeyDown={e => {
           if (e.ctrlKey && e.keyCode === 13) {
             setDone(!done);
           }
         }}
       />
-      <DatePicker start={startDate} setStart={setStartDate} />
+      <DatePicker start={start} setStart={setStart} />
     </Container>
   );
 };
