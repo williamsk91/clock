@@ -3,19 +3,26 @@ import "./index.css";
 
 import * as serviceWorker from "./serviceWorker";
 
+import { ApolloProvider } from "@apollo/react-hooks";
 import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { UserListProvider } from "./components/TitleContext";
+import { apolloClient } from "./data/apollo";
 import { theme } from "./styles/theme";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Router>
-        <App />
-      </Router>
+      <ApolloProvider client={apolloClient}>
+        <Router>
+          <UserListProvider>
+            <App />
+          </UserListProvider>
+        </Router>
+      </ApolloProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")

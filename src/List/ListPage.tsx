@@ -1,33 +1,46 @@
+import React, { useMemo } from "react";
 import { Title, TitleType } from "../components/Title";
 
 import { ITask } from "../components/types";
 import { Layout } from "../styles/layout";
-import React from "react";
+import { List } from "../graphql/generatedGraphql";
 import { Spacer } from "../components/Spacer";
 import { Task } from "../components/Task";
 
 interface Props {
-  name: string;
+  title: string;
   tasks: ITask[];
   updateTask: (id: string, t: ITask) => void;
+
+  userList: Pick<List, "id" | "title">[];
 }
 
 export const ListPage = (props: Props) => {
-  const { tasks, updateTask } = props;
-  const lists = tasks.map(t => (
-    <Task
-      {...t}
-      setDone={done => updateTask(t.id, { ...t, done })}
-      setTitle={title => updateTask(t.id, { ...t, title })}
-      setStart={start => updateTask(t.id, { ...t, start })}
-    />
-  ));
+  const { title, tasks, updateTask, userList } = props;
+
+  const taskList = useMemo(
+    () =>
+      tasks.map(t => (
+        <Task
+          {...t}
+          setDone={done => updateTask(t.id, { ...t, done })}
+          setTitle={title => updateTask(t.id, { ...t, title })}
+          setStart={start => updateTask(t.id, { ...t, start })}
+        />
+      )),
+    [tasks, updateTask]
+  );
+
+  const submenu = useMemo(
+    () => ({ title, items: userList.map(({ title }) => ({ title })) }),
+    [title, userList]
+  );
+
   return (
     <Layout>
-      <Title type={TitleType.Lists} />
+      <Title type={TitleType.Lists} submenu={submenu} />
       <Spacer spacing="108" />
-      {lists}
+      {taskList}
     </Layout>
   );
 };
-

@@ -4,28 +4,44 @@ import React, { FC } from "react";
 
 import { Menu } from "antd";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 const { SubMenu } = Menu;
 
 export enum TitleType {
   Home = "home",
-  Lists = "lists",
-  Calendar = "calendar"
+  Lists = "lists"
+}
+
+export interface SubmenuProps {
+  title: string;
+  items: { title: string; onClick?: () => void }[];
 }
 
 interface IProp {
   type: TitleType;
+  submenu?: SubmenuProps;
 }
 
 /**
- * Title of the current page. Can be on of the following.
+ * Extensible Title of the current page. Can be on of the following.
  *
  *  1. Home - displays calendar and tasks from different lists
  *  2. List - displays a single list
- *
  */
 export const Title: FC<IProp> = props => {
-  const { type } = props;
+  const { type, submenu } = props;
+  const history = useHistory();
+
+  const Submenu = submenu && (
+    <SubMenu title={<MenuTitle>{submenu.title}</MenuTitle>}>
+      {submenu.items.map(({ title }) => (
+        <Menu.Item>
+          <Item>{title}</Item>
+        </Menu.Item>
+      ))}
+    </SubMenu>
+  );
 
   return (
     <Container>
@@ -37,30 +53,14 @@ export const Title: FC<IProp> = props => {
             </MenuTitle>
           }
         >
-          <Menu.Item>
+          <Menu.Item onClick={() => history.push("/")}>
             <Item>Home</Item>
           </Menu.Item>
-          <Menu.Item>
+          <Menu.Item onClick={() => history.push("/list")}>
             <Item>Lists</Item>
           </Menu.Item>
-          <Menu.Item>
-            <Item>Calendar</Item>
-          </Menu.Item>
         </SubMenu>
-        <SubMenu title={<MenuTitle>Groceries</MenuTitle>}>
-          <Menu.Item>
-            <Item>Life</Item>
-          </Menu.Item>
-          <Menu.Item>
-            <Item>Work</Item>
-          </Menu.Item>
-          <Menu.Item>
-            <Item>Exercise</Item>
-          </Menu.Item>
-          <Menu.Item>
-            <Item>Groceries</Item>
-          </Menu.Item>
-        </SubMenu>
+        {Submenu}
       </Menu>
     </Container>
   );

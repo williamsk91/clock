@@ -1,10 +1,14 @@
+import React, { useContext } from "react";
+
 import { ListPage } from "./ListPage";
-import React from "react";
+import { UserListContext } from "../components/TitleContext";
 
 export const ListRoute = () => {
+  const userList = useContext(UserListContext);
+
   return (
     <ListPage
-      name="Groceries"
+      title="Groceries"
       tasks={[
         {
           id: "0",
@@ -16,6 +20,7 @@ export const ListRoute = () => {
         console.log("id: ", id);
         console.log("tasks: ", tasks);
       }}
+      userList={userList ?? []}
     />
   );
 };

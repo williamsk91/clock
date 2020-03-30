@@ -1,0 +1,18 @@
+import { ApolloClient } from "apollo-client";
+import { HttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+
+// Instantiate required constructor fields
+const cache = new InMemoryCache();
+const link = new HttpLink({
+  uri: process.env.REACT_APP_GRAPHQL_SERVER_URI,
+  credentials: "include"
+});
+
+/**
+ * Apollo client to make GraphQL queries to backend
+ */
+export const apolloClient = new ApolloClient({
+  cache,
+  link
+});

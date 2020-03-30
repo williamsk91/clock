@@ -26,7 +26,7 @@ story.add("base", () => {
   ]);
   return (
     <ListPage
-      name="Groceries"
+      title="Groceries"
       tasks={tasks}
       updateTask={(id, newTask) => {
         const newTasks = tasks.map(t => {
@@ -35,6 +35,11 @@ story.add("base", () => {
         });
         setTasks(newTasks);
       }}
+      userList={[
+        { id: "1", title: "Groceries" },
+        { id: "2", title: "Exercise" },
+        { id: "3", title: "Work" }
+      ]}
     />
   );
 });
