@@ -1,38 +1,41 @@
 import React, { useState } from "react";
 
-import { ITask } from "../components/types";
 import { ListPage } from "../List/ListPage";
+import { Task as TaskProps } from "../graphql/generatedGraphql";
 import { storiesOf } from "@storybook/react";
 
 const story = storiesOf("Pages|List", module);
 story.add("base", () => {
-  const [tasks, setTasks] = useState<ITask[]>([
+  const [tasks, setTasks] = useState<TaskProps[]>([
     {
       id: "0",
-      done: false,
-      title: "Cereal"
+      done: null,
+      title: "Cereal",
+      start: null
     },
     {
       id: "1",
-      done: true,
-      title: "Milk"
+      done: new Date("2020-03-25").toISOString(),
+      title: "Milk",
+      start: null
     },
     {
       id: "2",
-      done: false,
+      done: null,
       title: "Bowl",
-      start: new Date()
+      start: new Date("2020-09-01").toISOString()
     }
   ]);
   return (
     <ListPage
       title="Groceries"
       tasks={tasks}
-      updateTask={(id, newTask) => {
+      updateTask={newTask => {
         const newTasks = tasks.map(t => {
-          if (t.id === id) return newTask;
+          if (t.id === newTask.id) return newTask;
           return t;
         });
+
         setTasks(newTasks);
       }}
       userList={[

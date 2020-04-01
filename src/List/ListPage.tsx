@@ -1,16 +1,19 @@
+import {
+  List,
+  Task as TaskProps,
+  UpdateTaskInput
+} from "../graphql/generatedGraphql";
 import React, { useMemo } from "react";
 import { Title, TitleType } from "../components/Title";
 
-import { ITask } from "../components/types";
 import { Layout } from "../styles/layout";
-import { List } from "../graphql/generatedGraphql";
 import { Spacer } from "../components/Spacer";
 import { Task } from "../components/Task";
 
 interface Props {
   title: string;
-  tasks: ITask[];
-  updateTask: (id: string, t: ITask) => void;
+  tasks: TaskProps[];
+  updateTask: (t: UpdateTaskInput) => void;
 
   userList: Pick<List, "id" | "title">[];
 }
@@ -20,14 +23,18 @@ export const ListPage = (props: Props) => {
 
   const taskList = useMemo(
     () =>
-      tasks.map(t => (
-        <Task
-          {...t}
-          setDone={done => updateTask(t.id, { ...t, done })}
-          setTitle={title => updateTask(t.id, { ...t, title })}
-          setStart={start => updateTask(t.id, { ...t, start })}
-        />
-      )),
+      tasks.map(t => {
+        delete t.__typename;
+        return (
+          <Task
+            key={t.id}
+            {...t}
+            setDone={done => updateTask({ ...t, done })}
+            setTitle={title => updateTask({ ...t, title })}
+            setStart={start => updateTask({ ...t, start })}
+          />
+        );
+      }),
     [tasks, updateTask]
   );
 

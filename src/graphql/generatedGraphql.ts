@@ -51,13 +51,12 @@ export type MutationCreateTaskArgs = {
 
 
 export type MutationUpdateTaskArgs = {
-  listId: Scalars['ID'];
   task: UpdateTaskInput;
 };
 
 export type Query = {
    __typename?: 'Query';
-  list: Maybe<List>;
+  list: List;
   userList: Array<List>;
   me: Maybe<User>;
 };
@@ -78,7 +77,7 @@ export type Task = {
 export type UpdateTaskInput = {
   id: Scalars['ID'];
   done: Maybe<Scalars['String']>;
-  title: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   start: Maybe<Scalars['String']>;
 };
 
@@ -96,14 +95,27 @@ export type ListQueryVariables = {
 
 export type ListQuery = (
   { __typename?: 'Query' }
-  & { list: Maybe<(
+  & { list: (
     { __typename?: 'List' }
     & Pick<List, 'id' | 'title'>
     & { tasks: Array<(
       { __typename?: 'Task' }
       & Pick<Task, 'id' | 'title' | 'done' | 'start'>
     )> }
-  )> }
+  ) }
+);
+
+export type UpdateTaskMutationVariables = {
+  task: UpdateTaskInput;
+};
+
+
+export type UpdateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTask: (
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'title' | 'done' | 'start'>
+  ) }
 );
 
 export type UserListQueryVariables = {};
@@ -158,6 +170,41 @@ export function useListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOpt
 export type ListQueryHookResult = ReturnType<typeof useListQuery>;
 export type ListLazyQueryHookResult = ReturnType<typeof useListLazyQuery>;
 export type ListQueryResult = ApolloReactCommon.QueryResult<ListQuery, ListQueryVariables>;
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($task: UpdateTaskInput!) {
+  updateTask(task: $task) {
+    id
+    title
+    done
+    start
+  }
+}
+    `;
+export type UpdateTaskMutationFn = ApolloReactCommon.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
+
+/**
+ * __useUpdateTaskMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskMutation, { data, loading, error }] = useUpdateTaskMutation({
+ *   variables: {
+ *      task: // value for 'task'
+ *   },
+ * });
+ */
+export function useUpdateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, baseOptions);
+      }
+export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
+export type UpdateTaskMutationResult = ApolloReactCommon.MutationResult<UpdateTaskMutation>;
+export type UpdateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
 export const UserListDocument = gql`
     query UserList {
   userList {

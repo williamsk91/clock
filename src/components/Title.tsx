@@ -35,8 +35,8 @@ export const Title: FC<IProp> = props => {
 
   const Submenu = submenu && (
     <SubMenu title={<MenuTitle>{submenu.title}</MenuTitle>}>
-      {submenu.items.map(({ title }) => (
-        <Menu.Item>
+      {submenu.items.map(({ title }, i) => (
+        <Menu.Item key={i}>
           <Item>{title}</Item>
         </Menu.Item>
       ))}

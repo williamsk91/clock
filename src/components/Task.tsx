@@ -1,17 +1,12 @@
 import React, { FC } from "react";
 
 import { DatePicker } from "./DatePicker";
+import { Task as TaskProps } from "../graphql/generatedGraphql";
 import styled from "styled-components";
 
-interface IProp {
-  id: string;
-  done: boolean;
-  setDone: (d: boolean) => void;
-
-  start?: Date;
-  setStart: (d?: Date) => void;
-
-  title: string;
+interface IProp extends TaskProps {
+  setDone: (d: string | null) => void;
+  setStart: (d: string | null) => void;
   setTitle: (t: string) => void;
 }
 
@@ -21,24 +16,30 @@ interface IProp {
 export const Task: FC<IProp> = props => {
   const { done, setDone, title, setTitle, start, setStart } = props;
 
+  const updateDone = () => {
+    if (done) {
+      setDone(null);
+    } else {
+      setDone(new Date().toISOString());
+    }
+  };
+
   return (
     <Container>
-      <Checkbox
-        done={done}
-        onClick={() => {
-          setDone(!done);
-        }}
-      />
+      <Checkbox done={!!done} onClick={updateDone} />
       <Input
         value={title}
         onChange={e => setTitle(e.currentTarget.value)}
         onKeyDown={e => {
           if (e.ctrlKey && e.keyCode === 13) {
-            setDone(!done);
+            updateDone();
           }
         }}
       />
-      <DatePicker start={start} setStart={setStart} />
+      <DatePicker
+        start={start ? new Date(start) : undefined}
+        setStart={d => (d ? setStart(d.toISOString()) : setStart(null))}
+      />
     </Container>
   );
 };
