@@ -4,11 +4,12 @@ export interface ITheme {
     action: string;
     title: string;
     main: string;
+    disabled: string;
   };
 }
 
 export enum Theme {
-  light
+  light,
 }
 
 /** light theme is also the dafault theme */
@@ -17,8 +18,9 @@ const lightTheme: ITheme = {
   text: {
     action: "rgba(55, 53, 47, 0.95)",
     title: "rgba(55, 53, 47, 0.85)",
-    main: "rgba(55, 53, 47, 0.75)"
-  }
+    main: "rgba(55, 53, 47, 0.75)",
+    disabled: "rgba(55, 53, 47, 0.50)",
+  },
 };
 
 export const theme = lightTheme;

@@ -13,7 +13,7 @@ interface IProp extends TaskProps {
 /**
  * A single task
  */
-export const Task: FC<IProp> = props => {
+export const Task: FC<IProp> = (props) => {
   const { done, setDone, title, setTitle, start, setStart } = props;
 
   const updateDone = () => {
@@ -24,13 +24,16 @@ export const Task: FC<IProp> = props => {
     }
   };
 
+  const isDone: boolean = !!done;
+
   return (
     <Container>
-      <Checkbox done={!!done} onClick={updateDone} />
+      <Checkbox done={!!isDone} onClick={updateDone} />
       <Input
+        done={!!isDone}
         value={title}
-        onChange={e => setTitle(e.currentTarget.value)}
-        onKeyDown={e => {
+        onChange={(e) => setTitle(e.currentTarget.value)}
+        onKeyDown={(e) => {
           if (e.ctrlKey && e.keyCode === 13) {
             updateDone();
           }
@@ -38,7 +41,7 @@ export const Task: FC<IProp> = props => {
       />
       <DatePicker
         start={start ? new Date(start) : undefined}
-        setStart={d => (d ? setStart(d.toISOString()) : setStart(null))}
+        setStart={(d) => (d ? setStart(d.toISOString()) : setStart(null))}
       />
     </Container>
   );
@@ -58,13 +61,15 @@ const Checkbox = styled.div<{ done: boolean }>`
   width: 16px;
   height: 16px;
 
-  border: 2px solid ${p => p.theme.text.main};
-  background: ${p => (p.done ? p.theme.text.main : "transparent")};
+  border: 2px solid ${(p) => p.theme.text.main};
+  background: ${(p) => (p.done ? p.theme.text.main : "transparent")};
   background-clip: padding-box;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ done: boolean }>`
   grid-area: text;
-
   border: 0;
+
+  text-decoration: ${(p) => (p.done ? "line-through" : "initials")};
+  color: ${(p) => (p.done ? p.theme.text.disabled : p.theme.text.main)};
 `;
