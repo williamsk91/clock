@@ -7,6 +7,7 @@ import styled from "styled-components";
 interface IProp extends TaskProps {
   setDone: (d: string | null) => void;
   setStart: (d: string | null) => void;
+  setHasTime: (ht: boolean) => void;
   setTitle: (t: string) => void;
 }
 
@@ -14,7 +15,16 @@ interface IProp extends TaskProps {
  * A single task
  */
 export const Task: FC<IProp> = (props) => {
-  const { done, setDone, title, setTitle, start, setStart } = props;
+  const {
+    done,
+    setDone,
+    title,
+    setTitle,
+    start,
+    setStart,
+    hasTime,
+    setHasTime,
+  } = props;
 
   const updateDone = () => {
     if (done) {
@@ -42,6 +52,8 @@ export const Task: FC<IProp> = (props) => {
       <DatePicker
         start={start ? new Date(start) : undefined}
         setStart={(d) => (d ? setStart(d.toISOString()) : setStart(null))}
+        hasTime={hasTime}
+        setHasTime={setHasTime}
       />
     </Container>
   );

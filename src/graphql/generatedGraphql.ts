@@ -72,6 +72,7 @@ export type Task = {
   done: Maybe<Scalars['String']>;
   title: Scalars['String'];
   start: Maybe<Scalars['String']>;
+  hasTime: Scalars['Boolean'];
 };
 
 export type UpdateTaskInput = {
@@ -79,6 +80,7 @@ export type UpdateTaskInput = {
   done: Maybe<Scalars['String']>;
   title: Scalars['String'];
   start: Maybe<Scalars['String']>;
+  hasTime: Scalars['Boolean'];
 };
 
 export type User = {
