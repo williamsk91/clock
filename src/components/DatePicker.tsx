@@ -22,7 +22,8 @@ export const DatePicker = (props: Props) => {
       allowClear
       value={start && moment(start)}
       onChange={(_date, dateString) => {
-        setStart(dateString === "" ? undefined : new Date(dateString));
+        const date = dateString === "" ? undefined : new Date(dateString);
+        setStart(date);
       }}
       showToday={false}
       bordered={false}

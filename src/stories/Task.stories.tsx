@@ -9,6 +9,8 @@ story.add("base", () => {
   const [done, setDone] = useState<string | null>(null);
   const [text, setText] = useState("Chocolate");
   const [start, setStart] = useState<string | null>(new Date().toISOString());
+  const [hasTime, setHasTime] = useState<boolean>(false);
+
   return (
     <Task
       id="taskId"
@@ -18,6 +20,8 @@ story.add("base", () => {
       setTitle={setText}
       start={start}
       setStart={setStart}
+      hasTime={hasTime}
+      setHasTime={setHasTime}
     />
   );
 });

@@ -1,7 +1,7 @@
 import {
   List,
   Task as TaskProps,
-  UpdateTaskInput
+  UpdateTaskInput,
 } from "../graphql/generatedGraphql";
 import React, { useMemo } from "react";
 import { Title, TitleType } from "../components/Title";
@@ -23,15 +23,21 @@ export const ListPage = (props: Props) => {
 
   const taskList = useMemo(
     () =>
-      tasks.map(t => {
+      tasks.map((t) => {
         delete t.__typename;
         return (
           <Task
             key={t.id}
             {...t}
-            setDone={done => updateTask({ ...t, done })}
-            setTitle={title => updateTask({ ...t, title })}
-            setStart={start => updateTask({ ...t, start })}
+            setDone={(done) => updateTask({ ...t, done })}
+            setTitle={(title) => updateTask({ ...t, title })}
+            setStart={(start) =>
+              updateTask({
+                ...t,
+                start,
+              })
+            }
+            setHasTime={(hasTime) => updateTask({ ...t, hasTime })}
           />
         );
       }),

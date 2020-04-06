@@ -1,12 +1,11 @@
+#import "./task-fragment.graphql"
+
 query List($id: ID!) {
   list(id: $id) {
     id
     title
     tasks {
-      id
-      title
-      done
-      start
+      ...Task
     }
   }
 }

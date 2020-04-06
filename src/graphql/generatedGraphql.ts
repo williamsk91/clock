@@ -102,9 +102,14 @@ export type ListQuery = (
     & Pick<List, 'id' | 'title'>
     & { tasks: Array<(
       { __typename?: 'Task' }
-      & Pick<Task, 'id' | 'title' | 'done' | 'start'>
+      & TaskFragment
     )> }
   ) }
+);
+
+export type TaskFragment = (
+  { __typename?: 'Task' }
+  & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'hasTime'>
 );
 
 export type UpdateTaskMutationVariables = {
@@ -116,7 +121,7 @@ export type UpdateTaskMutation = (
   { __typename?: 'Mutation' }
   & { updateTask: (
     { __typename?: 'Task' }
-    & Pick<Task, 'id' | 'title' | 'done' | 'start'>
+    & TaskFragment
   ) }
 );
 
@@ -131,21 +136,26 @@ export type UserListQuery = (
   )> }
 );
 
-
+export const TaskFragmentDoc = gql`
+    fragment Task on Task {
+  id
+  title
+  done
+  start
+  hasTime
+}
+    `;
 export const ListDocument = gql`
     query List($id: ID!) {
   list(id: $id) {
     id
     title
     tasks {
-      id
-      title
-      done
-      start
+      ...Task
     }
   }
 }
-    `;
+    ${TaskFragmentDoc}`;
 
 /**
  * __useListQuery__
@@ -175,13 +185,10 @@ export type ListQueryResult = ApolloReactCommon.QueryResult<ListQuery, ListQuery
 export const UpdateTaskDocument = gql`
     mutation UpdateTask($task: UpdateTaskInput!) {
   updateTask(task: $task) {
-    id
-    title
-    done
-    start
+    ...Task
   }
 }
-    `;
+    ${TaskFragmentDoc}`;
 export type UpdateTaskMutationFn = ApolloReactCommon.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
 
 /**
