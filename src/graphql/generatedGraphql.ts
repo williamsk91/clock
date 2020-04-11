@@ -90,6 +90,20 @@ export type User = {
   displayName: Maybe<Scalars['String']>;
 };
 
+export type CreateTaskMutationVariables = {
+  listId: Scalars['ID'];
+  task: CreateTaskInput;
+};
+
+
+export type CreateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { createTask: (
+    { __typename?: 'Task' }
+    & TaskFragment
+  ) }
+);
+
 export type ListQueryVariables = {
   id: Scalars['ID'];
 };
@@ -145,6 +159,39 @@ export const TaskFragmentDoc = gql`
   hasTime
 }
     `;
+export const CreateTaskDocument = gql`
+    mutation CreateTask($listId: ID!, $task: CreateTaskInput!) {
+  createTask(listId: $listId, task: $task) {
+    ...Task
+  }
+}
+    ${TaskFragmentDoc}`;
+export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *      task: // value for 'task'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, baseOptions);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
 export const ListDocument = gql`
     query List($id: ID!) {
   list(id: $id) {

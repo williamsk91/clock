@@ -41,6 +41,19 @@ story.add("base", () => {
 
         setTasks(newTasks);
       }}
+      createTask={(title) => {
+        console.log("title: ", title);
+        setTasks([
+          ...tasks,
+          {
+            id: tasks.length.toString(),
+            title,
+            done: null,
+            start: null,
+            hasTime: false,
+          },
+        ]);
+      }}
       userList={[
         { id: "1", title: "Groceries" },
         { id: "2", title: "Exercise" },

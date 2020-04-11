@@ -1,8 +1,12 @@
-import React, { useContext } from "react";
 import {
+  ListDocument,
+  ListQuery,
+  ListQueryVariables,
+  useCreateTaskMutation,
   useListQuery,
   useUpdateTaskMutation
 } from "../graphql/generatedGraphql";
+import React, { useContext } from "react";
 
 import { Error } from "../components/flow/Error";
 import { ListPage } from "./ListPage";
@@ -17,6 +21,7 @@ export const ListRoute = () => {
   const { data, loading } = useListQuery({ variables: { id } });
 
   const [updateTask] = useUpdateTaskMutation();
+  const [createTask] = useCreateTaskMutation();
 
   if (loading) return <Loading />;
 
@@ -33,6 +38,43 @@ export const ListRoute = () => {
                 __typename: "Task",
                 ...task
               }
+            }
+          });
+        }}
+        createTask={title => {
+          createTask({
+            variables: {
+              listId: data.list.id,
+              task: {
+                title,
+                done: null,
+                start: null
+              }
+            },
+            update: (cache, { data: createTaskData }) => {
+              if (!createTaskData) return;
+
+              const cachedList = cache.readQuery<ListQuery, ListQueryVariables>(
+                {
+                  query: ListDocument,
+                  variables: { id: data.list.id }
+                }
+              );
+              if (!cachedList) return;
+              const { list } = cachedList;
+
+              const newList = {
+                ...list,
+                tasks: [...list.tasks, createTaskData.createTask].map(t => ({
+                  ...t,
+                  __typename: "Task"
+                }))
+              };
+              cache.writeQuery({
+                query: ListDocument,
+                variables: { id: data.list.id },
+                data: { list: newList }
+              });
             }
           });
         }}

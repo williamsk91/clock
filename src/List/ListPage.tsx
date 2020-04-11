@@ -7,6 +7,7 @@ import React, { useMemo } from "react";
 import { Title, TitleType } from "../components/Title";
 
 import { Layout } from "../styles/layout";
+import { NewTask } from "../components/NewTask";
 import { Spacer } from "../components/Spacer";
 import { Task } from "../components/Task";
 
@@ -14,12 +15,13 @@ interface Props {
   title: string;
   tasks: TaskProps[];
   updateTask: (t: UpdateTaskInput) => void;
+  createTask: (title: string) => void;
 
   userList: Pick<List, "id" | "title">[];
 }
 
 export const ListPage = (props: Props) => {
-  const { title, tasks, updateTask, userList } = props;
+  const { title, tasks, updateTask, userList, createTask } = props;
 
   const taskList = useMemo(
     () =>
@@ -54,6 +56,7 @@ export const ListPage = (props: Props) => {
       <Title type={TitleType.Lists} submenu={submenu} />
       <Spacer spacing="108" />
       {taskList}
+      <NewTask onCreate={createTask} />
     </Layout>
   );
 };
