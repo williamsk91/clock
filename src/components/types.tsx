@@ -3,4 +3,5 @@ export interface ITask {
   done: boolean;
   title: string;
   start?: Date;
+  end?: Date;
 }
