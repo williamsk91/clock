@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-import { Calendar } from "../components/Calendar";
+import { Calendar } from "../components/Calendar/Calendar";
 import { ITask } from "../components/types";
+import { Navigation } from "../components/Calendar/Navigation";
 import { addHours } from "date-fns";
 import { storiesOf } from "@storybook/react";
 
@@ -40,3 +41,12 @@ const getTasks = (): ITask[] => [
     end: addHours(new Date(), 3)
   }
 ];
+
+story.add("navigation", () => (
+  <Navigation
+    date={new Date()}
+    onPrev={() => console.log("onPrev")}
+    onNext={() => console.log("onNext")}
+    onNow={() => console.log("onNow")}
+  />
+));
