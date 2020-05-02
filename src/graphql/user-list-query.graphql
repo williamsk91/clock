@@ -1,6 +1,0 @@
-query UserList {
-  userList {
-    id
-    title
-  }
-}

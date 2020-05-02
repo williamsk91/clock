@@ -5,13 +5,13 @@ import "tui-time-picker/dist/tui-time-picker.css";
 import { ICalendarInfo, ISchedule } from "tui-calendar";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 
-import { ITask } from "../types";
 import { Navigation } from "./Navigation";
 import TUICalendar from "@toast-ui/react-calendar";
+import { Task } from "../../graphql/generated";
 import { colors } from "../../styles/colors";
 
 interface IProp {
-  tasks: ITask[];
+  tasks: Task[];
   setStart: (id: string, d: string | undefined) => void;
   setEnd: (id: string, d: string | undefined) => void;
 }
@@ -27,8 +27,7 @@ export const Calendar: FC<IProp> = props => {
       tasks.map(t => ({
         ...t,
         calendarId: "1",
-        category: "time",
-        borderColor: t.color
+        category: "time"
       })),
     []
   );

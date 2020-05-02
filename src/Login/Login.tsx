@@ -1,5 +1,3 @@
-import * as Text from "../components/Text";
-
 import { Layout } from "../styles/layout";
 import React from "react";
 import { Spacer } from "../components/Spacer";
@@ -33,7 +31,8 @@ export const LoginPage = (props: Props) => {
       <Container>
         <Illustration src={loginImg} />
         <Spacer spacing="12" />
-        <Text.Title onClick={onGoogleSignIn}>Login | Google</Text.Title>
+        <button onClick={onGoogleSignIn}>Login with Google</button>
+        {/* <Text.Title onClick={onGoogleSignIn}>Login | Google</Text.Title> */}
       </Container>
     </Layout>
   );

@@ -6,10 +6,10 @@ import { storiesOf } from "@storybook/react";
 const story = storiesOf("Components|Task", module);
 
 story.add("base", () => {
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const [text, setText] = useState("Chocolate");
   const [start, setStart] = useState<string | null>(new Date().toISOString());
-  const [hasTime, setHasTime] = useState<boolean>(false);
+  const [includeTime, setIncludeTime] = useState<boolean>(false);
 
   return (
     <Task
@@ -20,8 +20,9 @@ story.add("base", () => {
       setTitle={setText}
       start={start}
       setStart={setStart}
-      hasTime={hasTime}
-      setHasTime={setHasTime}
+      end={null}
+      includeTime={includeTime}
+      setIncludeTime={setIncludeTime}
     />
   );
 });

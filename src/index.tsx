@@ -9,7 +9,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { UserListProvider } from "./components/TitleContext";
 import { apolloClient } from "./data/apollo";
 import { theme } from "./styles/theme";
 
@@ -18,9 +17,7 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <ApolloProvider client={apolloClient}>
         <Router>
-          <UserListProvider>
-            <App />
-          </UserListProvider>
+          <App />
         </Router>
       </ApolloProvider>
     </ThemeProvider>

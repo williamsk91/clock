@@ -3,5 +3,6 @@ fragment Task on Task {
   title
   done
   start
-  hasTime
+  end
+  includeTime
 }

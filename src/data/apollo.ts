@@ -5,7 +5,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 // Instantiate required constructor fields
 const cache = new InMemoryCache();
 const link = new HttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_SERVER_URI,
+  uri: process.env.REACT_APP_GRAPHQL_SERVER_URI + "/graphql",
   credentials: "include"
 });
 

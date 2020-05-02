@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import { Calendar } from "../components/Calendar/Calendar";
-import { ITask } from "../components/types";
 import { Navigation } from "../components/Calendar/Navigation";
+import { Task } from "../graphql/generated";
 import { addHours } from "date-fns";
 import { storiesOf } from "@storybook/react";
 
@@ -32,13 +32,14 @@ story.add("base", () => {
   );
 });
 
-const getTasks = (): ITask[] => [
+const getTasks = (): Task[] => [
   {
     id: "1",
     done: false,
     title: "Milk",
     start: new Date(),
-    end: addHours(new Date(), 3)
+    end: addHours(new Date(), 3),
+    includeTime: false
   }
 ];
 
