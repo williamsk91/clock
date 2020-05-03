@@ -1,13 +1,17 @@
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import { Color, colors } from "../styles/colors";
 import React, { FC } from "react";
 
-import { DatePicker } from "./DatePicker";
+import { IconButton } from "./IconButton";
 import { Task as TaskProps } from "../graphql/generated";
+import { Text } from "./Text";
+import { formatDatetime } from "./datetime";
 import styled from "styled-components";
 
 interface IProp extends TaskProps {
   setDone: (d: boolean) => void;
-  setStart: (d: string | null) => void;
+  setStart: (d: Date | null) => void;
+  setEnd: (d: Date | null) => void;
   setIncludeTime: (it: boolean) => void;
   setTitle: (t: string) => void;
 }
@@ -16,39 +20,35 @@ interface IProp extends TaskProps {
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const {
-    done,
-    setDone,
-    title,
-    setTitle,
-    start,
-    setStart,
-    includeTime,
-    setIncludeTime
-  } = props;
+  const { done, setDone, title, setTitle, start, end, includeTime } = props;
 
-  const updateDone = () => {
-    setDone(!done);
-  };
-
-  const isDone: boolean = !!done;
-
+  const updateDone = () => setDone(!done);
+  console.log("start: ", start);
   return (
     <Container>
       <Banner color="red" />
-      <Input
-        done={!!isDone}
-        value={title}
-        onChange={e => setTitle(e.currentTarget.value)}
-        onKeyDown={e => {
-          if (e.ctrlKey && e.keyCode === 13) {
-            updateDone();
-          }
-        }}
+      <Content>
+        <Input
+          done={done}
+          value={title}
+          onChange={e => setTitle(e.currentTarget.value)}
+          onKeyDown={e => {
+            if (e.ctrlKey && e.keyCode === 13) {
+              updateDone();
+            }
+          }}
+        />
+        {start && (
+          <Text.Sub>
+            {formatDatetime(start, end ?? undefined, includeTime)}
+          </Text.Sub>
+        )}
+      </Content>
+      <IconButton
+        type="link"
+        onClick={updateDone}
+        icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
       />
-      <Icons>
-        <Checkbox done={!!done} />
-      </Icons>
     </Container>
   );
 };
@@ -71,20 +71,18 @@ const Banner = styled.div<{ color: Color }>`
   background: ${p => colors[p.color]};
 `;
 
-const Icons = styled.div``;
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Input = styled.input<{ done: boolean }>`
   border: 0;
 
   text-decoration: ${p => (p.done ? "line-through" : "initials")};
   color: ${p => (p.done ? p.theme.text.disabled : p.theme.text.main)};
-`;
 
-const Checkbox = styled.div<{ done: boolean }>`
-  width: 16px;
-  height: 16px;
-
-  border: 2px solid ${p => p.theme.text.main};
-  background: ${p => (p.done ? p.theme.text.main : "transparent")};
-  background-clip: padding-box;
+  &:focus {
+    outline: none;
+  }
 `;

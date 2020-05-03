@@ -10,12 +10,13 @@ export type Scalars = {
   Int: number,
   Float: number,
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any,
+  DateTime: Date,
 };
 
 
 export type Mutation = {
    __typename?: 'Mutation',
+  invalidateTokens: User,
   createTask: Task,
   updateTask: Task,
 };

@@ -8,8 +8,11 @@ const story = storiesOf("Components|Task", module);
 story.add("base", () => {
   const [done, setDone] = useState(false);
   const [text, setText] = useState("Chocolate");
-  const [start, setStart] = useState<string | null>(new Date().toISOString());
-  const [includeTime, setIncludeTime] = useState<boolean>(false);
+  const [start, setStart] = useState<Date | null>(
+    new Date("2020-04-16T10:00:00Z")
+  );
+  const [end, setEnd] = useState<Date | null>(null);
+  const [includeTime, setIncludeTime] = useState<boolean>(true);
 
   return (
     <Task
@@ -20,7 +23,8 @@ story.add("base", () => {
       setTitle={setText}
       start={start}
       setStart={setStart}
-      end={null}
+      end={end}
+      setEnd={setEnd}
       includeTime={includeTime}
       setIncludeTime={setIncludeTime}
     />

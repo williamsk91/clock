@@ -17,14 +17,14 @@ story.add("base", () => {
       setStart={(id, start) => {
         console.log("start: ", start);
         const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, start: start ? new Date(start) : undefined } : t
+          t.id === id ? { ...t, start: start ? new Date(start) : null } : t
         );
         setTasks(newTasks);
       }}
       setEnd={(id, end) => {
         console.log("end: ", end);
         const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, end: end ? new Date(end) : undefined } : t
+          t.id === id ? { ...t, end: end ? new Date(end) : null } : t
         );
         setTasks(newTasks);
       }}
