@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
+import { IconButton } from "./IconButton";
+import { PlusSquareOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 interface Props {
-  onCreate: (ttitle: string) => void;
+  onCreate: (title: string) => void;
 }
 
 /**
@@ -16,7 +18,6 @@ export const NewTask = (props: Props) => {
 
   return (
     <Container>
-      <Checkbox />
       <Input
         placeholder="Add a task"
         value={title}
@@ -28,35 +29,24 @@ export const NewTask = (props: Props) => {
           }
         }}
       />
+      <IconButton
+        type="link"
+        onClick={() => onCreate(title)}
+        icon={<PlusSquareOutlined />}
+      />
     </Container>
   );
 };
 
 const Container = styled.div`
   display: grid;
-  grid-template-areas: "box text date";
-  grid-template-columns: 24px 1fr auto;
-
+  grid-template-columns: 1fr 36px;
   align-items: center;
-`;
 
-const Checkbox = styled.div`
-  grid-area: box;
-
-  width: 16px;
-  height: 16px;
-
-  border: 2px solid ${p => p.theme.text.main};
-  background: "transparent";
-  background-clip: padding-box;
+  background: white;
 `;
 
 const Input = styled.input`
-  grid-area: text;
   border: 0;
-
-  color: ${p => p.theme.text.disabled};
-  :focus {
-    color: ${p => p.theme.text.main};
-  }
+  padding: 12px;
 `;
