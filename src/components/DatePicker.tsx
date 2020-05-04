@@ -25,6 +25,9 @@ interface Props {
   className?: string;
 }
 
+/**
+ * A Date and time range picker
+ */
 export const DatePicker = (props: Props) => {
   const {
     start,
