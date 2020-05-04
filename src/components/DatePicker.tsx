@@ -1,40 +1,73 @@
-import { DatePicker as AntDatePicker, Switch } from "antd";
+import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
-import { ClockCircleOutlined } from "@ant-design/icons";
+import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
+
 import React from "react";
-import moment from "moment";
+import { Switch } from "@blueprintjs/core";
+import styled from "styled-components";
 
 interface Props {
-  start?: Date;
-  setStart: (d?: Date) => void;
+  start: Date | null;
+  setStart: (d: Date | null) => void;
 
-  hasTime: boolean;
-  setHasTime: (ht: boolean) => void;
+  end: Date | null;
+  setEnd: (d: Date | null) => void;
+
+  includeTime: boolean;
+  setIncludeTime: (it: boolean) => void;
+
+  /**
+   * This is to extend the container style using
+   * Styled-Components
+   */
+  className?: string;
 }
 
 export const DatePicker = (props: Props) => {
-  const { start, setStart, hasTime, setHasTime } = props;
+  const {
+    start,
+    setStart,
+    end,
+    setEnd,
+    includeTime,
+    setIncludeTime,
+    className
+  } = props;
 
   return (
-    <AntDatePicker
-      showTime={hasTime ? { format: "HH:mm" } : false}
-      format={hasTime ? "YYYY/MM/DD HH:mm" : "YYYY/MM/DD"}
-      allowClear
-      value={start && moment(start)}
-      onChange={(_date, dateString) => {
-        const date = dateString === "" ? undefined : new Date(dateString);
-        setStart(date);
-      }}
-      showToday={false}
-      bordered={false}
-      renderExtraFooter={() => (
-        <Switch
-          checked={hasTime}
-          onChange={(c) => setHasTime(c)}
-          checkedChildren={<ClockCircleOutlined />}
-          unCheckedChildren={<ClockCircleOutlined />}
-        />
-      )}
-    />
+    <Container className={className}>
+      <DateRangePicker
+        value={[start, end]}
+        onChange={([newStart, newEnd]) => {
+          setStart(newStart);
+          setEnd(newEnd);
+        }}
+        timePickerProps={
+          includeTime
+            ? {
+                showArrowButtons: true,
+                precision: TimePrecision.MINUTE
+              }
+            : undefined
+        }
+        shortcuts={false}
+        allowSingleDayRange
+        singleMonthOnly
+      />
+      <Switch
+        checked={includeTime}
+        label="Include Time"
+        onChange={e => setIncludeTime(e.currentTarget.checked)}
+      />
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: #ffffff;
+`;

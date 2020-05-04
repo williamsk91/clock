@@ -1,8 +1,14 @@
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import {
+  BorderOutlined,
+  CalendarOutlined,
+  CheckSquareOutlined
+} from "@ant-design/icons";
 import { Color, colors } from "../styles/colors";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
+import { DatePicker } from "./DatePicker";
 import { IconButton } from "./IconButton";
+import { Spacer } from "./Spacer";
 import { Task as TaskProps } from "../graphql/generated";
 import { Text } from "./Text";
 import { formatDatetime } from "./datetime";
@@ -20,48 +26,90 @@ interface IProp extends TaskProps {
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const { done, setDone, title, setTitle, start, end, includeTime } = props;
+  const {
+    done,
+    setDone,
+    title,
+    setTitle,
+    start,
+    end,
+    includeTime,
+    setStart,
+    setEnd,
+    setIncludeTime
+  } = props;
+
+  const [isSettingDate, setIsSettingDate] = useState(false);
 
   const updateDone = () => setDone(!done);
-  console.log("start: ", start);
+
   return (
     <Container>
-      <Banner color="red" />
-      <Content>
-        <Input
-          done={done}
-          value={title}
-          onChange={e => setTitle(e.currentTarget.value)}
-          onKeyDown={e => {
-            if (e.ctrlKey && e.keyCode === 13) {
-              updateDone();
-            }
-          }}
-        />
-        {start && (
-          <Text.Sub>
-            {formatDatetime(start, end ?? undefined, includeTime)}
-          </Text.Sub>
-        )}
-      </Content>
-      <IconButton
-        type="link"
-        onClick={updateDone}
-        icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
-      />
+      <TaskContainer>
+        <Banner color="red" />
+        <div>
+          <Input
+            done={done}
+            value={title}
+            onChange={e => setTitle(e.currentTarget.value)}
+            onKeyDown={e => {
+              if (e.ctrlKey && e.keyCode === 13) {
+                updateDone();
+              }
+            }}
+          />
+          {start && (
+            <Text.Sub>
+              {formatDatetime(start, end ?? undefined, includeTime)}
+            </Text.Sub>
+          )}
+        </div>
+        <Actions>
+          <IconButton
+            type="link"
+            onClick={updateDone}
+            icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
+          />
+          <IconButton
+            type="link"
+            onClick={() => setIsSettingDate(isd => !isd)}
+            icon={<CalendarOutlined />}
+          />
+        </Actions>
+      </TaskContainer>
+      {isSettingDate && (
+        <>
+          <Spacer spacing="1" />
+          <DatePicker
+            start={start}
+            setStart={setStart}
+            end={end}
+            setEnd={setEnd}
+            includeTime={includeTime}
+            setIncludeTime={setIncludeTime}
+          />
+        </>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div`
+  min-width: 250px;
+
+  display: flex;
+  flex-flow: column;
+`;
+
+const TaskContainer = styled.div`
   height: 48px;
 
   display: grid;
-  grid-template-columns: 3px auto min-content;
+  grid-template-columns: 3px auto 64px;
   align-items: center;
   grid-gap: 6px;
 
-  position: relative;
+  background: white;
 `;
 
 const Banner = styled.div<{ color: Color }>`
@@ -69,11 +117,6 @@ const Banner = styled.div<{ color: Color }>`
   height: 42px;
 
   background: ${p => colors[p.color]};
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 const Input = styled.input<{ done: boolean }>`
@@ -85,4 +128,10 @@ const Input = styled.input<{ done: boolean }>`
   &:focus {
     outline: none;
   }
+`;
+
+const Actions = styled.div`
+  align-self: start;
+  display: grid;
+  grid-auto-flow: column;
 `;

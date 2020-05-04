@@ -6,14 +6,18 @@ import { storiesOf } from "@storybook/react";
 const story = storiesOf("Components | DatePicker", module);
 
 story.add("base", () => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [hasTime, setHasTime] = useState<boolean>(false);
+  const [start, setStart] = useState<Date | null>(new Date());
+  const [end, setEnd] = useState<Date | null>(null);
+  const [includeTime, setIncludeTime] = useState(false);
+
   return (
     <DatePicker
-      start={date}
-      setStart={setDate}
-      hasTime={hasTime}
-      setHasTime={setHasTime}
+      start={start}
+      setStart={setStart}
+      end={end}
+      setEnd={setEnd}
+      includeTime={includeTime}
+      setIncludeTime={setIncludeTime}
     />
   );
 });
