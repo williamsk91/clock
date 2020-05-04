@@ -3,6 +3,7 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
 
+import { Button } from "antd";
 import React from "react";
 import { Switch } from "@blueprintjs/core";
 import styled from "styled-components";
@@ -55,19 +56,38 @@ export const DatePicker = (props: Props) => {
         allowSingleDayRange
         singleMonthOnly
       />
-      <Switch
+      <PaddedSwitch
         checked={includeTime}
         label="Include Time"
         onChange={e => setIncludeTime(e.currentTarget.checked)}
+        alignIndicator="right"
       />
+      <Button
+        type="link"
+        danger
+        onClick={() => {
+          setStart(null);
+          setEnd(null);
+        }}
+      >
+        remove date
+      </Button>
     </Container>
   );
 };
 
 const Container = styled.div`
+  width: fit-content;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+
+  padding: 6px 0;
 
   background: #ffffff;
+`;
+
+const PaddedSwitch = styled(Switch)`
+  padding: 0 15px;
 `;
