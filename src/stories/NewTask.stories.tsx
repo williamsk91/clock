@@ -5,5 +5,5 @@ import { storiesOf } from "@storybook/react";
 const story = storiesOf("Components | NewTask", module);
 
 story.add("base", () => {
-  return <NewTask onCreate={title => console.log("title: ", title)} />;
+  return <NewTask createTask={title => console.log("title: ", title)} />;
 });

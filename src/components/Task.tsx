@@ -88,6 +88,7 @@ export const Task: FC<IProp> = props => {
             includeTime={includeTime}
             setIncludeTime={setIncludeTime}
           />
+          <Spacer spacing="1" />
         </>
       )}
     </Container>

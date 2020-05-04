@@ -5,14 +5,14 @@ import { PlusSquareOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 interface Props {
-  onCreate: (title: string) => void;
+  createTask: (title: string) => void;
 }
 
 /**
  * Create a new task by passing in the title of the task.
  */
 export const NewTask = (props: Props) => {
-  const { onCreate } = props;
+  const { createTask } = props;
 
   const [title, setTitle] = useState("");
 
@@ -24,14 +24,14 @@ export const NewTask = (props: Props) => {
         onChange={e => setTitle(e.currentTarget.value)}
         onKeyDown={e => {
           if (e.keyCode === 13) {
-            title !== "" && onCreate(title);
+            title !== "" && createTask(title);
             setTitle("");
           }
         }}
       />
       <IconButton
         type="link"
-        onClick={() => onCreate(title)}
+        onClick={() => createTask(title)}
         icon={<PlusSquareOutlined />}
       />
     </Container>
