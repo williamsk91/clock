@@ -10,10 +10,8 @@ import styled from "styled-components";
 
 interface Props {
   start: Date | null;
-  setStart: (d: Date | null) => void;
-
   end: Date | null;
-  setEnd: (d: Date | null) => void;
+  updateDates: (dates: [Date | null, Date | null]) => void;
 
   includeTime: boolean;
   setIncludeTime: (it: boolean) => void;
@@ -31,9 +29,8 @@ interface Props {
 export const DatePicker = (props: Props) => {
   const {
     start,
-    setStart,
     end,
-    setEnd,
+    updateDates,
     includeTime,
     setIncludeTime,
     className
@@ -43,10 +40,7 @@ export const DatePicker = (props: Props) => {
     <Container className={className}>
       <DateRangePicker
         value={[start, end]}
-        onChange={([newStart, newEnd]) => {
-          setStart(newStart);
-          setEnd(newEnd);
-        }}
+        onChange={updateDates}
         timePickerProps={
           includeTime
             ? {
@@ -65,16 +59,11 @@ export const DatePicker = (props: Props) => {
         onChange={e => setIncludeTime(e.currentTarget.checked)}
         alignIndicator="right"
       />
-      <Button
-        type="link"
-        danger
-        onClick={() => {
-          setStart(null);
-          setEnd(null);
-        }}
-      >
-        remove date
-      </Button>
+      {(start || end) && (
+        <Button type="link" danger onClick={() => updateDates([null, null])}>
+          remove date
+        </Button>
+      )}
     </Container>
   );
 };

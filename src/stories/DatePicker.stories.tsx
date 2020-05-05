@@ -13,11 +13,13 @@ story.add("base", () => {
   return (
     <DatePicker
       start={start}
-      setStart={setStart}
       end={end}
-      setEnd={setEnd}
       includeTime={includeTime}
       setIncludeTime={setIncludeTime}
+      updateDates={dates => {
+        setEnd(dates[0]);
+        setStart(dates[1]);
+      }}
     />
   );
 });

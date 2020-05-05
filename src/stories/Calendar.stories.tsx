@@ -17,14 +17,14 @@ story.add("base", () => {
       setStart={(id, start) => {
         console.log("start: ", start);
         const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, start: start ? new Date(start) : null } : t
+          t.id === id ? { ...t, start: start ?? null } : t
         );
         setTasks(newTasks);
       }}
       setEnd={(id, end) => {
         console.log("end: ", end);
         const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, end: end ? new Date(end) : null } : t
+          t.id === id ? { ...t, end: end ?? null } : t
         );
         setTasks(newTasks);
       }}
@@ -37,8 +37,8 @@ const getTasks = (): Task[] => [
     id: "1",
     done: false,
     title: "Milk",
-    start: new Date(),
-    end: addHours(new Date(), 3),
+    start: new Date().toISOString(),
+    end: addHours(new Date(), 3).toISOString(),
     includeTime: false
   }
 ];

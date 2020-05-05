@@ -57,6 +57,23 @@ export const formatDatetime = (
     ? `~${formatSingleDatetime(end, includeTime, now)}`
     : "";
   const startString = formatSingleDatetime(start, includeTime, now);
-
   return startString + endString;
 };
+
+/**
+ * Converts string to date.
+ * Used to deserialise `DateTime` scalar from the server.
+ */
+export const parseDate = (s: string | null): Date | null => {
+  let date: Date | null = null;
+  try {
+    date = s ? new Date(s) : null;
+  } catch (error) {}
+  return date;
+};
+
+/**
+ * Similar to `parseDate` but ignores undefined.
+ * Warning: this will throw an error if input is not a date string.
+ */
+export const parseDefinedDate = (s: string): Date => new Date(s);

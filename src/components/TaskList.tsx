@@ -20,8 +20,8 @@ export const TaskList = (props: Props) => {
 
   return (
     <Container>
-      {tasks.map(t => (
-        <Task {...t} {...demuxUpdateTask(t, updateTask)} />
+      {tasks.map((t, i) => (
+        <Task key={i} {...t} updateTask={updateTask} />
       ))}
       <Spacer spacing="1" />
       <NewTask createTask={createTask} />
@@ -32,21 +32,3 @@ export const TaskList = (props: Props) => {
 const Container = styled.div`
   overflow-y: auto;
 `;
-
-// ------------------------- Helper Functions -------------------------
-const demuxUpdateTask = (
-  task: TaskProps,
-  updateTask: (uti: UpdateTaskInput) => void
-): {
-  setDone: (d: boolean) => void;
-  setStart: (d: Date | null) => void;
-  setEnd: (d: Date | null) => void;
-  setIncludeTime: (it: boolean) => void;
-  setTitle: (t: string) => void;
-} => ({
-  setDone: (d: boolean) => updateTask({ ...task, done: d }),
-  setStart: (d: Date | null) => updateTask({ ...task, start: d }),
-  setEnd: (d: Date | null) => updateTask({ ...task, end: d }),
-  setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
-  setTitle: (t: string) => updateTask({ ...task, title: t })
-});
