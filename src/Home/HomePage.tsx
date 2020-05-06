@@ -1,4 +1,5 @@
 import {
+  TasksDocument,
   TasksQuery,
   useCreateTaskMutation,
   useUpdateTaskMutation
@@ -28,7 +29,33 @@ export const HomePage = (props: Props) => {
           tasks={tasks}
           createTask={title =>
             createTask({
-              variables: { title }
+              variables: { title },
+              optimisticResponse: {
+                createTask: {
+                  __typename: "Task",
+                  id: "temporaryId",
+                  title,
+                  done: false,
+                  start: null,
+                  end: null,
+                  includeTime: false
+                }
+              },
+              update: (cache, { data }) => {
+                const cachedData = cache.readQuery<TasksQuery>({
+                  query: TasksDocument
+                });
+                const newTaskData = data?.createTask;
+                if (!cachedData || !newTaskData) return;
+
+                const newTasks = [...cachedData.tasks, newTaskData];
+                cache.writeQuery<TasksQuery>({
+                  query: TasksDocument,
+                  data: {
+                    tasks: newTasks
+                  }
+                });
+              }
             })
           }
           updateTask={updateTaskInput =>
