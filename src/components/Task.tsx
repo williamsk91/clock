@@ -72,7 +72,7 @@ export const Task: FC<IProp> = props => {
       </TaskContainer>
       {isSettingDate && (
         <>
-          <Spacer spacing="1" />
+          <Spacer spacing="2" />
           <DatePickerContainer>
             <DatePicker
               start={start}
@@ -82,9 +82,9 @@ export const Task: FC<IProp> = props => {
               setIncludeTime={setIncludeTime}
             />
           </DatePickerContainer>
-          <Spacer spacing="1" />
         </>
       )}
+      <Spacer spacing="6" />
     </Container>
   );
 };

@@ -1,10 +1,12 @@
 import {
+  Task,
   TasksDocument,
   TasksQuery,
   useCreateTaskMutation,
   useUpdateTaskMutation
 } from "../graphql/generated";
 
+import { Calendar } from "../components/Calendar";
 import React from "react";
 import { TaskList } from "../components/TaskList";
 import styled from "styled-components";
@@ -67,7 +69,13 @@ export const HomePage = (props: Props) => {
           }
         />
       </SideBar>
-      <Content />
+      <Content>
+        <Calendar
+          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
+          setStart={start => console.log("start: ", start)}
+          setEnd={end => console.log("end: ", end)}
+        />
+      </Content>
     </Container>
   );
 };
@@ -81,9 +89,17 @@ const Container = styled.div`
 `;
 
 const SideBar = styled.div`
+  padding: 24px;
+
   background: #f7f8f7;
 `;
 
 const Content = styled.div`
+  padding: 24px 48px;
+
   background: white;
 `;
+
+// ------------------------- Helper Functions -------------------------
+const hasDateP = (task: Task): boolean => !!task.start || !!task.end;
+const isNotDoneP = (task: Task): boolean => !task.done;

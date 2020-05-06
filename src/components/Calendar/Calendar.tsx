@@ -2,9 +2,9 @@ import "tui-calendar/dist/tui-calendar.css";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 
+import { ICalendarInfo, ISchedule } from "tui-calendar";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 
-import { ICalendarInfo } from "tui-calendar";
 import { Navigation } from "./Navigation";
 import TUICalendar from "@toast-ui/react-calendar";
 import { Task } from "../../graphql/generated";
@@ -22,15 +22,16 @@ export const Calendar: FC<IProp> = props => {
   const { tasks, setStart, setEnd } = props;
   const cal = useRef<TUICalendar>(null);
 
-  const schedules: any[] = useMemo(
+  const schedules: ISchedule[] = useMemo(
     () =>
-      tasks
-        .filter(t => !!t.start)
-        .map(t => ({
-          ...t,
-          calendarId: "1",
-          category: "time"
-        })),
+      tasks.map(t => ({
+        ...t,
+        start: t.start ?? undefined,
+        end: t.end ?? undefined,
+        calendarId: "1",
+        category: "time",
+        isAllDay: !t.includeTime
+      })),
     [tasks]
   );
 
