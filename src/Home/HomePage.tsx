@@ -81,8 +81,8 @@ export const HomePage = (props: Props) => {
 };
 
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 
   display: grid;
   grid-template-columns: 365px 1fr;
@@ -90,12 +90,14 @@ const Container = styled.div`
 
 const SideBar = styled.div`
   padding: 24px;
+  box-sizing: border-box;
 
   background: #f7f8f7;
 `;
 
 const Content = styled.div`
   padding: 24px 48px;
+  box-sizing: border-box;
 
   background: white;
 `;

@@ -1,14 +1,10 @@
-import "tui-calendar/dist/tui-calendar.css";
-import "tui-date-picker/dist/tui-date-picker.css";
-import "tui-time-picker/dist/tui-time-picker.css";
+import "./style.scss";
 
-import { ICalendarInfo, ISchedule } from "tui-calendar";
-import React, { FC, useCallback, useMemo, useRef } from "react";
+import React, { FC, useRef } from "react";
 
-import { Navigation } from "./Navigation";
-import TUICalendar from "@toast-ui/react-calendar";
+import FullCalendar from "@fullcalendar/react";
 import { Task } from "../../graphql/generated";
-import { colors } from "../../styles/colors";
+import timeGridPlugin from "@fullcalendar/timegrid";
 
 interface IProp {
   tasks: Task[];
@@ -16,79 +12,31 @@ interface IProp {
   setEnd: (id: string, d: string | undefined) => void;
 }
 
-const noop = () => null;
-
 export const Calendar: FC<IProp> = props => {
-  const { tasks, setStart, setEnd } = props;
-  const cal = useRef<TUICalendar>(null);
+  const cal = useRef<FullCalendar>(null);
+  const { tasks } = props;
 
-  const schedules: ISchedule[] = useMemo(
-    () =>
-      tasks.map(t => ({
-        ...t,
-        start: t.start ?? undefined,
-        end: t.end ?? undefined,
-        calendarId: "1",
-        category: "time",
-        isAllDay: !t.includeTime
-      })),
-    [tasks]
-  );
-
-  const onPrev = useCallback(() => cal.current?.getInstance().prev() ?? noop, [
-    cal.current
-  ]);
-
-  const onNext = useCallback(() => cal.current?.getInstance().next() ?? noop, [
-    cal.current
-  ]);
-
-  const onNow = useCallback(() => cal.current?.getInstance().today() ?? noop, [
-    cal.current
-  ]);
+  const events = tasks.map(t => ({
+    ...t,
+    allDay: !t.includeTime
+  }));
 
   return (
     <div>
-      <Navigation
-        date={new Date()}
-        onPrev={onPrev}
-        onNow={onNow}
-        onNext={onNext}
-      />
-      <TUICalendar
+      <FullCalendar
         ref={cal}
-        height="900px"
-        taskView={false}
-        week={{ startDayOfWeek: 1 }}
-        schedules={schedules}
-        disableClick
-        disableDblClick
-        onBeforeUpdateSchedule={({ schedule, changes }) => {
-          const { id, calendarId } = schedule;
-
-          if (!id || !calendarId || !changes) return;
-
-          const { start, end } = changes;
-          start && setStart(id, start.toString());
-          end && setEnd(id, end.toString());
-          cal.current?.getInstance();
-          cal.current?.getInstance().updateSchedule(id, calendarId, changes);
+        height={900}
+        defaultView="timeGridWeek"
+        plugins={[timeGridPlugin]}
+        events={events}
+        header={{
+          left: "title",
+          right: "prev,today,next"
         }}
-        calendars={calendars}
-        usageStatistics={false}
+        nowIndicator
+        // locale
+        firstDay={1}
       />
     </div>
   );
 };
-
-// used for base styling
-const calendars: ICalendarInfo[] = [
-  {
-    id: "1",
-    name: "",
-    color: "rgba(55, 53, 47, 0.85)",
-    bgColor: "#fff",
-    dragBgColor: "transparent",
-    borderColor: colors.red
-  }
-];
