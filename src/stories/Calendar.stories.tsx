@@ -10,26 +10,8 @@ const story = storiesOf("Components|Calendar", module);
 
 story.add("base", () => {
   const [tasks, setTasks] = useState(getTasks());
-
-  return (
-    <Calendar
-      tasks={tasks}
-      setStart={(id, start) => {
-        console.log("start: ", start);
-        const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, start: start ?? null } : t
-        );
-        setTasks(newTasks);
-      }}
-      setEnd={(id, end) => {
-        console.log("end: ", end);
-        const newTasks = tasks.map(t =>
-          t.id === id ? { ...t, end: end ?? null } : t
-        );
-        setTasks(newTasks);
-      }}
-    />
-  );
+  console.log("setTasks: ", setTasks);
+  return <Calendar tasks={tasks} updateTask={t => console.log("t: ", t)} />;
 });
 
 const getTasks = (): Task[] => [

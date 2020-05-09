@@ -1,13 +1,14 @@
+import React, { useCallback } from "react";
 import {
   Task,
   TasksDocument,
   TasksQuery,
+  UpdateTaskInput,
   useCreateTaskMutation,
   useUpdateTaskMutation
 } from "../graphql/generated";
 
 import { Calendar } from "../components/Calendar";
-import React from "react";
 import { TaskList } from "../components/TaskList";
 import styled from "styled-components";
 
@@ -24,11 +25,28 @@ export const HomePage = (props: Props) => {
   const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
 
+  const updateTaskOptimistic = useCallback(
+    (updateTaskInput: UpdateTaskInput) => {
+      updateTask({
+        variables: {
+          task: updateTaskInput
+        },
+        optimisticResponse: {
+          updateTask: {
+            __typename: "Task",
+            ...updateTaskInput
+          }
+        }
+      });
+    },
+    [updateTask]
+  );
+
   return (
     <Container>
       <SideBar>
         <TaskList
-          tasks={tasks}
+          tasks={tasks.filter(isNotDoneP)}
           createTask={title =>
             createTask({
               variables: { title },
@@ -60,20 +78,13 @@ export const HomePage = (props: Props) => {
               }
             })
           }
-          updateTask={updateTaskInput =>
-            updateTask({
-              variables: {
-                task: updateTaskInput
-              }
-            })
-          }
+          updateTask={updateTaskOptimistic}
         />
       </SideBar>
       <Content>
         <Calendar
           tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
-          setStart={start => console.log("start: ", start)}
-          setEnd={end => console.log("end: ", end)}
+          updateTask={updateTaskOptimistic}
         />
       </Content>
     </Container>
@@ -91,13 +102,14 @@ const Container = styled.div`
 const SideBar = styled.div`
   padding: 24px;
   box-sizing: border-box;
+  overflow-y: auto;
 
   background: #f7f8f7;
 `;
 
 const Content = styled.div`
-  padding: 24px 48px;
-  box-sizing: border-box;
+  margin: 24px 48px;
+  overflow: hidden;
 
   background: white;
 `;
