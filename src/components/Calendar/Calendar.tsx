@@ -53,6 +53,10 @@ export const Calendar: FC<IProp> = props => {
         <p class="day">${format(date, "d")}</p>`;
       }}
       allDayText=""
+      // events
+      eventBackgroundColor="white"
+      eventBorderColor="rgba(55, 53, 47, 0.85)"
+      eventTextColor="rgba(55, 53, 47, 0.85)"
       // locale
       firstDay={1}
     />
