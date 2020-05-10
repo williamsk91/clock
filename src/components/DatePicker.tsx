@@ -6,6 +6,7 @@ import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
 import { Button } from "antd";
 import React from "react";
 import { Switch } from "@blueprintjs/core";
+import { isBefore } from "date-fns";
 import styled from "styled-components";
 
 interface Props {
@@ -40,7 +41,12 @@ export const DatePicker = (props: Props) => {
     <Container className={className}>
       <DateRangePicker
         value={[start, end]}
-        onChange={updateDates}
+        onChange={([newStart, newEnd]) => {
+          // end is earlier than start restriction violated
+          if (newStart && newEnd && isBefore(newEnd, newStart)) return;
+
+          updateDates([newStart, newEnd]);
+        }}
         timePickerProps={
           includeTime
             ? {
