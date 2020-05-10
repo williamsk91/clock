@@ -9,7 +9,9 @@ import {
 } from "../graphql/generated";
 
 import { Calendar } from "../components/Calendar";
+import { Spacer } from "../components/Spacer";
 import { TaskList } from "../components/TaskList";
+import { format } from "date-fns";
 import styled from "styled-components";
 
 interface Props {
@@ -45,6 +47,9 @@ export const HomePage = (props: Props) => {
   return (
     <Container>
       <SideBar>
+        <Spacer spacing="48" />
+        <Today />
+        <Spacer spacing="48" />
         <TaskList
           tasks={tasks.filter(isNotDoneP)}
           createTask={title =>
@@ -112,6 +117,24 @@ const Content = styled.div`
   overflow: hidden;
 
   background: white;
+`;
+
+/**
+ * Displays today as big heading
+ */
+const Today = () => {
+  return (
+    <>
+      <TodayContainer>{format(new Date(), "d")}</TodayContainer>
+      <TodayContainer>{format(new Date(), "MMMM")}</TodayContainer>
+    </>
+  );
+};
+
+const TodayContainer = styled.div`
+  font-size: 64px;
+  color: rgba(55, 53, 47, 0.85);
+  line-height: 1;
 `;
 
 // ------------------------- Helper Functions -------------------------
