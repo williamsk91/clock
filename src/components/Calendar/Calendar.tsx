@@ -70,5 +70,6 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   done: e.extendedProps.done,
   start: e.start?.toISOString() ?? null,
   end: e.end?.toISOString() ?? null,
-  includeTime: !e.allDay
+  includeTime: !e.allDay,
+  order: e.extendedProps.order
 });

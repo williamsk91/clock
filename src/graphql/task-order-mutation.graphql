@@ -1,0 +1,6 @@
+mutation TaskReorder($tasks: [TaskReorderInput!]!) {
+  taskReorder(tasks: $tasks) {
+    id
+    order
+  }
+}

@@ -5,4 +5,5 @@ fragment Task on Task {
   start
   end
   includeTime
+  order
 }

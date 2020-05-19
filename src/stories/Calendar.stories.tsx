@@ -21,7 +21,8 @@ const getTasks = (): Task[] => [
     title: "Milk",
     start: new Date().toISOString(),
     end: addHours(new Date(), 3).toISOString(),
-    includeTime: false
+    includeTime: false,
+    order: 3
   }
 ];
 

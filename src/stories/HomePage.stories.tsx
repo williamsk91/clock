@@ -15,7 +15,8 @@ story.add("base", () => {
           done: false,
           start: new Date().toISOString(),
           end: null,
-          includeTime: true
+          includeTime: true,
+          order: 1
         },
         {
           id: "task2Id",
@@ -23,7 +24,8 @@ story.add("base", () => {
           done: false,
           start: null,
           end: null,
-          includeTime: true
+          includeTime: true,
+          order: 2
         },
         {
           id: "task3Id",
@@ -31,7 +33,8 @@ story.add("base", () => {
           done: false,
           start: new Date().toISOString(),
           end: addHours(new Date(), 3).toISOString(),
-          includeTime: true
+          includeTime: true,
+          order: 3
         }
       ]}
     />

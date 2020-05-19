@@ -1,16 +1,20 @@
 import React, { useCallback } from "react";
 import {
   Task,
+  TaskFragmentDoc,
+  TaskReorderInput,
   TasksDocument,
   TasksQuery,
   UpdateTaskInput,
   useCreateTaskMutation,
+  useTaskReorderMutation,
   useUpdateTaskMutation
 } from "../graphql/generated";
 
 import { Calendar } from "../components/Calendar";
 import { Spacer } from "../components/Spacer";
 import { TaskList } from "../components/TaskList";
+import { cycleArray } from "../components/utils";
 import { format } from "date-fns";
 import styled from "styled-components";
 
@@ -26,6 +30,7 @@ export const HomePage = (props: Props) => {
 
   const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
+  const [taskReorder] = useTaskReorderMutation();
 
   const updateTaskOptimistic = useCallback(
     (updateTaskInput: UpdateTaskInput) => {
@@ -44,6 +49,43 @@ export const HomePage = (props: Props) => {
     [updateTask]
   );
 
+  const taskReorderOptimistic = useCallback(
+    (taskReorderInput: TaskReorderInput[]) => {
+      const shiftedOrder = cycleArray(taskReorderInput);
+
+      taskReorder({
+        variables: { tasks: taskReorderInput },
+        optimisticResponse: {
+          taskReorder: taskReorderInput.map((t, i) => ({
+            ...t,
+            order: shiftedOrder[i].order,
+            __typename: "TaskReorder"
+          }))
+        },
+        update: (cache, { data }) => {
+          if (!data?.taskReorder) return;
+          data.taskReorder.forEach(({ id, order }) => {
+            const cachedTask = cache.readFragment<Task>({
+              id: `Task:${id}`,
+              fragment: TaskFragmentDoc
+            });
+            cache.writeFragment({
+              id: `Task:${id}`,
+              fragment: TaskFragmentDoc,
+              data: {
+                ...cachedTask,
+                order
+              }
+            });
+          });
+        }
+      });
+    },
+    [taskReorder]
+  );
+
+  const displayTasks = tasks.filter(isNotDoneP);
+
   return (
     <Container>
       <SideBar>
@@ -51,7 +93,7 @@ export const HomePage = (props: Props) => {
         <Today />
         <Spacer spacing="48" />
         <TaskList
-          tasks={tasks.filter(isNotDoneP)}
+          tasks={displayTasks}
           createTask={title =>
             createTask({
               variables: { title },
@@ -63,7 +105,8 @@ export const HomePage = (props: Props) => {
                   done: false,
                   start: null,
                   end: null,
-                  includeTime: false
+                  includeTime: false,
+                  order: tasks[tasks.length - 1].order + 1
                 }
               },
               update: (cache, { data }) => {
@@ -84,6 +127,7 @@ export const HomePage = (props: Props) => {
             })
           }
           updateTask={updateTaskOptimistic}
+          taskReorder={taskReorderOptimistic}
         />
       </SideBar>
       <Content>

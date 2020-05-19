@@ -16,9 +16,10 @@ export type Scalars = {
 
 export type Mutation = {
    __typename?: 'Mutation',
-  invalidateTokens: User,
+  invalidateTokens: Scalars['Boolean'],
   createTask: Task,
   updateTask: Task,
+  taskReorder: Array<TaskReorder>,
 };
 
 
@@ -29,6 +30,11 @@ export type MutationCreateTaskArgs = {
 
 export type MutationUpdateTaskArgs = {
   task: UpdateTaskInput
+};
+
+
+export type MutationTaskReorderArgs = {
+  tasks: Array<TaskReorderInput>
 };
 
 export type Query = {
@@ -45,6 +51,18 @@ export type Task = {
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
+  order: Scalars['Float'],
+};
+
+export type TaskReorder = {
+   __typename?: 'TaskReorder',
+  id: Scalars['ID'],
+  order: Scalars['Float'],
+};
+
+export type TaskReorderInput = {
+  id: Scalars['ID'],
+  order: Scalars['Float'],
 };
 
 /** New task data */
@@ -55,6 +73,7 @@ export type UpdateTaskInput = {
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
+  order: Scalars['Float'],
 };
 
 export type User = {
@@ -77,7 +96,20 @@ export type CreateTaskMutation = (
 
 export type TaskFragment = (
   { __typename?: 'Task' }
-  & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime'>
+  & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'order'>
+);
+
+export type TaskReorderMutationVariables = {
+  tasks: Array<TaskReorderInput>
+};
+
+
+export type TaskReorderMutation = (
+  { __typename?: 'Mutation' }
+  & { taskReorder: Array<(
+    { __typename?: 'TaskReorder' }
+    & Pick<TaskReorder, 'id' | 'order'>
+  )> }
 );
 
 export type TasksQueryVariables = {};
@@ -112,6 +144,7 @@ export const TaskFragmentDoc = gql`
   start
   end
   includeTime
+  order
 }
     `;
 export const CreateTaskDocument = gql`
@@ -146,6 +179,39 @@ export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const TaskReorderDocument = gql`
+    mutation TaskReorder($tasks: [TaskReorderInput!]!) {
+  taskReorder(tasks: $tasks) {
+    id
+    order
+  }
+}
+    `;
+export type TaskReorderMutationFn = ApolloReactCommon.MutationFunction<TaskReorderMutation, TaskReorderMutationVariables>;
+
+/**
+ * __useTaskReorderMutation__
+ *
+ * To run a mutation, you first call `useTaskReorderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaskReorderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taskReorderMutation, { data, loading, error }] = useTaskReorderMutation({
+ *   variables: {
+ *      tasks: // value for 'tasks'
+ *   },
+ * });
+ */
+export function useTaskReorderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TaskReorderMutation, TaskReorderMutationVariables>) {
+        return ApolloReactHooks.useMutation<TaskReorderMutation, TaskReorderMutationVariables>(TaskReorderDocument, baseOptions);
+      }
+export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMutation>;
+export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
+export type TaskReorderMutationOptions = ApolloReactCommon.BaseMutationOptions<TaskReorderMutation, TaskReorderMutationVariables>;
 export const TasksDocument = gql`
     query Tasks {
   tasks {
