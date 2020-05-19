@@ -39,7 +39,7 @@ export const DatePicker = (props: Props) => {
 
   return (
     <Container className={className}>
-      <DateRangePicker
+      <StyledDateRangePicker
         value={[start, end]}
         onChange={([newStart, newEnd]) => {
           // end is earlier than start restriction violated
@@ -84,6 +84,21 @@ const Container = styled.div`
   padding: 6px 0;
 
   background: #ffffff;
+`;
+
+const StyledDateRangePicker = styled(DateRangePicker)`
+  .DayPicker-Day--today {
+    &,
+    &:hover {
+      color: hsl(352, 98%, 54%);
+    }
+  }
+  .DayPicker-Day--selected {
+    &,
+    &:hover {
+      color: white;
+    }
+  }
 `;
 
 const PaddedSwitch = styled(Switch)`
