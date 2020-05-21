@@ -9,16 +9,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { UserProvider } from "./components/context/UserContext";
 import { apolloClient } from "./data/apollo";
-import { theme } from "./styles/theme";
+import { theme } from "./components/styles/theme";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <ApolloProvider client={apolloClient}>
-        <Router>
-          <App />
-        </Router>
+        <UserProvider>
+          <Router>
+            <App />
+          </Router>
+        </UserProvider>
       </ApolloProvider>
     </ThemeProvider>
   </React.StrictMode>,

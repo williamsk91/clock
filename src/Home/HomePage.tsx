@@ -11,22 +11,25 @@ import {
   useUpdateTaskMutation
 } from "../graphql/generated";
 
+import { Button } from "antd";
 import { Calendar } from "../components/Calendar";
+import { SettingOutlined } from "@ant-design/icons";
 import { Spacer } from "../components/Spacer";
 import { TaskList } from "../components/TaskList";
 import { cycleArray } from "../components/utils";
 import { format } from "date-fns";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 interface Props {
   tasks: TasksQuery["tasks"];
 }
-
 /**
  * Displays a list of task and a weekly calendar
  */
 export const HomePage = (props: Props) => {
   const { tasks } = props;
+  const history = useHistory();
 
   const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -89,7 +92,15 @@ export const HomePage = (props: Props) => {
   return (
     <Container>
       <SideBar>
-        <Spacer spacing="48" />
+        <Spacer spacing="12" />
+        <Button
+          onClick={() => history.push("/setting")}
+          type="link"
+          icon={<SettingOutlined />}
+        >
+          setting
+        </Button>
+        <Spacer spacing="36" />
         <Today />
         <Spacer spacing="48" />
         <TaskList

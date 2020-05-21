@@ -1,20 +1,29 @@
-import { Layout } from "../styles/layout";
-import React from "react";
+import React, { useContext } from "react";
+
+import Cookies from "js-cookie";
+import { Layout } from "../components/styles/layout";
 import { Spacer } from "../components/Spacer";
+import { UserContext } from "../components/context/UserContext";
 import loginImg from "../assets/login_undraw_navigator_a479.svg";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 /**
  * Login route is used to authenticate a user
  */
 export const LoginRoute = () => {
-  return (
-    <LoginPage
-      onGoogleSignIn={() =>
-        (window.location.href = `${process.env.REACT_APP_GRAPHQL_SERVER_URI}/auth/google`)
-      }
-    />
-  );
+  const { signedIn, setSignedIn, signIn } = useContext(UserContext);
+  const history = useHistory();
+
+  // update signed in state if already signed in
+  if (!signedIn) {
+    const refreshTokenExists = !!Cookies.get("T2_refresh_token");
+    refreshTokenExists && setSignedIn(refreshTokenExists);
+  }
+
+  if (signedIn) history.replace("/");
+
+  return <LoginPage onGoogleSignIn={signIn} />;
 };
 
 interface Props {

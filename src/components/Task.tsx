@@ -3,7 +3,7 @@ import {
   CalendarOutlined,
   CheckSquareOutlined
 } from "@ant-design/icons";
-import { Color, colors } from "../styles/colors";
+import { Color, colors } from "./styles/colors";
 import React, { FC, useMemo, useState } from "react";
 import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { formatDatetime, parseDate } from "./datetime";
