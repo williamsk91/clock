@@ -49,4 +49,8 @@ const Container = styled.div`
 const Input = styled.input`
   border: 0;
   padding: 12px;
+
+  &:focus {
+    outline: none;
+  }
 `;
