@@ -1,16 +1,21 @@
-import { Button, Collapse, Divider, Popconfirm } from "antd";
+import { Button, Collapse, Popconfirm } from "antd";
 import React, { useContext } from "react";
 
-import { Layout } from "../components/styles/layout";
+import { LeftOutlined } from "@ant-design/icons";
+import { MiniLayout } from "../components/styles/layout";
+import { Spacer } from "../components/Spacer";
 import { UserContext } from "../components/context/UserContext";
 import { apolloClient } from "../data/apollo";
 import { useDeleteUserMutation } from "../graphql/generated";
+import { useHistory } from "react-router-dom";
 
 export const SettingRoute = () => {
   return <SettingPage />;
 };
 
 export const SettingPage = () => {
+  const history = useHistory();
+
   const { signOut, setSignedIn } = useContext(UserContext);
 
   const [deleteUser] = useDeleteUserMutation({
@@ -21,10 +26,19 @@ export const SettingPage = () => {
   });
 
   return (
-    <Layout>
-      <Collapse bordered={false} defaultActiveKey={["1"]}>
+    <MiniLayout>
+      <Button
+        icon={<LeftOutlined />}
+        type="primary"
+        onClick={() => history.push("/")}
+      >
+        Go back
+      </Button>
+      <Spacer spacing="24" />
+      <Collapse bordered={false}>
         <Collapse.Panel header="Account" key="1">
-          <div>Danger Zone</div>
+          <strong>Danger Zone</strong>
+          <Spacer spacing="3" />
           <Popconfirm
             title="This is not a reversible action!"
             okText="Yes, delete my account forever"
@@ -32,14 +46,12 @@ export const SettingPage = () => {
             okType="danger"
             placement="right"
           >
-            <Button>Delete Account</Button>
+            <Button type="danger">Delete Account</Button>
           </Popconfirm>
         </Collapse.Panel>
       </Collapse>
-      <Divider />
-      <Button type="link" onClick={signOut}>
-        sign out
-      </Button>
-    </Layout>
+      <Spacer spacing="12" />
+      <Button onClick={signOut}>Sign out</Button>
+    </MiniLayout>
   );
 };

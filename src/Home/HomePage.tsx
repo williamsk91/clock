@@ -95,7 +95,7 @@ export const HomePage = (props: Props) => {
         <Spacer spacing="12" />
         <Button
           onClick={() => history.push("/setting")}
-          type="link"
+          type="default"
           icon={<SettingOutlined />}
         >
           setting

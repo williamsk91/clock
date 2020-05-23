@@ -1,8 +1,8 @@
+import { Button, Divider } from "antd";
 import React, { useContext } from "react";
 
 import Cookies from "js-cookie";
-import { Layout } from "../components/styles/layout";
-import { Spacer } from "../components/Spacer";
+import { MiniLayout } from "../components/styles/layout";
 import { UserContext } from "../components/context/UserContext";
 import loginImg from "../assets/login_undraw_navigator_a479.svg";
 import styled from "styled-components";
@@ -36,14 +36,15 @@ interface Props {
 export const LoginPage = (props: Props) => {
   const { onGoogleSignIn } = props;
   return (
-    <Layout>
+    <MiniLayout>
       <Container>
         <Illustration src={loginImg} />
-        <Spacer spacing="12" />
-        <button onClick={onGoogleSignIn}>Login with Google</button>
-        {/* <Text.Title onClick={onGoogleSignIn}>Login | Google</Text.Title> */}
+        <Divider />
+        <Button type="primary" onClick={onGoogleSignIn}>
+          Login with Google
+        </Button>
       </Container>
-    </Layout>
+    </MiniLayout>
   );
 };
 
