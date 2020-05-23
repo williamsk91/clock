@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-
-import { IconButton } from "./IconButton";
 import { PlusSquareOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+
+import { IconButton } from "./IconButton";
 
 interface Props {
   createTask: (title: string) => void;

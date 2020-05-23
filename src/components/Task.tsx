@@ -1,18 +1,18 @@
+import React, { FC, useMemo, useState } from "react";
 import {
   BorderOutlined,
   CalendarOutlined,
   CheckSquareOutlined
 } from "@ant-design/icons";
-import { Color, colors } from "./styles/colors";
-import React, { FC, useMemo, useState } from "react";
-import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
-import { formatDatetime, parseDate } from "./datetime";
+import styled from "styled-components";
 
+import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { DatePicker } from "./DatePicker";
+import { formatDatetime, parseDate } from "./datetime";
 import { IconButton } from "./IconButton";
 import { Spacer } from "./Spacer";
+import { Color, colors } from "./styles/colors";
 import { Text } from "./Text";
-import styled from "styled-components";
 
 interface IProp extends TaskProps {
   updateTask: (uti: UpdateTaskInput) => void;

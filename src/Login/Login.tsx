@@ -1,12 +1,12 @@
-import { Button, Divider } from "antd";
 import React, { useContext } from "react";
-
-import Cookies from "js-cookie";
-import { MiniLayout } from "../components/styles/layout";
-import { UserContext } from "../components/context/UserContext";
-import loginImg from "../assets/login_undraw_navigator_a479.svg";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { Button, Divider } from "antd";
+import Cookies from "js-cookie";
+import styled from "styled-components";
+
+import loginImg from "../assets/login_undraw_navigator_a479.svg";
+import { UserContext } from "../components/context/UserContext";
+import { MiniLayout } from "../components/styles/layout";
 
 /**
  * Login route is used to authenticate a user

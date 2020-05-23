@@ -1,7 +1,8 @@
-import { HomePage } from "../Home/HomePage";
 import React from "react";
-import { addHours } from "date-fns";
 import { storiesOf } from "@storybook/react";
+import { addHours } from "date-fns";
+
+import { HomePage } from "../Home/HomePage";
 
 const story = storiesOf("Components / HomePage", module);
 

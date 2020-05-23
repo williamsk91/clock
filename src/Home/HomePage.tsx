@@ -1,4 +1,14 @@
 import React, { useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import { SettingOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import { format } from "date-fns";
+import styled from "styled-components";
+
+import { Calendar } from "../components/Calendar";
+import { Spacer } from "../components/Spacer";
+import { TaskList } from "../components/TaskList";
+import { cycleArray } from "../components/utils";
 import {
   Task,
   TaskFragmentDoc,
@@ -10,16 +20,6 @@ import {
   useTaskReorderMutation,
   useUpdateTaskMutation
 } from "../graphql/generated";
-
-import { Button } from "antd";
-import { Calendar } from "../components/Calendar";
-import { SettingOutlined } from "@ant-design/icons";
-import { Spacer } from "../components/Spacer";
-import { TaskList } from "../components/TaskList";
-import { cycleArray } from "../components/utils";
-import { format } from "date-fns";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 
 interface Props {
   tasks: TasksQuery["tasks"];

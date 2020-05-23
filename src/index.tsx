@@ -1,17 +1,18 @@
 import "antd/dist/antd.css";
-import "./index.css";
 
-import * as serviceWorker from "./serviceWorker";
-
-import { ApolloProvider } from "@apollo/react-hooks";
-import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+import { ApolloProvider } from "@apollo/react-hooks";
 import { ThemeProvider } from "styled-components";
+
+import "./index.css";
+
+import App from "./App";
 import { UserProvider } from "./components/context/UserContext";
-import { apolloClient } from "./data/apollo";
 import { theme } from "./components/styles/theme";
+import { apolloClient } from "./data/apollo";
+import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <React.StrictMode>

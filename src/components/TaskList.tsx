@@ -1,12 +1,12 @@
+import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 import {
   Task as TaskProps,
   TaskReorderInput,
   UpdateTaskInput
 } from "../graphql/generated";
-
 import { NewTask } from "./NewTask";
-import React from "react";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 

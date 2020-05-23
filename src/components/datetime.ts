@@ -23,7 +23,7 @@ const formatSingleDatetime = (
 ): string => {
   return `${formatDate(date, now)}${
     includeTime ? ` ${format(date, TIME_FORMAT)}` : ""
-  }`;
+    }`;
 };
 
 /**
@@ -68,7 +68,7 @@ export const parseDate = (s: string | null): Date | null => {
   let date: Date | null = null;
   try {
     date = s ? new Date(s) : null;
-  } catch (error) {}
+  } catch (error) { }
   return date;
 };
 

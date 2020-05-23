@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { storiesOf } from "@storybook/react";
+import { addHours } from "date-fns";
 
 import { Calendar } from "../components/Calendar/Calendar";
 import { Navigation } from "../components/Calendar/Navigation";
 import { Task } from "../graphql/generated";
-import { addHours } from "date-fns";
-import { storiesOf } from "@storybook/react";
 
 const story = storiesOf("Components|Calendar", module);
 

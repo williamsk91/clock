@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { storiesOf } from "@storybook/react";
 
 import { DatePicker } from "../components/DatePicker";
-import { storiesOf } from "@storybook/react";
 
 const story = storiesOf("Components | DatePicker", module);
 

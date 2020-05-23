@@ -1,7 +1,7 @@
 import "styled-components";
 
-import { ITheme } from "../src/styles/theme";
+import { ITheme } from "../src/components/styles/theme";
 
 declare module "styled-components" {
-  export interface DefaultTheme extends ITheme {}
+  export interface DefaultTheme extends ITheme { }
 }

@@ -1,10 +1,10 @@
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-
-import { Button } from "antd";
 import React from "react";
-import { Text } from "../Text";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import { format } from "date-fns";
 import styled from "styled-components";
+
+import { Text } from "../Text";
 
 interface Props {
   date: Date;

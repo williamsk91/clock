@@ -1,9 +1,10 @@
 import React from "react";
+import { useState } from "react";
+import { storiesOf } from "@storybook/react";
+import { addHours } from "date-fns";
+
 import { TaskList } from "../components/TaskList";
 import { Task as TaskProps } from "../graphql/generated";
-import { addHours } from "date-fns";
-import { storiesOf } from "@storybook/react";
-import { useState } from "react";
 
 const story = storiesOf("Components|TaskList", module);
 

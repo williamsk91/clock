@@ -1,6 +1,7 @@
-import { NewTask } from "../components/NewTask";
 import React from "react";
 import { storiesOf } from "@storybook/react";
+
+import { NewTask } from "../components/NewTask";
 
 const story = storiesOf("Components | NewTask", module);
 

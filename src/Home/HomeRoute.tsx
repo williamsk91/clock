@@ -1,8 +1,9 @@
-import { Error } from "../components/flow/Error";
-import { HomePage } from "./HomePage";
-import { Loading } from "../components/flow/Loading";
 import React from "react";
+
+import { Error } from "../components/flow/Error";
+import { Loading } from "../components/flow/Loading";
 import { useTasksQuery } from "../graphql/generated";
+import { HomePage } from "./HomePage";
 
 /**
  * Home route is where most of the application's

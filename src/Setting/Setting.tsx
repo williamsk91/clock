@@ -1,13 +1,13 @@
-import { Button, Collapse, Popconfirm } from "antd";
 import React, { useContext } from "react";
-
+import { useHistory } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
-import { MiniLayout } from "../components/styles/layout";
-import { Spacer } from "../components/Spacer";
+import { Button, Collapse, Popconfirm } from "antd";
+
 import { UserContext } from "../components/context/UserContext";
+import { Spacer } from "../components/Spacer";
+import { MiniLayout } from "../components/styles/layout";
 import { apolloClient } from "../data/apollo";
 import { useDeleteUserMutation } from "../graphql/generated";
-import { useHistory } from "react-router-dom";
 
 export const SettingRoute = () => {
   return <SettingPage />;

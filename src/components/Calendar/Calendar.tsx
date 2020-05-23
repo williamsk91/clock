@@ -1,14 +1,15 @@
+import React, { FC, useRef } from "react";
+import { EventApi } from "@fullcalendar/core";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import { format } from "date-fns";
+
+import { EventSourceInput } from "@fullcalendar/core/structs/event-source";
+
 import "./style.scss";
 
-import React, { FC, useRef } from "react";
 import { Task, UpdateTaskInput } from "../../graphql/generated";
-
-import { EventApi } from "@fullcalendar/core";
-import { EventSourceInput } from "@fullcalendar/core/structs/event-source";
-import FullCalendar from "@fullcalendar/react";
-import { format } from "date-fns";
-import interactionPlugin from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
 
 interface IProp {
   tasks: Task[];

@@ -1,11 +1,10 @@
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
-import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
-
-import { Button } from "antd";
 import React from "react";
 import { Switch } from "@blueprintjs/core";
+import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
+import { Button } from "antd";
 import { isBefore } from "date-fns";
 import styled from "styled-components";
 
@@ -50,9 +49,9 @@ export const DatePicker = (props: Props) => {
         timePickerProps={
           includeTime
             ? {
-                showArrowButtons: true,
-                precision: TimePrecision.MINUTE
-              }
+              showArrowButtons: true,
+              precision: TimePrecision.MINUTE
+            }
             : undefined
         }
         shortcuts={false}
