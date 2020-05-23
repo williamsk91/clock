@@ -34,7 +34,7 @@ export const Task: FC<IProp> = props => {
 
   const [isSettingDate, setIsSettingDate] = useState(false);
 
-  const updateDone = () => setDone(!done);
+  const updateDone = () => setDone(done ? null : new Date().toISOString());
 
   return (
     <Container>
@@ -42,7 +42,7 @@ export const Task: FC<IProp> = props => {
         <Banner color="red" />
         <div>
           <Input
-            done={done}
+            done={!!done}
             value={title}
             onChange={e => setTitle(e.currentTarget.value)}
             onKeyDown={e => {
@@ -145,14 +145,14 @@ const demuxUpdateTask = (
   task: TaskProps,
   updateTask: (uti: UpdateTaskInput) => void
 ): {
-  setDone: (d: boolean) => void;
+  setDone: (d: string | null) => void;
   updateDates: (dates: [Date | null, Date | null]) => void;
   setIncludeTime: (it: boolean) => void;
   setTitle: (t: string) => void;
 } => {
   delete task.__typename;
   return {
-    setDone: (d: boolean) => updateTask({ ...task, done: d }),
+    setDone: (d: string | null) => updateTask({ ...task, done: d }),
     updateDates: (dates: [Date | null, Date | null]) =>
       updateTask({
         ...task,

@@ -43,13 +43,14 @@ export type Query = {
    __typename?: 'Query',
   me: User,
   tasks: Array<Task>,
+  completedTasks: Array<Task>,
 };
 
 export type Task = {
    __typename?: 'Task',
   id: Scalars['ID'],
   title: Scalars['String'],
-  done: Scalars['Boolean'],
+  done: Maybe<Scalars['DateTime']>,
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
@@ -71,7 +72,7 @@ export type TaskReorderInput = {
 export type UpdateTaskInput = {
   id: Scalars['ID'],
   title: Scalars['String'],
-  done: Scalars['Boolean'],
+  done: Maybe<Scalars['DateTime']>,
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],

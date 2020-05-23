@@ -6,7 +6,7 @@ import styled, { ThemeProvider } from "styled-components";
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { addDecorator } from "@storybook/react";
-import { theme } from "../src/styles/theme";
+import { theme } from "../src/components/styles/theme";
 
 addDecorator(Story => {
   return (

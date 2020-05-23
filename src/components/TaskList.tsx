@@ -9,6 +9,7 @@ import {
 import { NewTask } from "./NewTask";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
+import styled from "styled-components";
 
 interface Props {
   tasks: TaskProps[];
@@ -24,7 +25,7 @@ export const TaskList = (props: Props) => {
   const { tasks, updateTask, createTask, taskReorder } = props;
 
   return (
-    <div>
+    <Container>
       <NewTask createTask={createTask} />
       <Spacer spacing="12" />
       <DragDropContext
@@ -64,6 +65,10 @@ export const TaskList = (props: Props) => {
           )}
         </Droppable>
       </DragDropContext>
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  overflow-y: auto;
+`

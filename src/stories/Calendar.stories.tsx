@@ -17,7 +17,7 @@ story.add("base", () => {
 const getTasks = (): Task[] => [
   {
     id: "1",
-    done: false,
+    done: null,
     title: "Milk",
     start: new Date().toISOString(),
     end: addHours(new Date(), 3).toISOString(),

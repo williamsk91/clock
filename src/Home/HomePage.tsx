@@ -89,20 +89,26 @@ export const HomePage = (props: Props) => {
 
   const displayTasks = tasks.filter(isNotDoneP);
 
+
+
+
   return (
+
     <Container>
       <SideBar>
-        <Spacer spacing="12" />
-        <Button
-          onClick={() => history.push("/setting")}
-          type="default"
-          icon={<SettingOutlined />}
-        >
-          setting
+        <div>
+          <Spacer spacing="12" />
+          <Button
+            onClick={() => history.push("/setting")}
+            type="default"
+            icon={<SettingOutlined />}
+          >
+            setting
         </Button>
-        <Spacer spacing="36" />
-        <Today />
-        <Spacer spacing="48" />
+          <Spacer spacing="12" />
+          <Today />
+          <Spacer spacing="24" />
+        </div>
         <TaskList
           tasks={displayTasks}
           createTask={title =>
@@ -113,7 +119,7 @@ export const HomePage = (props: Props) => {
                   __typename: "Task",
                   id: "temporaryId",
                   title,
-                  done: false,
+                  done: null,
                   start: null,
                   end: null,
                   includeTime: false,
@@ -147,7 +153,7 @@ export const HomePage = (props: Props) => {
           updateTask={updateTaskOptimistic}
         />
       </Content>
-    </Container>
+    </Container >
   );
 };
 
@@ -160,9 +166,9 @@ const Container = styled.div`
 `;
 
 const SideBar = styled.div`
-  padding: 24px;
+  height: 100vh;
+  padding: 0 24px;
   box-sizing: border-box;
-  overflow-y: auto;
 
   background: #f7f8f7;
 `;

@@ -13,7 +13,7 @@ story.add("base", () => {
     {
       id: "task1Id",
       title: "Go grocery shopping",
-      done: false,
+      done: null,
       start: new Date().toISOString(),
       end: null,
       includeTime: true,
@@ -22,7 +22,7 @@ story.add("base", () => {
     {
       id: "task2Id",
       title: "Plan exercise routine",
-      done: false,
+      done: null,
       start: null,
       end: null,
       includeTime: true,
@@ -31,7 +31,7 @@ story.add("base", () => {
     {
       id: "task3Id",
       title: "Meeting with HR",
-      done: false,
+      done: null,
       start: new Date().toISOString(),
       end: addHours(new Date(), 3).toISOString(),
       includeTime: true,
@@ -53,7 +53,7 @@ story.add("base", () => {
           {
             id: `${title}-id`,
             title,
-            done: false,
+            done: null,
             start: new Date().toISOString(),
             end: null,
             includeTime: true,
