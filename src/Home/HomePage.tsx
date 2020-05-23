@@ -89,11 +89,7 @@ export const HomePage = (props: Props) => {
 
   const displayTasks = tasks.filter(isNotDoneP);
 
-
-
-
   return (
-
     <Container>
       <SideBar>
         <div>
@@ -104,7 +100,7 @@ export const HomePage = (props: Props) => {
             icon={<SettingOutlined />}
           >
             setting
-        </Button>
+          </Button>
           <Spacer spacing="12" />
           <Today />
           <Spacer spacing="24" />
@@ -153,7 +149,7 @@ export const HomePage = (props: Props) => {
           updateTask={updateTaskOptimistic}
         />
       </Content>
-    </Container >
+    </Container>
   );
 };
 
