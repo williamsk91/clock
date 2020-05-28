@@ -1,13 +1,10 @@
 import React, { FC, useRef } from "react";
-import { EventApi } from "@fullcalendar/core";
+import { format } from "date-fns";
+
+import { EventApi, EventInput } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { format } from "date-fns";
-
-import { EventSourceInput } from "@fullcalendar/core/structs/event-source";
-
-import "./style.scss";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
 
@@ -21,24 +18,26 @@ export const Calendar: FC<IProp> = props => {
 
   const cal = useRef<FullCalendar>(null);
 
-  const events: EventSourceInput = tasks.map(t => ({
+  const events: EventInput[] = tasks.map(t => ({
     ...t,
+    start: t.start ?? undefined,
+    end: t.start ?? undefined,
     allDay: !t.includeTime
   }));
 
   return (
     <FullCalendar
       ref={cal}
-      height="parent"
-      defaultView="timeGridWeek"
+      initialView="timeGridWeek"
       plugins={[timeGridPlugin, interactionPlugin]}
       events={events}
-      header={{
+      editable
+      // Labels
+      headerToolbar={{
         left: "title",
         right: "prev,today,next"
       }}
       nowIndicator
-      editable
       // resizing
       eventResize={({ event }) => {
         updateTask(eventToTaskUpdateInput(event));
@@ -48,11 +47,12 @@ export const Calendar: FC<IProp> = props => {
         updateTask(eventToTaskUpdateInput(event));
       }}
       // header
-      columnHeaderHtml={d => {
-        const date = d as Date;
-        return `<p class="weekday">${format(date, "EEE")}</p>
-        <p class="day">${format(date, "d")}</p>`;
-      }}
+      dayHeaderContent={({ date }) => (
+        <>
+          <p className="weekday">{format(date, "EEE")}</p>
+          <p className="day">{format(date, "d")}</p>
+        </>
+      )}
       allDayText=""
       // events
       eventBackgroundColor="white"

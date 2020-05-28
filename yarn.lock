@@ -1323,35 +1323,62 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@fullcalendar/core@^4.4.0", "@fullcalendar/core@~4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.4.0.tgz#79dbc0cca836ce628a07e739a456da11ff141373"
-  integrity sha512-PC4mmXHJHAlXmUEmZVnePyA8yYCOBdxBNq8yjJqedEtT1X0x36yTFz/Y0Ux6bniICZDqYtk0xoxe6jaxi++e0g==
-
-"@fullcalendar/daygrid@~4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.4.0.tgz#25fcae7226b62688b4e086a611582e72253b5229"
-  integrity sha512-pDfvL0XZxKHTZ4VFOmwaYe3LmuABEIZsEopeqQ8y5O6BDen9KCbJqgHeCI8FpASSBd6bNlUx7il7EHdSoHhgIw==
-
-"@fullcalendar/interaction@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.4.0.tgz#fc8f8baaf5cb3533d6ce0a684d6f9952a4430685"
-  integrity sha512-nGu0ZzYYlNpIhqfyv3JupteWKFETs3W1MzbRJcEZkuPncn4BooEi4A2blgHfacHAmmpaNkT84tAmhzi734MFBA==
-
-"@fullcalendar/react@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-4.4.0.tgz#243fda9e3d053a51e7eab9263a03847ca6eb5514"
-  integrity sha512-7PExd430is8/KoUkddfSKnvozOw18UzqOW10PmLLxs3l+wki3Z/sh7nxC6df13VC/l9GljhsLZwU0hEF7dm2Kg==
+"@fullcalendar/common@5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.0.0-beta.4.tgz#789960cc08fd86639c8ffe3908114175e0578dc3"
+  integrity sha512-2kvOx3Qfrt94MoXT5bWQ0ry4G8YhMQ4Qrtz/fgfQO+5ZBIqTgfSGpwcciyeHcvxr1DmTf8s7flB71TbC++tQ2Q==
   dependencies:
-    "@fullcalendar/core" "~4.4.0"
-    fast-deep-equal "^2.0.1"
+    tslib "^1.9.3"
 
-"@fullcalendar/timegrid@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.4.0.tgz#c5837cfd676afff0d95535ac4cc054ed65965976"
-  integrity sha512-QwJ9oM87/ZTbXaE8PMIVp20GPtVCFmroaeR1GydJ6BKYtbxG/nsaSv7RhqvDa2jLjHaTWC2NjHo9hRfjQjtCZA==
+"@fullcalendar/core@^5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-5.0.0-beta.4.tgz#195f10a98ad7bb30c1e94535decb8466ca110e0c"
+  integrity sha512-5VxTdyZkUMmWJoi2/UtEK6JPCgsIXSfD4TXMmQCpvJt6MnkAfzHjr262ryvV4F0/MfK2YGhDbypJN1E8BPdarw==
   dependencies:
-    "@fullcalendar/daygrid" "~4.4.0"
+    "@fullcalendar/common" "5.0.0-beta.4"
+    preact "^10.0.5"
+    tslib "^1.9.3"
+
+"@fullcalendar/daygrid@5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.0.0-beta.4.tgz#b5616fddfe9a5496e5e98f20d6fafdcb6393a42e"
+  integrity sha512-ZWCF4dUCDngPqOJ3iUGl/ZiSOah8mgo9fayPR3WLazGMoQTsSAqMBGSuhFaNNdMDWQ+dhcT2JBa8e9DNoe2S+g==
+  dependencies:
+    "@fullcalendar/common" "5.0.0-beta.4"
+    tslib "^1.9.3"
+
+"@fullcalendar/interaction@^5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-5.0.0-beta.4.tgz#75fea01084c4ddc7a61b69706754d32aa783ad45"
+  integrity sha512-QoMFcR0MNrWXg9KVUv8tbdi6+rnUoYzsKoFfrYyB9ZSrKQCr/yyraG0YQ/HXWePqnFTgLWCqYCcNMEoucyj/wQ==
+  dependencies:
+    "@fullcalendar/common" "5.0.0-beta.4"
+    tslib "^1.9.3"
+
+"@fullcalendar/react@^5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.0.0-beta.4.tgz#9c721093bfb49f938469f93960a10894623e152c"
+  integrity sha512-gY8+GaUe43olA1rjXD/wCsOBTx4VmRquTK4iHS/ib5x1N1J8YZqTDygx4hGbJ8Aflj6RuVpU5wL7NHydYamohg==
+  dependencies:
+    "@fullcalendar/common" "5.0.0-beta.4"
+    tslib "^1.9.3"
+
+"@fullcalendar/rrule@^5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-5.0.0-beta.4.tgz#c1e627c4ac2b8d6c25a471afa400a120cfa53695"
+  integrity sha512-64DF9xmnWrOgJO9X2P28Lk0dqKXnILA0RONYtZuTDda98RJR1XYfmt5NVLa9XX5+JnUfFfRA4R1uoPH8ii2uTA==
+  dependencies:
+    "@fullcalendar/common" "5.0.0-beta.4"
+    tslib "^1.9.3"
+
+"@fullcalendar/timegrid@^5.0.0-beta.4":
+  version "5.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.0.0-beta.4.tgz#e31b92772705738191617c9f1af4b91d27fcf8c6"
+  integrity sha512-kdI3NQ0Yt7bPxn0v6d01AyQeW5gKVPgGA8J2hsTpITkN/eaQJUxrmmOGEFhSVwvvJU0m+ji71Z30eKESNs/leA==
+  dependencies:
+    "@fullcalendar/common" "5.0.0-beta.4"
+    "@fullcalendar/daygrid" "5.0.0-beta.4"
+    tslib "^1.9.3"
 
 "@graphql-codegen/cli@1.9.1":
   version "1.9.1"
@@ -11762,6 +11789,11 @@ postcss@^7, postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.16, po
     chalk "^2.4.2"
     source-map "^0.6.1"
     supports-color "^6.1.0"
+
+preact@^10.0.5:
+  version "10.4.4"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.4.4.tgz#0bd6d759ec2f8684aaf8c63c7f076191e46528cf"
+  integrity sha512-EaTJrerceyAPatQ+vfnadoopsMBZAOY7ak9ogVdUi5xbpR8SoHgtLryXnW+4mQOwt21icqoVR1brkU2dq7pEBA==
 
 prelude-ls@~1.1.2:
   version "1.1.2"
