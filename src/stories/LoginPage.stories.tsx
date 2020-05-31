@@ -1,10 +1,9 @@
 import React from "react";
-import { storiesOf } from "@storybook/react";
 
 import { LoginPage } from "../Login/Login";
 
-const story = storiesOf("Pages|Login", module);
+export default { title: "Pages / Login" };
 
-story.add("base", () => (
+export const base = () => (
   <LoginPage onGoogleSignIn={() => console.log("google sign in")} />
-));
+);

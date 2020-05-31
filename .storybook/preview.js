@@ -1,12 +1,19 @@
 import "antd/dist/antd.css";
-import "../src/index.css";
-
-import styled, { ThemeProvider } from "styled-components";
 
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { addDecorator } from "@storybook/react";
+import { addDecorator, addParameters } from "@storybook/react";
+import styled, { ThemeProvider } from "styled-components";
+
+import "../src/index.css";
+
 import { theme } from "../src/components/styles/theme";
+
+addParameters({
+  options: {
+    showRoots: true
+  }
+});
 
 addDecorator(Story => {
   return (

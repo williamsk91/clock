@@ -1,18 +1,17 @@
 import React from "react";
-import { storiesOf } from "@storybook/react";
 
 import { Task } from "../components/Task";
 import { getTask } from "./mocks";
 
-const story = storiesOf("Components|Task", module);
+export default { title: "Components / Task" };
 
-story.add("base", () => (
+export const base = () => (
   <Task {...getTask()} updateTask={t => console.log("update task: ", t)} />
-));
+);
 
-story.add("checked", () => (
+export const checked = () => (
   <Task
     {...getTask({ done: new Date().toISOString() })}
     updateTask={t => console.log("update task: ", t)}
   />
-));
+);

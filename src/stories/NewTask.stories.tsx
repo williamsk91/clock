@@ -1,10 +1,9 @@
 import React from "react";
-import { storiesOf } from "@storybook/react";
 
 import { NewTask } from "../components/NewTask";
 
-const story = storiesOf("Components | NewTask", module);
+export default { title: "Components / NewTask" };
 
-story.add("base", () => {
-  return <NewTask createTask={title => console.log("title: ", title)} />;
-});
+export const base = () => (
+  <NewTask createTask={title => console.log("title: ", title)} />
+);

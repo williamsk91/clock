@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { storiesOf } from "@storybook/react";
 
 import { DatePicker } from "../components/DatePicker";
 
-const story = storiesOf("Components | DatePicker", module);
+export default { title: "Components / DatePicker" };
 
-story.add("base", () => {
+const Base = () => {
   const [start, setStart] = useState<Date | null>(new Date());
   const [end, setEnd] = useState<Date | null>(null);
   const [includeTime, setIncludeTime] = useState(false);
@@ -24,4 +23,5 @@ story.add("base", () => {
       updateRepeat={() => null}
     />
   );
-});
+};
+export const base = () => <Base />;

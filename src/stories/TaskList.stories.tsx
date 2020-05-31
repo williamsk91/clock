@@ -1,15 +1,15 @@
 import React from "react";
 import { useState } from "react";
-import { storiesOf } from "@storybook/react";
 
 import { TaskList } from "../components/TaskList";
 import { Task as TaskProps } from "../graphql/generated";
 import { getTasks } from "./mocks";
 
-const story = storiesOf("Components|TaskList", module);
+export default { title: "Components / TaskList" };
 
-story.add("base", () => {
+const Base = () => {
   const [tasks, setTasks] = useState<TaskProps[]>(getTasks());
+
   return (
     <TaskList
       tasks={tasks}
@@ -38,4 +38,6 @@ story.add("base", () => {
       taskReorder={() => console.log("swap order")}
     />
   );
-});
+};
+
+export const base = () => <Base />;

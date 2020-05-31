@@ -21,24 +21,34 @@ export const getTasks = (): Task[] => [
   {
     id: "1",
     done: null,
-    title: "All Day Task",
+    title: "All Day",
     start: new Date().toISOString(),
-    end: addHours(new Date(), 3).toISOString(),
+    end: null,
     includeTime: false,
-    order: 3,
+    order: 1,
     repeat: null
   },
   {
     id: "2",
     done: null,
-    title: "Milk",
+    title: "daily",
     start: new Date().toISOString(),
     end: addHours(new Date(), 3).toISOString(),
     includeTime: true,
-    order: 4,
+    order: 2,
     repeat: {
       freq: "daily",
       byweekday: null
     }
+  },
+  {
+    id: "3",
+    done: null,
+    title: "tomorrow",
+    start: addHours(new Date(), 26).toISOString(),
+    end: addHours(new Date(), 28).toISOString(),
+    includeTime: true,
+    order: 3,
+    repeat: null
   }
 ];
