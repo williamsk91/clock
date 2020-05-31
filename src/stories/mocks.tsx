@@ -1,4 +1,4 @@
-import { addHours } from "date-fns";
+import { addHours, setHours } from "date-fns";
 
 import { Task } from "../graphql/generated";
 
@@ -32,8 +32,8 @@ export const getTasks = (): Task[] => [
     id: "2",
     done: null,
     title: "daily",
-    start: new Date().toISOString(),
-    end: addHours(new Date(), 3).toISOString(),
+    start: setHours(new Date(), 6).toISOString(),
+    end: setHours(new Date(), 7).toISOString(),
     includeTime: true,
     order: 2,
     repeat: {
@@ -44,9 +44,9 @@ export const getTasks = (): Task[] => [
   {
     id: "3",
     done: null,
-    title: "tomorrow",
-    start: addHours(new Date(), 26).toISOString(),
-    end: addHours(new Date(), 28).toISOString(),
+    title: "today",
+    start: setHours(new Date(), 8).toISOString(),
+    end: setHours(new Date(), 10).toISOString(),
     includeTime: true,
     order: 3,
     repeat: null

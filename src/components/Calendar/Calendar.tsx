@@ -8,6 +8,7 @@ import {
   differenceInYears,
   format
 } from "date-fns";
+import styled from "styled-components";
 
 import { EventInput } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -30,38 +31,39 @@ export const Calendar: FC<IProp> = props => {
   const events: EventInput[] = tasksToEventInput(tasks);
 
   return (
-    <FullCalendar
-      ref={cal}
-      initialView="timeGridWeek"
-      plugins={[timeGridPlugin, rrule, interactionPlugin]}
-      // events
-      events={events}
-      eventBackgroundColor="white"
-      eventBorderColor="rgba(55, 53, 47, 0.85)"
-      eventTextColor="rgba(55, 53, 47, 0.85)"
-      editable
-      // resizing
-      eventResize={({ event }) => {
-        updateTask(eventToTaskUpdateInput(event));
-      }}
-      // dragging
-      eventDrop={({ event }) => updateTask(eventToTaskUpdateInput(event))}
-      // Labels
-      headerToolbar={{
-        left: "title",
-        right: "prev,today,next"
-      }}
-      nowIndicator
-      dayHeaderContent={({ date }) => (
-        <>
-          <p className="weekday">{format(date, "EEE")}</p>
-          <p className="day">{format(date, "d")}</p>
-        </>
-      )}
-      allDayText=""
-      // locale
-      firstDay={1}
-    />
+    <Container>
+      <FullCalendar
+        ref={cal}
+        initialView="timeGridWeek"
+        plugins={[timeGridPlugin, rrule, interactionPlugin]}
+        // time-axis
+        slotDuration="01:00:00"
+        slotLabelFormat={{ hour: "numeric", minute: "numeric", hour12: false }}
+        // events
+        events={events}
+        eventBorderColor="transparent"
+        editable
+        // resizing
+        eventResize={({ event }) => updateTask(eventToTaskUpdateInput(event))}
+        // dragging
+        eventDrop={({ event }) => updateTask(eventToTaskUpdateInput(event))}
+        // Labels
+        headerToolbar={{
+          left: "title",
+          right: "prev,today,next"
+        }}
+        nowIndicator
+        dayHeaderContent={({ date }) => (
+          <>
+            <p className="weekday">{format(date, "EEE")}</p>
+            <p className="day">{format(date, "d")}</p>
+          </>
+        )}
+        allDayText=""
+        // locale
+        firstDay={1}
+      />
+    </Container>
   );
 };
 
@@ -124,3 +126,30 @@ const eventDuration = (
     minute: differenceInMinutes(endDate, startDate)
   };
 };
+
+/**
+ * Container is used to overwrite `FullCalendar` styling.
+ * Scope the style to each views.
+ */
+const Container = styled.div`
+  .fc-timegrid {
+    .fc-timegrid-slot {
+      height: 48px;
+    }
+
+    /* allDay event */
+    .fc-daygrid-event {
+      padding: 0 6px;
+      font-size: 16px;
+    }
+
+    .fc-timegrid-event {
+      padding: 3px 6px;
+      .fc-event-time {
+        font-size: 12px;
+      }
+
+      font-size: 16px;
+    }
+  }
+`;
