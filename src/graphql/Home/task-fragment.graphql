@@ -6,4 +6,8 @@ fragment Task on Task {
   end
   includeTime
   order
+  repeat {
+    freq
+    byweekday
+  }
 }

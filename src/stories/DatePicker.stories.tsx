@@ -20,6 +20,8 @@ story.add("base", () => {
         setEnd(dates[0]);
         setStart(dates[1]);
       }}
+      repeat={null}
+      updateRepeat={() => null}
     />
   );
 });

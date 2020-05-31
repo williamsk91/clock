@@ -46,6 +46,18 @@ export type Query = {
   completedTasks: Array<Task>,
 };
 
+export type Repeat = {
+   __typename?: 'Repeat',
+  freq: Scalars['String'],
+  byweekday: Maybe<Array<Scalars['Float']>>,
+};
+
+/** Recurring task input data */
+export type RepeatInput = {
+  freq: Scalars['String'],
+  byweekday: Maybe<Array<Scalars['Float']>>,
+};
+
 export type Task = {
    __typename?: 'Task',
   id: Scalars['ID'],
@@ -55,6 +67,7 @@ export type Task = {
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
   order: Scalars['Float'],
+  repeat: Maybe<Repeat>,
 };
 
 export type TaskReorder = {
@@ -77,6 +90,7 @@ export type UpdateTaskInput = {
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
   order: Scalars['Float'],
+  repeat: Maybe<RepeatInput>,
 };
 
 export type User = {
@@ -100,6 +114,10 @@ export type CreateTaskMutation = (
 export type TaskFragment = (
   { __typename?: 'Task' }
   & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'order'>
+  & { repeat: Maybe<(
+    { __typename?: 'Repeat' }
+    & Pick<Repeat, 'freq' | 'byweekday'>
+  )> }
 );
 
 export type TaskReorderMutationVariables = {
@@ -164,6 +182,10 @@ export const TaskFragmentDoc = gql`
   end
   includeTime
   order
+  repeat {
+    freq
+    byweekday
+  }
 }
     `;
 export const CreateTaskDocument = gql`

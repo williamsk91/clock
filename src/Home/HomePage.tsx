@@ -44,7 +44,13 @@ export const HomePage = (props: Props) => {
         optimisticResponse: {
           updateTask: {
             __typename: "Task",
-            ...updateTaskInput
+            ...updateTaskInput,
+            repeat: updateTaskInput.repeat
+              ? {
+                  __typename: "Repeat",
+                  ...updateTaskInput.repeat
+                }
+              : null
           }
         }
       });
@@ -87,8 +93,6 @@ export const HomePage = (props: Props) => {
     [taskReorder]
   );
 
-  const displayTasks = tasks.filter(isNotDoneP);
-
   return (
     <Container>
       <SideBar>
@@ -106,7 +110,7 @@ export const HomePage = (props: Props) => {
           <Spacer spacing="24" />
         </div>
         <TaskList
-          tasks={displayTasks}
+          tasks={tasks.filter(isNotDoneP)}
           createTask={title =>
             createTask({
               variables: { title },
@@ -119,7 +123,8 @@ export const HomePage = (props: Props) => {
                   start: null,
                   end: null,
                   includeTime: false,
-                  order: tasks[tasks.length - 1].order + 1
+                  order: tasks[tasks.length - 1].order + 1,
+                  repeat: null
                 }
               },
               update: (cache, { data }) => {

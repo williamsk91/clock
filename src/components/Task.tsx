@@ -6,7 +6,11 @@ import {
 } from "@ant-design/icons";
 import styled from "styled-components";
 
-import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
+import {
+  RepeatInput,
+  Task as TaskProps,
+  UpdateTaskInput
+} from "../graphql/generated";
 import { DatePicker } from "./DatePicker";
 import { formatDatetime, parseDate } from "./datetime";
 import { IconButton } from "./IconButton";
@@ -25,12 +29,16 @@ export const Task: FC<IProp> = props => {
   const { done, title, includeTime, updateTask } = props;
   const start = parseDate(props.start);
   const end = parseDate(props.end);
+  const repeat = props.repeat;
 
   const task: TaskProps = { ...props };
-  const { setDone, updateDates, setTitle, setIncludeTime } = useMemo(
-    () => demuxUpdateTask(task, updateTask),
-    [task, updateTask]
-  );
+  const {
+    setDone,
+    updateDates,
+    setTitle,
+    setIncludeTime,
+    updateRepeat
+  } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
 
   const [isSettingDate, setIsSettingDate] = useState(false);
 
@@ -80,6 +88,8 @@ export const Task: FC<IProp> = props => {
               updateDates={updateDates}
               includeTime={includeTime}
               setIncludeTime={setIncludeTime}
+              repeat={repeat}
+              updateRepeat={updateRepeat}
             />
           </DatePickerContainer>
         </>
@@ -149,6 +159,7 @@ const demuxUpdateTask = (
   updateDates: (dates: [Date | null, Date | null]) => void;
   setIncludeTime: (it: boolean) => void;
   setTitle: (t: string) => void;
+  updateRepeat: (r: RepeatInput | null) => void;
 } => {
   delete task.__typename;
   return {
@@ -160,6 +171,7 @@ const demuxUpdateTask = (
         end: dates[1]?.toISOString() ?? null
       }),
     setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
-    setTitle: (t: string) => updateTask({ ...task, title: t })
+    setTitle: (t: string) => updateTask({ ...task, title: t }),
+    updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r })
   };
 };

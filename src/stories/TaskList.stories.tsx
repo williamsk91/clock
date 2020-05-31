@@ -1,43 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import { storiesOf } from "@storybook/react";
-import { addHours } from "date-fns";
 
 import { TaskList } from "../components/TaskList";
 import { Task as TaskProps } from "../graphql/generated";
+import { getTasks } from "./mocks";
 
 const story = storiesOf("Components|TaskList", module);
 
 story.add("base", () => {
-  const [tasks, setTasks] = useState<TaskProps[]>([
-    {
-      id: "task1Id",
-      title: "Go grocery shopping",
-      done: null,
-      start: new Date().toISOString(),
-      end: null,
-      includeTime: true,
-      order: 1
-    },
-    {
-      id: "task2Id",
-      title: "Plan exercise routine",
-      done: null,
-      start: null,
-      end: null,
-      includeTime: true,
-      order: 1
-    },
-    {
-      id: "task3Id",
-      title: "Meeting with HR",
-      done: null,
-      start: new Date().toISOString(),
-      end: addHours(new Date(), 3).toISOString(),
-      includeTime: true,
-      order: 1
-    }
-  ]);
+  const [tasks, setTasks] = useState<TaskProps[]>(getTasks());
   return (
     <TaskList
       tasks={tasks}
@@ -57,7 +29,8 @@ story.add("base", () => {
             start: new Date().toISOString(),
             end: null,
             includeTime: true,
-            order: tasks[tasks.length - 1].order + 1
+            order: tasks[tasks.length - 1].order + 1,
+            repeat: null
           }
         ];
         setTasks(newTasks);
