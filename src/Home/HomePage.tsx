@@ -114,32 +114,20 @@ export const HomePage = (props: Props) => {
           createTask={title =>
             createTask({
               variables: { title },
-              optimisticResponse: {
-                createTask: {
-                  __typename: "Task",
-                  id: "temporaryId",
-                  title,
-                  done: null,
-                  start: null,
-                  end: null,
-                  includeTime: false,
-                  color: null,
-                  order: tasks[tasks.length - 1].order + 1,
-                  repeat: null
-                }
-              },
               update: (cache, { data }) => {
                 const cachedData = cache.readQuery<TasksQuery>({
                   query: TasksDocument
                 });
                 const newTaskData = data?.createTask;
                 if (!cachedData || !newTaskData) return;
-
                 const newTasks = [...cachedData.tasks, newTaskData];
                 cache.writeQuery<TasksQuery>({
                   query: TasksDocument,
                   data: {
-                    tasks: newTasks
+                    tasks: newTasks.map(t => ({
+                      ...t,
+                      repeat: t.repeat && { ...t.repeat, __typename: "Repeat" }
+                    }))
                   }
                 });
               }
@@ -176,7 +164,7 @@ const SideBar = styled.div`
 `;
 
 const Content = styled.div`
-  margin: 24px 48px;
+  margin: 12px;
   overflow: hidden;
 
   background: white;
