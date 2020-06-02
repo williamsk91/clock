@@ -11,11 +11,11 @@ import {
   Task as TaskProps,
   UpdateTaskInput
 } from "../graphql/generated";
+import { defaultEventColor } from "./Calendar/styles";
 import { DatePicker } from "./DatePicker";
 import { formatDatetime, parseDate } from "./datetime";
 import { IconButton } from "./IconButton";
 import { Spacer } from "./Spacer";
-import { Color, colors } from "./styles/colors";
 import { Text } from "./Text";
 
 interface IProp extends TaskProps {
@@ -47,7 +47,7 @@ export const Task: FC<IProp> = props => {
   return (
     <Container>
       <TaskContainer>
-        <Banner color="red" />
+        <Banner color={color ?? defaultEventColor} />
         <div>
           <Input
             done={!!done}
@@ -128,11 +128,11 @@ const DatePickerContainer = styled.div`
   background: white;
 `;
 
-const Banner = styled.div<{ color: Color }>`
+const Banner = styled.div<{ color: string }>`
   width: 3px;
   height: 42px;
 
-  background: ${p => colors[p.color]};
+  background: ${p => p.color};
 `;
 
 const Input = styled.input<{ done: boolean }>`
