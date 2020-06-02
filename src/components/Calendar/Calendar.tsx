@@ -34,6 +34,7 @@ export const Calendar: FC<IProp> = props => {
     <Container>
       <FullCalendar
         ref={cal}
+        height="100%"
         initialView="timeGridWeek"
         plugins={[timeGridPlugin, rrule, interactionPlugin]}
         // time-axis
@@ -49,8 +50,8 @@ export const Calendar: FC<IProp> = props => {
         eventDrop={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // Labels
         headerToolbar={{
-          left: "title",
-          right: "prev,today,next"
+          left: "prev,today,next",
+          right: undefined
         }}
         nowIndicator
         dayHeaderContent={({ date }) => (
@@ -72,7 +73,76 @@ export const Calendar: FC<IProp> = props => {
  * Scope the style to each views.
  */
 const Container = styled.div`
+  height: 100%;
+
+  /* toolbar */
+  .fc-header-toolbar {
+    margin-left: 24px;
+    .fc-button {
+      &,
+      &:active:focus {
+        color: rgba(55, 53, 47, 0.85);
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+
   .fc-timegrid {
+    /* table */
+    table {
+      border: none;
+    }
+
+    /* header */
+    .fc-col-header-cell {
+      border: none;
+      background: none;
+      .weekday {
+        color: rgba(55, 53, 47, 0.65);
+      }
+      .day {
+        font-size: 36px;
+        color: rgba(55, 53, 47, 0.85);
+      }
+
+      /* heading today */
+      &.fc-day-today {
+        .weekday {
+          color: rgba(253, 22, 54, 0.65);
+        }
+        .day {
+          color: rgba(253, 22, 54, 0.85);
+        }
+      }
+    }
+
+    /* scrollbar in header and allday */
+    .fc-scroller {
+      overflow: hidden auto !important;
+    }
+
+    /* allday */
+    .fc-daygrid-day {
+      background: #f7f8f7;
+    }
+
+    /* columns */
+    .fc-timegrid-col {
+      background: #f7f8f7;
+    }
+
+    /* time axis */
+    .fc-timegrid-axis {
+      border: none;
+    }
+    .fc-timegrid-slot {
+      font-size: 12px;
+      color: rgba(55, 53, 47, 0.65);
+    }
+
+    /* slot */
     .fc-timegrid-slot {
       height: 48px;
     }
@@ -83,13 +153,19 @@ const Container = styled.div`
       font-size: 14px;
     }
 
+    /* event */
     .fc-timegrid-event {
       padding: 3px 4px;
       .fc-event-time {
         font-size: 12px;
       }
-
       font-size: 14px;
+    }
+
+    /* divider */
+    .fc-divider {
+      padding: 0;
+      border: none;
     }
   }
 `;

@@ -164,7 +164,7 @@ const SideBar = styled.div`
 `;
 
 const Content = styled.div`
-  margin: 12px;
+  margin-left: 12px;
   overflow: hidden;
 
   background: white;
@@ -176,7 +176,7 @@ const Content = styled.div`
 const Today = () => {
   return (
     <>
-      <TodayContainer>{format(new Date(), "d")}</TodayContainer>
+      <TodayContainer>{format(new Date(), "dd")}</TodayContainer>
       <TodayContainer>{format(new Date(), "MMMM")}</TodayContainer>
     </>
   );
