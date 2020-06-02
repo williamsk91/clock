@@ -67,6 +67,33 @@ export const Calendar: FC<IProp> = props => {
   );
 };
 
+/**
+ * Container is used to overwrite `FullCalendar` styling.
+ * Scope the style to each views.
+ */
+const Container = styled.div`
+  .fc-timegrid {
+    .fc-timegrid-slot {
+      height: 48px;
+    }
+
+    /* allDay event */
+    .fc-daygrid-event {
+      padding: 0 4px;
+      font-size: 14px;
+    }
+
+    .fc-timegrid-event {
+      padding: 3px 4px;
+      .fc-event-time {
+        font-size: 12px;
+      }
+
+      font-size: 14px;
+    }
+  }
+`;
+
 // ------------------------- Helper Functions -------------------------
 const tasksToEventInput = (tasks: Task[]): EventInput[] =>
   tasks.map(t => {
@@ -93,7 +120,16 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
       groupId: id,
 
       /** Style */
-      backgroundColor: t.color ?? undefined
+      backgroundColor: t.color ?? undefined,
+
+      /**
+       * Extra props are required to get full information of the task.
+       * Check eventToTaskUpdateInput
+       */
+      done: t.done,
+      order: t.order,
+      repeat: t.repeat,
+      eventColor: t.color
     };
   });
 
@@ -104,7 +140,7 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   start: e.start?.toISOString() ?? null,
   end: e.end?.toISOString() ?? null,
   includeTime: !e.allDay,
-  color: e.extendedProps?.color,
+  color: e.extendedProps?.eventColor,
   order: e.extendedProps.order,
   repeat: e.extendedProps?.repeat
 });
@@ -135,30 +171,3 @@ const eventDuration = (
     minute: differenceInMinutes(endDate, startDate)
   };
 };
-
-/**
- * Container is used to overwrite `FullCalendar` styling.
- * Scope the style to each views.
- */
-const Container = styled.div`
-  .fc-timegrid {
-    .fc-timegrid-slot {
-      height: 48px;
-    }
-
-    /* allDay event */
-    .fc-daygrid-event {
-      padding: 0 6px;
-      font-size: 16px;
-    }
-
-    .fc-timegrid-event {
-      padding: 3px 6px;
-      .fc-event-time {
-        font-size: 12px;
-      }
-
-      font-size: 16px;
-    }
-  }
-`;
