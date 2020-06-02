@@ -239,8 +239,8 @@ const ColorSelect = (props: ColorSelectProps) => {
         <Select.Option value={defaultEventColor}>
           <ColorBlock color={defaultEventColor} aria-label="color block" />
         </Select.Option>
-        {eventColors.map(ec => (
-          <Select.Option value={ec}>
+        {eventColors.map((ec, i) => (
+          <Select.Option key={i} value={ec}>
             <ColorBlock color={ec} aria-label="color block" />
           </Select.Option>
         ))}

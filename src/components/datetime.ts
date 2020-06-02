@@ -1,4 +1,7 @@
 import { format, isSameDay, isSameYear } from "date-fns";
+import RRule from "rrule";
+
+import { Repeat } from "../graphql/generated";
 
 /**
  * Set of helper function to deal with datetime
@@ -23,8 +26,13 @@ const formatSingleDatetime = (
 ): string => {
   return `${formatDate(date, now)}${
     includeTime ? ` ${format(date, TIME_FORMAT)}` : ""
-    }`;
+  }`;
 };
+
+/**
+ * Format repeat date using RRule
+ */
+const formatRRule = (rr: RRule) => rr.toText();
 
 /**
  * Format date one of the following format
@@ -40,6 +48,7 @@ const formatSingleDatetime = (
 export const formatDatetime = (
   start: Date,
   end?: Date,
+  repeat?: Repeat,
   includeTime: boolean = false,
   now: Date = new Date()
 ): string => {
@@ -57,7 +66,10 @@ export const formatDatetime = (
     ? `~${formatSingleDatetime(end, includeTime, now)}`
     : "";
   const startString = formatSingleDatetime(start, includeTime, now);
-  return startString + endString;
+
+  const repeatText = repeat ? `, ${formatRRule(repeatToRRule(repeat))}` : "";
+
+  return startString + endString + repeatText;
 };
 
 /**
@@ -68,7 +80,7 @@ export const parseDate = (s: string | null): Date | null => {
   let date: Date | null = null;
   try {
     date = s ? new Date(s) : null;
-  } catch (error) { }
+  } catch (error) {}
   return date;
 };
 
@@ -77,3 +89,26 @@ export const parseDate = (s: string | null): Date | null => {
  * Warning: this will throw an error if input is not a date string.
  */
 export const parseDefinedDate = (s: string): Date => new Date(s);
+
+const repeatToRRule = (r: Repeat): RRule => {
+  let freq;
+  switch (r.freq) {
+    case "daily":
+      freq = 3;
+      break;
+    case "weekly":
+      freq = 2;
+      break;
+    case "monthly":
+      freq = 1;
+      break;
+    case "yearly":
+      freq = 0;
+      break;
+  }
+
+  return new RRule({
+    freq,
+    byweekday: r.byweekday
+  });
+};

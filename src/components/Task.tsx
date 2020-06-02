@@ -61,7 +61,12 @@ export const Task: FC<IProp> = props => {
           />
           {start && (
             <Text.Sub>
-              {formatDatetime(start, end ?? undefined, includeTime)}
+              {formatDatetime(
+                start,
+                end ?? undefined,
+                repeat ?? undefined,
+                includeTime
+              )}
             </Text.Sub>
           )}
         </div>
