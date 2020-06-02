@@ -26,10 +26,9 @@ interface IProp extends TaskProps {
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const { done, title, includeTime, updateTask } = props;
+  const { done, title, includeTime, updateTask, repeat, color } = props;
   const start = parseDate(props.start);
   const end = parseDate(props.end);
-  const repeat = props.repeat;
 
   const task: TaskProps = { ...props };
   const {
@@ -37,7 +36,8 @@ export const Task: FC<IProp> = props => {
     updateDates,
     setTitle,
     setIncludeTime,
-    updateRepeat
+    updateRepeat,
+    updateColor
   } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
 
   const [isSettingDate, setIsSettingDate] = useState(false);
@@ -90,6 +90,8 @@ export const Task: FC<IProp> = props => {
               setIncludeTime={setIncludeTime}
               repeat={repeat}
               updateRepeat={updateRepeat}
+              color={color}
+              updateColor={updateColor}
             />
           </DatePickerContainer>
         </>
@@ -160,6 +162,7 @@ const demuxUpdateTask = (
   setIncludeTime: (it: boolean) => void;
   setTitle: (t: string) => void;
   updateRepeat: (r: RepeatInput | null) => void;
+  updateColor: (r: string | null) => void;
 } => {
   delete task.__typename;
   return {
@@ -172,6 +175,7 @@ const demuxUpdateTask = (
       }),
     setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
     setTitle: (t: string) => updateTask({ ...task, title: t }),
-    updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r })
+    updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r }),
+    updateColor: (c: string | null) => updateTask({ ...task, color: c })
   };
 };

@@ -123,6 +123,7 @@ export const HomePage = (props: Props) => {
                   start: null,
                   end: null,
                   includeTime: false,
+                  color: null,
                   order: tasks[tasks.length - 1].order + 1,
                   repeat: null
                 }

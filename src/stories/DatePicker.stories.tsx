@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { DatePicker } from "../components/DatePicker";
+import { MiniLayout } from "../components/styles/layout";
 
 export default { title: "Components / DatePicker" };
 
@@ -8,6 +9,7 @@ const Base = () => {
   const [start, setStart] = useState<Date | null>(new Date());
   const [end, setEnd] = useState<Date | null>(null);
   const [includeTime, setIncludeTime] = useState(false);
+  const [color, setColor] = useState<string | null>(null);
 
   return (
     <DatePicker
@@ -21,7 +23,13 @@ const Base = () => {
       }}
       repeat={null}
       updateRepeat={() => null}
+      color={color}
+      updateColor={c => setColor(c)}
     />
   );
 };
-export const base = () => <Base />;
+export const base = () => (
+  <MiniLayout>
+    <Base />
+  </MiniLayout>
+);

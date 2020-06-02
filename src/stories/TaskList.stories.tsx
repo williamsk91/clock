@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
+import { MiniLayout } from "../components/styles/layout";
 import { TaskList } from "../components/TaskList";
 import { Task as TaskProps } from "../graphql/generated";
 import { getTasks } from "./mocks";
@@ -29,6 +30,7 @@ const Base = () => {
             start: new Date().toISOString(),
             end: null,
             includeTime: true,
+            color: null,
             order: tasks[tasks.length - 1].order + 1,
             repeat: null
           }
@@ -40,4 +42,8 @@ const Base = () => {
   );
 };
 
-export const base = () => <Base />;
+export const base = () => (
+  <MiniLayout>
+    <Base />
+  </MiniLayout>
+);

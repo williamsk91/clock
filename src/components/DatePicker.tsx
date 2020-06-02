@@ -9,6 +9,7 @@ import { getDay, isBefore } from "date-fns";
 import styled from "styled-components";
 
 import { Repeat, RepeatInput } from "../graphql/generated";
+import { defaultEventColor, eventColors } from "./Calendar/styles";
 import { RoundCheck } from "./RoundCheck";
 import { Spacer } from "./Spacer";
 
@@ -22,6 +23,9 @@ interface Props {
 
   repeat: Repeat | null;
   updateRepeat: (r: Repeat | null) => void;
+
+  color: string | null;
+  updateColor: (c: string | null) => void;
 
   /**
    * This is to extend the container style using
@@ -42,6 +46,8 @@ export const DatePicker = (props: Props) => {
     setIncludeTime,
     repeat,
     updateRepeat,
+    color,
+    updateColor,
     className
   } = props;
 
@@ -72,13 +78,12 @@ export const DatePicker = (props: Props) => {
           updateRepeat={updateRepeat}
         />
       )}
+      <Spacer spacing="12" />
+      <ColorSelect activeColor={color} updateColor={updateColor} />
       {(start || end) && (
-        <>
-          <Spacer spacing="24" />
-          <Button type="link" danger onClick={() => updateDates([null, null])}>
-            remove date
-          </Button>
-        </>
+        <Button type="link" danger onClick={() => updateDates([null, null])}>
+          remove date
+        </Button>
       )}
     </Container>
   );
@@ -212,4 +217,46 @@ const WeeklySelect = ({ checkedWeekdays, onChange }: WeeklySelectProps) => {
 const WeeklySelectContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+`;
+
+// ------------------------- Color Select -------------------------
+interface ColorSelectProps {
+  activeColor: string | null;
+  updateColor: (c: string | null) => void;
+}
+
+/**
+ * Select color for the task. Defaults to fullcalendar default color.
+ */
+const ColorSelect = (props: ColorSelectProps) => {
+  const { activeColor, updateColor } = props;
+  return (
+    <ColorSelectContainer>
+      <Select
+        defaultValue={activeColor ?? defaultEventColor}
+        onChange={c => updateColor(c === defaultEventColor ? null : c)}
+      >
+        <Select.Option value={defaultEventColor}>
+          <ColorBlock color={defaultEventColor} aria-label="color block" />
+        </Select.Option>
+        {eventColors.map(ec => (
+          <Select.Option value={ec}>
+            <ColorBlock color={ec} aria-label="color block" />
+          </Select.Option>
+        ))}
+      </Select>
+    </ColorSelectContainer>
+  );
+};
+
+const ColorSelectContainer = styled.div`
+  padding: 0 15px;
+`;
+
+const ColorBlock = styled.div<{ color: string }>`
+  width: 12px;
+  height: 12px;
+  margin-top: 8px;
+
+  background: ${p => p.color};
 `;

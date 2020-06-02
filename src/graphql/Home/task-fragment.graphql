@@ -5,6 +5,7 @@ fragment Task on Task {
   start
   end
   includeTime
+  color
   order
   repeat {
     freq

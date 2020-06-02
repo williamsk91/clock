@@ -70,9 +70,14 @@ export const Calendar: FC<IProp> = props => {
 // ------------------------- Helper Functions -------------------------
 const tasksToEventInput = (tasks: Task[]): EventInput[] =>
   tasks.map(t => {
+    const { id, title } = t;
+
     delete t.repeat?.__typename;
     return {
-      ...t,
+      id,
+      title,
+
+      /** Timestamp */
       start: t.start ?? undefined,
       end: t.end ?? undefined,
       allDay: !t.includeTime,
@@ -85,19 +90,23 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
        */
       duration: eventDuration(t.start, t.end, !!t.repeat, !t.includeTime),
       // this is to move recurring dates together
-      groupId: t.id
+      groupId: id,
+
+      /** Style */
+      backgroundColor: t.color ?? undefined
     };
   });
 
 const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   id: e.id,
   title: e.title,
-  done: e?.extendedProps?.done,
+  done: e.extendedProps?.done,
   start: e.start?.toISOString() ?? null,
   end: e.end?.toISOString() ?? null,
   includeTime: !e.allDay,
+  color: e.extendedProps?.color,
   order: e.extendedProps.order,
-  repeat: e?.extendedProps?.repeat
+  repeat: e.extendedProps?.repeat
 });
 
 /**

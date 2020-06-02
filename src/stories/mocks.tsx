@@ -1,5 +1,6 @@
 import { addHours, setHours } from "date-fns";
 
+import { eventColors } from "../components/Calendar/styles";
 import { Task } from "../graphql/generated";
 
 export const getTask = (override?: Partial<Task>): Task => ({
@@ -9,6 +10,7 @@ export const getTask = (override?: Partial<Task>): Task => ({
   start: new Date().toISOString(),
   end: addHours(new Date(), 3).toISOString(),
   includeTime: true,
+  color: null,
   order: 1,
   repeat: {
     freq: "daily",
@@ -25,6 +27,7 @@ export const getTasks = (): Task[] => [
     start: new Date().toISOString(),
     end: null,
     includeTime: false,
+    color: null,
     order: 1,
     repeat: null
   },
@@ -35,6 +38,8 @@ export const getTasks = (): Task[] => [
     start: setHours(new Date(), 6).toISOString(),
     end: setHours(new Date(), 7).toISOString(),
     includeTime: true,
+    color: eventColors[3],
+
     order: 2,
     repeat: {
       freq: "daily",
@@ -48,6 +53,7 @@ export const getTasks = (): Task[] => [
     start: setHours(new Date(), 8).toISOString(),
     end: setHours(new Date(), 10).toISOString(),
     includeTime: true,
+    color: eventColors[0],
     order: 3,
     repeat: null
   }

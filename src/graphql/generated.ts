@@ -66,6 +66,7 @@ export type Task = {
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
+  color: Maybe<Scalars['String']>,
   order: Scalars['Float'],
   repeat: Maybe<Repeat>,
 };
@@ -89,6 +90,7 @@ export type UpdateTaskInput = {
   start: Maybe<Scalars['DateTime']>,
   end: Maybe<Scalars['DateTime']>,
   includeTime: Scalars['Boolean'],
+  color: Maybe<Scalars['String']>,
   order: Scalars['Float'],
   repeat: Maybe<RepeatInput>,
 };
@@ -113,7 +115,7 @@ export type CreateTaskMutation = (
 
 export type TaskFragment = (
   { __typename?: 'Task' }
-  & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'order'>
+  & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'color' | 'order'>
   & { repeat: Maybe<(
     { __typename?: 'Repeat' }
     & Pick<Repeat, 'freq' | 'byweekday'>
@@ -181,6 +183,7 @@ export const TaskFragmentDoc = gql`
   start
   end
   includeTime
+  color
   order
   repeat {
     freq
