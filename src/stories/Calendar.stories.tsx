@@ -2,8 +2,8 @@ import React from "react";
 
 import { Calendar } from "../components/Calendar/Calendar";
 import { Navigation } from "../components/Calendar/Navigation";
-import { FullPageLayout } from "./layout";
 import { getTasks } from "./mocks";
+import { FullPageLayout } from "./utils";
 
 export default { title: "Components / Calendar" };
 

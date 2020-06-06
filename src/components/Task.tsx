@@ -1,22 +1,18 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useMemo } from "react";
 import {
   BorderOutlined,
-  CalendarOutlined,
-  CheckSquareOutlined
+  CheckSquareOutlined,
+  SettingOutlined
 } from "@ant-design/icons";
 import styled from "styled-components";
 
-import {
-  RepeatInput,
-  Task as TaskProps,
-  UpdateTaskInput
-} from "../graphql/generated";
+import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { defaultEventColor } from "./Calendar/styles";
-import { DatePicker } from "./DatePicker";
 import { formatDatetime, parseDate } from "./datetime";
 import { IconButton } from "./IconButton";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
+import { demuxUpdateTask } from "./utils";
 
 interface IProp extends TaskProps {
   updateTask: (uti: UpdateTaskInput) => void;
@@ -31,16 +27,10 @@ export const Task: FC<IProp> = props => {
   const end = parseDate(props.end);
 
   const task: TaskProps = { ...props };
-  const {
-    setDone,
-    updateDates,
-    setTitle,
-    setIncludeTime,
-    updateRepeat,
-    updateColor
-  } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
-
-  const [isSettingDate, setIsSettingDate] = useState(false);
+  const { setDone, setTitle } = useMemo(
+    () => demuxUpdateTask(task, updateTask),
+    [task, updateTask]
+  );
 
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
@@ -78,29 +68,11 @@ export const Task: FC<IProp> = props => {
           />
           <IconButton
             type="link"
-            onClick={() => setIsSettingDate(isd => !isd)}
-            icon={<CalendarOutlined />}
+            // onClick={() => setIsSettingDate(isd => !isd)}
+            icon={<SettingOutlined />}
           />
         </Actions>
       </TaskContainer>
-      {isSettingDate && (
-        <>
-          <Spacer spacing="2" />
-          <DatePickerContainer>
-            <DatePicker
-              start={start}
-              end={end}
-              updateDates={updateDates}
-              includeTime={includeTime}
-              setIncludeTime={setIncludeTime}
-              repeat={repeat}
-              updateRepeat={updateRepeat}
-              color={color}
-              updateColor={updateColor}
-            />
-          </DatePickerContainer>
-        </>
-      )}
       <Spacer spacing="6" />
     </Container>
   );
@@ -121,14 +93,6 @@ const TaskContainer = styled.div`
   grid-template-columns: 3px auto 64px;
   align-items: center;
   grid-gap: 6px;
-
-  background: white;
-`;
-
-const DatePickerContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
 
   background: white;
 `;
@@ -156,31 +120,3 @@ const Actions = styled.div`
   display: grid;
   grid-auto-flow: column;
 `;
-
-// ------------------------- Helper Functions -------------------------
-const demuxUpdateTask = (
-  task: TaskProps,
-  updateTask: (uti: UpdateTaskInput) => void
-): {
-  setDone: (d: string | null) => void;
-  updateDates: (dates: [Date | null, Date | null]) => void;
-  setIncludeTime: (it: boolean) => void;
-  setTitle: (t: string) => void;
-  updateRepeat: (r: RepeatInput | null) => void;
-  updateColor: (r: string | null) => void;
-} => {
-  delete task.__typename;
-  return {
-    setDone: (d: string | null) => updateTask({ ...task, done: d }),
-    updateDates: (dates: [Date | null, Date | null]) =>
-      updateTask({
-        ...task,
-        start: dates[0]?.toISOString() ?? null,
-        end: dates[1]?.toISOString() ?? null
-      }),
-    setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
-    setTitle: (t: string) => updateTask({ ...task, title: t }),
-    updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r }),
-    updateColor: (c: string | null) => updateTask({ ...task, color: c })
-  };
-};
