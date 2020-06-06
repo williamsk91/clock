@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { Calendar } from "../components/Calendar";
 import { Spacer } from "../components/Spacer";
+import { Sidebar } from "../components/styles/layout";
 import { TaskList } from "../components/TaskList";
 import { cycleArray } from "../components/utils";
 import {
@@ -94,8 +95,8 @@ export const HomePage = (props: Props) => {
   );
 
   return (
-    <Container>
-      <SideBar>
+    <Sidebar.Container>
+      <Sidebar.SideBar>
         <div>
           <Spacer spacing="12" />
           <Button
@@ -136,39 +137,16 @@ export const HomePage = (props: Props) => {
           updateTask={updateTaskOptimistic}
           taskReorder={taskReorderOptimistic}
         />
-      </SideBar>
-      <Content>
+      </Sidebar.SideBar>
+      <Sidebar.Content>
         <Calendar
           tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
           updateTask={updateTaskOptimistic}
         />
-      </Content>
-    </Container>
+      </Sidebar.Content>
+    </Sidebar.Container>
   );
 };
-
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  display: grid;
-  grid-template-columns: 365px 1fr;
-`;
-
-const SideBar = styled.div`
-  height: 100vh;
-  padding: 0 24px;
-  box-sizing: border-box;
-
-  background: #f7f8f7;
-`;
-
-const Content = styled.div`
-  margin-left: 12px;
-  overflow: hidden;
-
-  background: white;
-`;
 
 /**
  * Displays today as big heading
