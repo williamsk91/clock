@@ -21,6 +21,7 @@ export const demuxUpdateTask = (
   updateColor: (r: string | null) => void;
 } => {
   delete task.__typename;
+  delete task.repeat?.__typename;
   return {
     setDone: (d: string | null) => updateTask({ ...task, done: d }),
     updateDates: (dates: [Date | null, Date | null]) =>

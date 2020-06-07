@@ -10,8 +10,8 @@ function App() {
   return (
     <Switch>
       <Route exact path="/login" component={LoginRoute} />
-      <PrivateRoute exact path="/" component={HomeRoute} />
       <PrivateRoute exact path="/setting" component={SettingRoute} />
+      <PrivateRoute path="/" component={HomeRoute} />
     </Switch>
   );
 }

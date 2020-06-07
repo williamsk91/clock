@@ -38,6 +38,7 @@ const Base = () => {
         setTasks(newTasks);
       }}
       taskReorder={() => console.log("swap order")}
+      goTask={id => console.log("goTask: ", id)}
     />
   );
 };

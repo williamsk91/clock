@@ -16,13 +16,24 @@ import { demuxUpdateTask } from "./utils";
 
 interface IProp extends TaskProps {
   updateTask: (uti: UpdateTaskInput) => void;
+
+  goTask: (id: string) => void;
 }
 
 /**
  * A single task
  */
 export const Task: FC<IProp> = props => {
-  const { done, title, includeTime, updateTask, repeat, color } = props;
+  const {
+    id,
+    done,
+    title,
+    includeTime,
+    updateTask,
+    repeat,
+    color,
+    goTask
+  } = props;
   const start = parseDate(props.start);
   const end = parseDate(props.end);
 
@@ -68,7 +79,7 @@ export const Task: FC<IProp> = props => {
           />
           <IconButton
             type="link"
-            // onClick={() => setIsSettingDate(isd => !isd)}
+            onClick={() => goTask(id)}
             icon={<SettingOutlined />}
           />
         </Actions>

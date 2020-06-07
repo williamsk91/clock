@@ -8,7 +8,11 @@ export default { title: "Components / Task" };
 
 export const base = () => (
   <MiniLayout>
-    <Task {...getTask()} updateTask={t => console.log("update task: ", t)} />
+    <Task
+      {...getTask()}
+      updateTask={t => console.log("update task: ", t)}
+      goTask={id => console.log("goTask: ", id)}
+    />
   </MiniLayout>
 );
 
@@ -17,6 +21,7 @@ export const checked = () => (
     <Task
       {...getTask({ done: new Date().toISOString() })}
       updateTask={t => console.log("update task: ", t)}
+      goTask={id => console.log("goTask: ", id)}
     />
   </MiniLayout>
 );

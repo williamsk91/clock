@@ -42,8 +42,14 @@ export type MutationTaskReorderArgs = {
 export type Query = {
    __typename?: 'Query',
   me: User,
+  task: Task,
   tasks: Array<Task>,
   completedTasks: Array<Task>,
+};
+
+
+export type QueryTaskArgs = {
+  id: Scalars['ID']
 };
 
 export type Repeat = {
@@ -120,6 +126,19 @@ export type TaskFragment = (
     { __typename?: 'Repeat' }
     & Pick<Repeat, 'freq' | 'byweekday'>
   )> }
+);
+
+export type TaskQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type TaskQuery = (
+  { __typename?: 'Query' }
+  & { task: (
+    { __typename?: 'Task' }
+    & TaskFragment
+  ) }
 );
 
 export type TaskReorderMutationVariables = {
@@ -223,6 +242,39 @@ export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const TaskDocument = gql`
+    query Task($id: ID!) {
+  task(id: $id) {
+    ...Task
+  }
+}
+    ${TaskFragmentDoc}`;
+
+/**
+ * __useTaskQuery__
+ *
+ * To run a query within a React component, call `useTaskQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaskQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTaskQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTaskQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TaskQuery, TaskQueryVariables>) {
+        return ApolloReactHooks.useQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+      }
+export function useTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TaskQuery, TaskQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+        }
+export type TaskQueryHookResult = ReturnType<typeof useTaskQuery>;
+export type TaskLazyQueryHookResult = ReturnType<typeof useTaskLazyQuery>;
+export type TaskQueryResult = ApolloReactCommon.QueryResult<TaskQuery, TaskQueryVariables>;
 export const TaskReorderDocument = gql`
     mutation TaskReorder($tasks: [TaskReorderInput!]!) {
   taskReorder(tasks: $tasks) {

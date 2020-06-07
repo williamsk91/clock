@@ -1,5 +1,6 @@
 import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import styled from "styled-components";
 
 import {
   Task as TaskProps,
@@ -9,20 +10,21 @@ import {
 import { NewTask } from "./NewTask";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
-import styled from "styled-components";
 
 interface Props {
   tasks: TaskProps[];
   updateTask: (uti: UpdateTaskInput) => void;
   createTask: (title: string) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
+
+  goTask: (id: string) => void;
 }
 
 /**
  * A list of Tasks
  */
 export const TaskList = (props: Props) => {
-  const { tasks, updateTask, createTask, taskReorder } = props;
+  const { tasks, updateTask, createTask, taskReorder, goTask } = props;
 
   return (
     <Container>
@@ -55,7 +57,12 @@ export const TaskList = (props: Props) => {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Task key={i} {...t} updateTask={updateTask} />
+                      <Task
+                        key={i}
+                        {...t}
+                        updateTask={updateTask}
+                        goTask={goTask}
+                      />
                     </div>
                   )}
                 </Draggable>
@@ -71,4 +78,4 @@ export const TaskList = (props: Props) => {
 
 const Container = styled.div`
   overflow-y: auto;
-`
+`;

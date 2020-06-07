@@ -1,14 +1,9 @@
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import { SettingOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import { format } from "date-fns";
-import styled from "styled-components";
+import { Switch } from "react-router-dom";
 
 import { Calendar } from "../components/Calendar";
-import { Spacer } from "../components/Spacer";
+import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Sidebar } from "../components/styles/layout";
-import { TaskList } from "../components/TaskList";
 import { cycleArray } from "../components/utils";
 import {
   Task,
@@ -21,6 +16,8 @@ import {
   useTaskReorderMutation,
   useUpdateTaskMutation
 } from "../graphql/generated";
+import { ListSidebar } from "./Sidebar/ListSidebar";
+import { TaskSidebar } from "./Sidebar/TaskSidebar";
 
 interface Props {
   tasks: TasksQuery["tasks"];
@@ -30,11 +27,38 @@ interface Props {
  */
 export const HomePage = (props: Props) => {
   const { tasks } = props;
-  const history = useHistory();
 
   const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [taskReorder] = useTaskReorderMutation();
+
+  const createTaskOptimistic = useCallback(
+    (title: string) =>
+      createTask({
+        variables: { title },
+        update: (cache, { data }) => {
+          const cachedData = cache.readQuery<TasksQuery>({
+            query: TasksDocument
+          });
+          const newTaskData = data?.createTask;
+          if (!cachedData || !newTaskData) return;
+          const newTasks = [...cachedData.tasks, newTaskData];
+          cache.writeQuery<TasksQuery>({
+            query: TasksDocument,
+            data: {
+              tasks: newTasks.map(t => ({
+                ...t,
+                repeat: t.repeat && {
+                  ...t.repeat,
+                  __typename: "Repeat"
+                }
+              }))
+            }
+          });
+        }
+      }),
+    [createTask]
+  );
 
   const updateTaskOptimistic = useCallback(
     (updateTaskInput: UpdateTaskInput) => {
@@ -97,50 +121,23 @@ export const HomePage = (props: Props) => {
   return (
     <Sidebar.Container>
       <Sidebar.SideBar>
-        <div>
-          <Spacer spacing="12" />
-          <Button
-            onClick={() => history.push("/setting")}
-            type="default"
-            icon={<SettingOutlined />}
-          >
-            setting
-          </Button>
-          <Spacer spacing="12" />
-          <Today />
-          <Spacer spacing="24" />
-        </div>
-        <TaskList
-          tasks={tasks.filter(isNotDoneP)}
-          createTask={title =>
-            createTask({
-              variables: { title },
-              update: (cache, { data }) => {
-                const cachedData = cache.readQuery<TasksQuery>({
-                  query: TasksDocument
-                });
-                const newTaskData = data?.createTask;
-                if (!cachedData || !newTaskData) return;
-                const newTasks = [...cachedData.tasks, newTaskData];
-                cache.writeQuery<TasksQuery>({
-                  query: TasksDocument,
-                  data: {
-                    tasks: newTasks.map(t => ({
-                      ...t,
-                      repeat: t.repeat && { ...t.repeat, __typename: "Repeat" }
-                    }))
-                  }
-                });
-              }
-            })
-          }
-          updateTask={updateTaskOptimistic}
-          taskReorder={taskReorderOptimistic}
-        />
+        <Switch>
+          <PrivateRoute exact path="/">
+            <ListSidebar
+              tasks={tasks}
+              createTask={createTaskOptimistic}
+              updateTask={updateTaskOptimistic}
+              taskReorder={taskReorderOptimistic}
+            />
+          </PrivateRoute>
+          <PrivateRoute exact path="/task/:id">
+            <TaskSidebar updateTask={updateTaskOptimistic} />
+          </PrivateRoute>
+        </Switch>
       </Sidebar.SideBar>
       <Sidebar.Content>
         <Calendar
-          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
+          tasks={tasks.filter(hasDateP)}
           updateTask={updateTaskOptimistic}
         />
       </Sidebar.Content>
@@ -148,24 +145,5 @@ export const HomePage = (props: Props) => {
   );
 };
 
-/**
- * Displays today as big heading
- */
-const Today = () => {
-  return (
-    <>
-      <TodayContainer>{format(new Date(), "dd")}</TodayContainer>
-      <TodayContainer>{format(new Date(), "MMMM")}</TodayContainer>
-    </>
-  );
-};
-
-const TodayContainer = styled.div`
-  font-size: 64px;
-  color: rgba(55, 53, 47, 0.85);
-  line-height: 1;
-`;
-
 // ------------------------- Helper Functions -------------------------
 const hasDateP = (task: Task): boolean => !!task.start || !!task.end;
-const isNotDoneP = (task: Task): boolean => !task.done;
