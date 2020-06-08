@@ -1,11 +1,12 @@
 import React, { useCallback } from "react";
-import { Switch } from "react-router-dom";
+import { Switch, useHistory } from "react-router-dom";
 
 import { Calendar } from "../components/Calendar";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Sidebar } from "../components/styles/layout";
 import { cycleArray } from "../components/utils";
 import {
+  CreateTaskInput,
   Task,
   TaskFragmentDoc,
   TaskReorderInput,
@@ -27,15 +28,18 @@ interface Props {
  */
 export const HomePage = (props: Props) => {
   const { tasks } = props;
+  const history = useHistory();
 
-  const [createTask] = useCreateTaskMutation();
+  const [createTask] = useCreateTaskMutation({
+    onCompleted: ({ createTask: { id } }) => history.push(`/task/${id}`)
+  });
   const [updateTask] = useUpdateTaskMutation();
   const [taskReorder] = useTaskReorderMutation();
 
   const createTaskOptimistic = useCallback(
-    (title: string) =>
+    (task: CreateTaskInput) =>
       createTask({
-        variables: { title },
+        variables: { createTaskInput: task },
         update: (cache, { data }) => {
           const cachedData = cache.readQuery<TasksQuery>({
             query: TasksDocument
@@ -125,7 +129,17 @@ export const HomePage = (props: Props) => {
           <PrivateRoute exact path="/">
             <ListSidebar
               tasks={tasks}
-              createTask={createTaskOptimistic}
+              createTask={title =>
+                createTaskOptimistic({
+                  title,
+                  includeTime: false,
+                  done: null,
+                  start: null,
+                  end: null,
+                  color: null,
+                  repeat: null
+                })
+              }
               updateTask={updateTaskOptimistic}
               taskReorder={taskReorderOptimistic}
             />
@@ -139,6 +153,17 @@ export const HomePage = (props: Props) => {
         <Calendar
           tasks={tasks.filter(hasDateP)}
           updateTask={updateTaskOptimistic}
+          createTask={(start, end, includeTime) =>
+            createTaskOptimistic({
+              title: "Untitled",
+              start: start.toISOString(),
+              end: end.toISOString(),
+              includeTime,
+              done: null,
+              color: null,
+              repeat: null
+            })
+          }
         />
       </Sidebar.Content>
     </Sidebar.Container>

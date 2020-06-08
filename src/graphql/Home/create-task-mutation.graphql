@@ -1,7 +1,7 @@
 #import "./task-fragment.graphql"
 
-mutation CreateTask($title: String!) {
-  createTask(title: $title) {
+mutation CreateTask($createTaskInput: CreateTaskInput!) {
+  createTask(task: $createTaskInput) {
     ...Task
   }
 }

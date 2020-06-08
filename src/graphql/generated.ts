@@ -13,6 +13,16 @@ export type Scalars = {
   DateTime: string,
 };
 
+export type CreateTaskInput = {
+  title: Scalars['String'],
+  done: Maybe<Scalars['DateTime']>,
+  start: Maybe<Scalars['DateTime']>,
+  end: Maybe<Scalars['DateTime']>,
+  includeTime: Scalars['Boolean'],
+  color: Maybe<Scalars['String']>,
+  repeat: Maybe<RepeatInput>,
+};
+
 
 export type Mutation = {
    __typename?: 'Mutation',
@@ -26,7 +36,7 @@ export type Mutation = {
 
 
 export type MutationCreateTaskArgs = {
-  title: Scalars['String']
+  task: CreateTaskInput
 };
 
 
@@ -107,7 +117,7 @@ export type User = {
 };
 
 export type CreateTaskMutationVariables = {
-  title: Scalars['String']
+  createTaskInput: CreateTaskInput
 };
 
 
@@ -211,8 +221,8 @@ export const TaskFragmentDoc = gql`
 }
     `;
 export const CreateTaskDocument = gql`
-    mutation CreateTask($title: String!) {
-  createTask(title: $title) {
+    mutation CreateTask($createTaskInput: CreateTaskInput!) {
+  createTask(task: $createTaskInput) {
     ...Task
   }
 }
@@ -232,7 +242,7 @@ export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTask
  * @example
  * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
  *   variables: {
- *      title: // value for 'title'
+ *      createTaskInput: // value for 'createTaskInput'
  *   },
  * });
  */

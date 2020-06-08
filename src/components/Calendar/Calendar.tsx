@@ -21,10 +21,11 @@ import { Task, UpdateTaskInput } from "../../graphql/generated";
 interface IProp {
   tasks: Task[];
   updateTask: (uti: UpdateTaskInput) => void;
+  createTask: (start: Date, end: Date, includeTime: boolean) => void;
 }
 
 export const Calendar: FC<IProp> = props => {
-  const { tasks, updateTask } = props;
+  const { tasks, updateTask, createTask } = props;
 
   const cal = useRef<FullCalendar>(null);
 
@@ -38,12 +39,17 @@ export const Calendar: FC<IProp> = props => {
         initialView="timeGridWeek"
         plugins={[timeGridPlugin, rrule, interactionPlugin]}
         // time-axis
-        slotDuration="01:00:00"
+        slotDuration="01:00"
         slotLabelFormat={{ hour: "numeric", minute: "numeric", hour12: false }}
         // events
         events={events}
         eventBorderColor="transparent"
         editable
+        // selecting
+        selectable
+        selectMirror
+        snapDuration="00:30"
+        select={({ start, end, allDay }) => createTask(start, end, !allDay)}
         // resizing
         eventResize={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // dragging

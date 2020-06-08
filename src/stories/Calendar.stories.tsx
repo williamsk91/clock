@@ -11,7 +11,11 @@ export const base = () => {
   const tasks = getTasks();
   return (
     <FullPageLayout>
-      <Calendar tasks={tasks} updateTask={t => console.log("t: ", t)} />
+      <Calendar
+        tasks={tasks}
+        updateTask={t => console.log("t: ", t)}
+        createTask={title => console.log("title: ", title)}
+      />
     </FullPageLayout>
   );
 };
