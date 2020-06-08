@@ -1,6 +1,7 @@
 import "@fullcalendar/react";
 
 import React, { FC, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import {
   differenceInDays,
   differenceInMinutes,
@@ -26,6 +27,7 @@ interface IProp {
 
 export const Calendar: FC<IProp> = props => {
   const { tasks, updateTask, createTask } = props;
+  const history = useHistory();
 
   const cal = useRef<FullCalendar>(null);
 
@@ -45,6 +47,8 @@ export const Calendar: FC<IProp> = props => {
         events={events}
         eventBorderColor="transparent"
         editable
+        // clicking
+        eventClick={({ event }) => history.push(`/task/${event.id}`)}
         // selecting
         selectable
         selectMirror

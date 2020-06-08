@@ -17,7 +17,7 @@ export const ColorSelect = (props: Props) => {
   return (
     <Select
       style={{ width: 60 }}
-      defaultValue={activeColor ?? defaultEventColor}
+      value={activeColor ?? defaultEventColor}
       onChange={c => updateColor(c === defaultEventColor ? null : c)}
     >
       <Select.Option value={defaultEventColor}>
