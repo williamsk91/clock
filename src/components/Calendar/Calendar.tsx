@@ -168,6 +168,18 @@ const Container = styled.div`
       font-size: 14px;
     }
 
+    /* done events */
+    .fc-timegrid-event {
+      &.done {
+        text-decoration: line-through white solid;
+      }
+    }
+    .fc-daygrid-event {
+      &.done {
+        text-decoration: line-through white solid;
+      }
+    }
+
     /* divider */
     .fc-divider {
       padding: 0;
@@ -203,6 +215,7 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
 
       /** Style */
       backgroundColor: t.color ?? undefined,
+      classNames: t.done ? ["done"] : [],
 
       /**
        * Extra props are required to get full information of the task.
