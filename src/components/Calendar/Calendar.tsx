@@ -52,6 +52,7 @@ export const Calendar: FC<IProp> = props => {
         // selecting
         selectable
         selectMirror
+        unselectCancel=".new-calendar-event-input"
         snapDuration="00:30"
         select={({ start, end, allDay }) => createTask(start, end, !allDay)}
         // resizing
@@ -170,6 +171,11 @@ const Container = styled.div`
         font-size: 12px;
       }
       font-size: 14px;
+    }
+
+    /* event creation */
+    .fc-event-mirror {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     }
 
     /* done events */

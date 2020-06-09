@@ -18,6 +18,7 @@ import {
   useUpdateTaskMutation
 } from "../graphql/generated";
 import { ListSidebar } from "./Sidebar/ListSidebar";
+import { NewTaskSidebar } from "./Sidebar/NewTaskSidebar";
 import { TaskSidebar } from "./Sidebar/TaskSidebar";
 
 interface Props {
@@ -147,6 +148,21 @@ export const HomePage = (props: Props) => {
           <PrivateRoute exact path="/task/:id">
             <TaskSidebar updateTask={updateTaskOptimistic} />
           </PrivateRoute>
+          <PrivateRoute exact path="/newtask">
+            <NewTaskSidebar
+              createTask={(title, start, end, includeTime) =>
+                createTaskOptimistic({
+                  title,
+                  includeTime,
+                  done: null,
+                  start: start.toISOString(),
+                  end: end.toISOString(),
+                  color: null,
+                  repeat: null
+                })
+              }
+            />
+          </PrivateRoute>
         </Switch>
       </Sidebar.SideBar>
       <Sidebar.Content>
@@ -154,14 +170,12 @@ export const HomePage = (props: Props) => {
           tasks={tasks.filter(hasDateP)}
           updateTask={updateTaskOptimistic}
           createTask={(start, end, includeTime) =>
-            createTaskOptimistic({
-              title: "Untitled",
-              start: start.toISOString(),
-              end: end.toISOString(),
-              includeTime,
-              done: null,
-              color: null,
-              repeat: null
+            history.push(`/newtask`, {
+              date: {
+                start,
+                end,
+                includeTime
+              }
             })
           }
         />
