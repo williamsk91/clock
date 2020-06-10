@@ -29,7 +29,7 @@ export const NewTask = (props: Props) => {
           }
         }}
       />
-      <IconButton
+      <AddButton
         type="link"
         onClick={() => createTask(title)}
         icon={<PlusSquareOutlined />}
@@ -52,5 +52,13 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
+  }
+`;
+
+const AddButton = styled(IconButton)`
+  transition: opacity 0.1s ease-in;
+  opacity: 0;
+  ${Container}:hover & {
+    opacity: 100;
   }
 `;

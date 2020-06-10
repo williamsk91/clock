@@ -3,6 +3,7 @@ import { Switch, useHistory } from "react-router-dom";
 
 import { Calendar } from "../components/Calendar";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
+import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
 import { hasDateP, isNotDoneP } from "../components/taskFilter";
 import { cycleArray } from "../components/utils";
@@ -168,6 +169,7 @@ export const HomePage = (props: Props) => {
         </Switch>
       </Sidebar.SideBar>
       <Sidebar.Content>
+        <Spacer spacing="12" />
         <Calendar
           tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
           updateTask={updateTaskOptimistic}

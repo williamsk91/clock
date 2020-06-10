@@ -46,46 +46,48 @@ export const Task: FC<IProp> = props => {
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
   return (
-    <Container>
-      <TaskContainer>
-        <Banner color={color ?? defaultEventColor} />
-        <div>
-          <Input
-            done={!!done}
-            value={title}
-            onChange={e => setTitle(e.currentTarget.value)}
-            onKeyDown={e => {
-              if (e.ctrlKey && e.keyCode === 13) {
-                updateDone();
-              }
-            }}
-          />
-          {start && (
-            <Text.Sub>
-              {formatDatetime(
-                start,
-                end ?? undefined,
-                repeat ?? undefined,
-                includeTime
-              )}
-            </Text.Sub>
-          )}
-        </div>
-        <Actions>
-          <IconButton
-            type="link"
-            onClick={updateDone}
-            icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
-          />
-          <IconButton
-            type="link"
-            onClick={() => goTask(id)}
-            icon={<SettingOutlined />}
-          />
-        </Actions>
-      </TaskContainer>
+    <>
+      <Container>
+        <TaskContainer>
+          <Banner color={color ?? defaultEventColor} />
+          <div>
+            <Input
+              done={!!done}
+              value={title}
+              onChange={e => setTitle(e.currentTarget.value)}
+              onKeyDown={e => {
+                if (e.ctrlKey && e.keyCode === 13) {
+                  updateDone();
+                }
+              }}
+            />
+            {start && (
+              <Text.Sub>
+                {formatDatetime(
+                  start,
+                  end ?? undefined,
+                  repeat ?? undefined,
+                  includeTime
+                )}
+              </Text.Sub>
+            )}
+          </div>
+          <Actions>
+            <IconButton
+              type="link"
+              onClick={updateDone}
+              icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
+            />
+            <IconButton
+              type="link"
+              onClick={() => goTask(id)}
+              icon={<SettingOutlined />}
+            />
+          </Actions>
+        </TaskContainer>
+      </Container>
       <Spacer spacing="6" />
-    </Container>
+    </>
   );
 };
 
@@ -130,4 +132,10 @@ const Actions = styled.div`
   align-self: start;
   display: grid;
   grid-auto-flow: column;
+
+  transition: opacity 0.1s ease-in;
+  opacity: 0;
+  ${TaskContainer}:hover & {
+    opacity: 100;
+  }
 `;

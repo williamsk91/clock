@@ -89,6 +89,7 @@ const Container = styled.div`
   /* toolbar */
   .fc-header-toolbar {
     margin-left: 24px;
+    margin-bottom: 12px;
     .fc-button {
       &,
       &:active:focus {
