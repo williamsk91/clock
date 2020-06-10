@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import styled from "styled-components";
 
 import { Spacer } from "../../components/Spacer";
+import { isNotDoneP } from "../../components/taskFilter";
 import { TaskList } from "../../components/TaskList";
 import {
   Task,
@@ -68,6 +69,3 @@ const TodayContainer = styled.div`
   color: rgba(55, 53, 47, 0.85);
   line-height: 1;
 `;
-
-// ------------------------- Helper Functions -------------------------
-const isNotDoneP = (task: Task): boolean => !task.done;

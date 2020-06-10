@@ -4,6 +4,7 @@ import { Switch, useHistory } from "react-router-dom";
 import { Calendar } from "../components/Calendar";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Sidebar } from "../components/styles/layout";
+import { hasDateP, isNotDoneP } from "../components/taskFilter";
 import { cycleArray } from "../components/utils";
 import {
   CreateTaskInput,
@@ -24,6 +25,7 @@ import { TaskSidebar } from "./Sidebar/TaskSidebar";
 interface Props {
   tasks: TasksQuery["tasks"];
 }
+
 /**
  * Displays a list of task and a weekly calendar
  */
@@ -167,7 +169,7 @@ export const HomePage = (props: Props) => {
       </Sidebar.SideBar>
       <Sidebar.Content>
         <Calendar
-          tasks={tasks.filter(hasDateP)}
+          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
           updateTask={updateTaskOptimistic}
           createTask={(start, end, includeTime) =>
             history.push(`/newtask`, {
@@ -183,6 +185,3 @@ export const HomePage = (props: Props) => {
     </Sidebar.Container>
   );
 };
-
-// ------------------------- Helper Functions -------------------------
-const hasDateP = (task: Task): boolean => !!task.start || !!task.end;
