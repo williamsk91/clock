@@ -7,14 +7,11 @@ import {
   TaskReorderInput,
   UpdateTaskInput
 } from "../graphql/generated";
-import { NewTask } from "./NewTask";
-import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
 interface Props {
   tasks: TaskProps[];
   updateTask: (uti: UpdateTaskInput) => void;
-  createTask: (title: string) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
 
   goTask: (id: string) => void;
@@ -24,12 +21,10 @@ interface Props {
  * A list of Tasks
  */
 export const TaskList = (props: Props) => {
-  const { tasks, updateTask, createTask, taskReorder, goTask } = props;
+  const { tasks, updateTask, taskReorder, goTask } = props;
 
   return (
     <Container>
-      <NewTask createTask={createTask} />
-      <Spacer spacing="12" />
       <DragDropContext
         onDragEnd={result => {
           const destinationIndex = result.destination?.index;
@@ -77,5 +72,5 @@ export const TaskList = (props: Props) => {
 };
 
 const Container = styled.div`
-  overflow-y: auto;
+  overflow: auto;
 `;

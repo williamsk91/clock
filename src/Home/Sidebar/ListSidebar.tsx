@@ -5,6 +5,7 @@ import { Button } from "antd";
 import { format } from "date-fns";
 import styled from "styled-components";
 
+import { NewTask } from "../../components/NewTask";
 import { Spacer } from "../../components/Spacer";
 import { isNotDoneP } from "../../components/taskFilter";
 import { TaskList } from "../../components/TaskList";
@@ -27,9 +28,8 @@ export const ListSidebar = (props: Props) => {
   const history = useHistory();
 
   return (
-    <div>
+    <Container>
       <div>
-        <Spacer spacing="12" />
         <Button
           onClick={() => history.push("/setting")}
           type="default"
@@ -40,17 +40,26 @@ export const ListSidebar = (props: Props) => {
         <Spacer spacing="12" />
         <Today />
         <Spacer spacing="24" />
+        <NewTask createTask={createTask} />
+        <Spacer spacing="12" />
       </div>
       <TaskList
         tasks={tasks.filter(isNotDoneP)}
-        createTask={createTask}
         updateTask={updateTask}
         taskReorder={taskReorder}
         goTask={(id: string) => history.push(`task/${id}`)}
       />
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding-top: 12px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+`;
 
 /**
  * Displays today as big heading
