@@ -177,6 +177,13 @@ const Container = styled.div`
       :hover {
         text-decoration: none;
       }
+      &.short-duration-event .fc-event-main {
+        display: flex;
+        .fc-event-time {
+          margin-right: 3px;
+        }
+      }
+
       .fc-event-time {
         font-size: 12px;
       }
@@ -214,6 +221,14 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
     const { id, title } = t;
 
     delete t.repeat?.__typename;
+
+    // classNames for styling
+    const classNames = [];
+    t.start &&
+      t.end &&
+      differenceInMinutes(new Date(t.end), new Date(t.start)) <= 45 &&
+      classNames.push("short-duration-event");
+
     return {
       id,
       title,
@@ -235,7 +250,7 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
 
       /** Style */
       backgroundColor: t.color ?? undefined,
-      classNames: t.done ? ["done"] : [],
+      classNames,
 
       /**
        * Extra props are required to get full information of the task.
