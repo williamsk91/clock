@@ -111,6 +111,9 @@ const Container = styled.div`
     .fc-col-header-cell {
       border: none;
       background: none;
+      .fc-col-header-cell-cushion:hover {
+        text-decoration: none;
+      }
       .weekday {
         color: rgba(55, 53, 47, 0.65);
       }
@@ -163,11 +166,17 @@ const Container = styled.div`
     .fc-daygrid-event {
       padding: 0 4px;
       font-size: 14px;
+      :hover {
+        text-decoration: none;
+      }
     }
 
     /* event */
     .fc-timegrid-event {
       padding: 3px 4px;
+      :hover {
+        text-decoration: none;
+      }
       .fc-event-time {
         font-size: 12px;
       }
