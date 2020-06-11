@@ -10,12 +10,12 @@ import {
   RetweetOutlined,
   WarningOutlined
 } from "@ant-design/icons";
-import { DateRangePicker, TimePrecision } from "@blueprintjs/datetime";
 import { Button, Input, Switch } from "antd";
 import { isBefore } from "date-fns";
 import styled from "styled-components";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
+import { DatePicker } from "../DatePicker";
 import { parseDate } from "../datetime";
 import { demuxUpdateTask } from "../utils";
 import { ColorSelect } from "./ColorSelect";
@@ -59,17 +59,14 @@ export const TaskSetting = (props: Props) => {
       <IconContainer>
         <CalendarOutlined />
       </IconContainer>
-      <StyledDateRangePicker
+      <DatePicker
         value={[start, end]}
         onChange={([newStart, newEnd]) => {
           // end is earlier than start restriction violated
           if (newStart && newEnd && isBefore(newEnd, newStart)) return;
           updateDates([newStart, newEnd]);
         }}
-        timePrecision={includeTime ? TimePrecision.MINUTE : undefined}
-        shortcuts={false}
-        allowSingleDayRange
-        singleMonthOnly
+        includeTime={includeTime}
       />
 
       <IconContainer>
@@ -147,21 +144,6 @@ const IconContainer = styled.div<{ onClick?: () => void }>`
 
 const Title = styled(Input.TextArea)`
   border: none;
-`;
-
-const StyledDateRangePicker = styled(DateRangePicker)`
-  .DayPicker-Day--today {
-    &,
-    &:hover {
-      color: hsl(352, 98%, 54%);
-    }
-  }
-  .DayPicker-Day--selected {
-    &,
-    &:hover {
-      color: white;
-    }
-  }
 `;
 
 const IncludeTimeRow = styled.div`
