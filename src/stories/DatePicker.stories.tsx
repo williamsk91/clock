@@ -16,6 +16,10 @@ const Base = () => {
         setStart(start);
         setEnd(end);
       }}
+      repeat={{
+        freq: "weekly",
+        byweekday: [0, 1, 2, 3, 6]
+      }}
       includeTime={true}
     />
   );
