@@ -262,8 +262,6 @@ const tasksToEventInput = (tasks: Task[]): EventInput[] =>
        * Repeating task have requires special explicit duration.
        */
       duration: eventDuration(t.start, t.end, !!t.repeat, !t.includeTime),
-      // this is to move recurring dates together
-      groupId: id,
 
       /** Style */
       backgroundColor: t.color ?? undefined,
@@ -336,8 +334,17 @@ const repeatDropEventToRepeatDropModal = (
   return {
     open: true,
     onCancel: () => setRepeatEventDrop(null),
-    updateCurrent: () => console.log("updateCurrent"),
-    updateCurrentOnward: () => console.log("updateCurrentOnward"),
-    updateAll: () => console.log("updateAll")
+    updateCurrent: () => {
+      console.log("updateCurrent");
+      setRepeatEventDrop(null);
+    },
+    updateCurrentOnward: () => {
+      console.log("updateCurrentOnward");
+      setRepeatEventDrop(null);
+    },
+    updateAll: () => {
+      updateTask(eventToTaskUpdateInput(arg.event));
+      setRepeatEventDrop(null);
+    }
   };
 };

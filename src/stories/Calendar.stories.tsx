@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Calendar } from "../components/Calendar/Calendar";
 import { Navigation } from "../components/Calendar/Navigation";
@@ -8,18 +8,26 @@ import { FullPageLayout } from "./utils";
 
 export default { title: "Components / Calendar" };
 
-export const base = () => {
-  const tasks = getTasks();
+const Base = () => {
+  const [tasks, setTasks] = useState(getTasks());
   return (
-    <FullPageLayout>
-      <Calendar
-        tasks={tasks}
-        updateTask={t => console.log("t: ", t)}
-        createTask={title => console.log("title: ", title)}
-      />
-    </FullPageLayout>
+    <Calendar
+      tasks={tasks}
+      updateTask={ut => {
+        const taskIndex = tasks.findIndex(t => t.id === ut.id);
+        const copy = [...tasks];
+        copy[taskIndex] = ut;
+        setTasks(copy);
+      }}
+      createTask={title => console.log("title: ", title)}
+    />
   );
 };
+export const base = () => (
+  <FullPageLayout>
+    <Base />
+  </FullPageLayout>
+);
 
 export const navigation = () => (
   <Navigation
