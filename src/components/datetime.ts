@@ -1,4 +1,4 @@
-import { addMinutes, format, isSameDay, isSameYear } from "date-fns";
+import { format, isSameDay, isSameYear } from "date-fns";
 import RRule from "rrule";
 
 import { Repeat } from "../graphql/generated";
@@ -85,9 +85,12 @@ export const parseDate = (s: string | null): Date | null => {
 };
 
 /**
- * Converts `Repeat` to RRule
+ * Similar to `parseDate` but ignores undefined.
+ * Warning: this will throw an error if input is not a date string.
  */
-export const repeatToRRule = (r: Repeat, dtstart?: Date): RRule => {
+export const parseDefinedDate = (s: string): Date => new Date(s);
+
+const repeatToRRule = (r: Repeat): RRule => {
   let freq;
   switch (r.freq) {
     case "daily":
@@ -106,11 +109,6 @@ export const repeatToRRule = (r: Repeat, dtstart?: Date): RRule => {
 
   return new RRule({
     freq,
-    byweekday: r.byweekday,
-    // rrule doesn't play nicely with timezone so we convert it to UTC time first
-    // https://github.com/jakubroztocil/rrule#important-use-utc-dates
-    dtstart: dtstart
-      ? addMinutes(dtstart, dtstart.getTimezoneOffset() * -1)
-      : undefined
+    byweekday: r.byweekday
   });
 };

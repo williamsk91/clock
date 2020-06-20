@@ -66,7 +66,6 @@ export const TaskSetting = (props: Props) => {
           if (newStart && newEnd && isBefore(newEnd, newStart)) return;
           updateDates([newStart, newEnd]);
         }}
-        repeat={repeat}
         includeTime={includeTime}
       />
 
