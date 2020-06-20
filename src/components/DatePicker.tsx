@@ -36,6 +36,9 @@ export const DatePicker = (props: Props) => {
       shortcuts={false}
       allowSingleDayRange
       singleMonthOnly
+      dayPickerProps={{
+        firstDayOfWeek: 1
+      }}
     />
   );
 };
