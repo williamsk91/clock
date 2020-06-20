@@ -2,7 +2,6 @@ import React from "react";
 
 import { Calendar } from "../components/Calendar/Calendar";
 import { Navigation } from "../components/Calendar/Navigation";
-import { RepeatDropModal } from "../components/Calendar/RepeatDropModal";
 import { getTasks } from "./mocks";
 import { FullPageLayout } from "./utils";
 
@@ -27,15 +26,5 @@ export const navigation = () => (
     onPrev={() => console.log("onPrev")}
     onNext={() => console.log("onNext")}
     onNow={() => console.log("onNow")}
-  />
-);
-
-export const repeatDropModal = () => (
-  <RepeatDropModal
-    open={true}
-    onCancel={() => console.log("cancel")}
-    updateCurrent={() => console.log("updateCurrent")}
-    updateCurrentOnward={() => console.log("updateCurrentOnward")}
-    updateAll={() => console.log("updateAll")}
   />
 );

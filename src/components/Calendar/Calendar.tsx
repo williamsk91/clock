@@ -1,6 +1,6 @@
 import "@fullcalendar/react";
 
-import React, { FC, useState } from "react";
+import React, { FC, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import {
   differenceInDays,
@@ -12,13 +12,12 @@ import {
 import styled from "styled-components";
 
 import { EventInput } from "@fullcalendar/core";
-import interactionPlugin, { EventDropArg } from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
-import { RepeatDropModal, RepeatDropModalProps } from "./RepeatDropModal";
 
 interface IProp {
   tasks: Task[];
@@ -30,22 +29,14 @@ export const Calendar: FC<IProp> = props => {
   const { tasks, updateTask, createTask } = props;
   const history = useHistory();
 
-  const [repeatEventDrop, setRepeatEventDrop] = useState<EventDropArg | null>(
-    null
-  );
+  const cal = useRef<FullCalendar>(null);
 
   const events: EventInput[] = tasksToEventInput(tasks);
 
   return (
     <Container>
-      <RepeatDropModal
-        {...repeatDropEventToRepeatDropModal(
-          repeatEventDrop,
-          setRepeatEventDrop,
-          updateTask
-        )}
-      />
       <FullCalendar
+        ref={cal}
         height="100%"
         initialView="timeGridWeek"
         plugins={[timeGridPlugin, rrule, interactionPlugin]}
@@ -67,15 +58,7 @@ export const Calendar: FC<IProp> = props => {
         // resizing
         eventResize={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // dragging
-        eventDrop={arg => {
-          // show modal to choose how this repeating event
-          //  affects other instances of itself.
-          if (arg.event.extendedProps.repeat) {
-            setRepeatEventDrop(arg);
-          } else {
-            updateTask(eventToTaskUpdateInput(arg.event));
-          }
-        }}
+        eventDrop={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // Labels
         headerToolbar={{
           left: "prev,today,next",
@@ -316,28 +299,5 @@ const eventDuration = (
     month: differenceInMonths(endDate, startDate),
     day: differenceInDays(endDate, startDate),
     minute: differenceInMinutes(endDate, startDate)
-  };
-};
-
-const repeatDropEventToRepeatDropModal = (
-  arg: EventDropArg | null,
-  setRepeatEventDrop: (red: EventDropArg | null) => void,
-  updateTask: (uti: UpdateTaskInput) => void
-): RepeatDropModalProps => {
-  if (!arg)
-    return {
-      open: false,
-      onCancel: () => setRepeatEventDrop(null),
-      updateCurrent: () => console.log("updateCurrent"),
-      updateCurrentOnward: () => console.log("updateCurrentOnward"),
-      updateAll: () => console.log("updateAll")
-    };
-
-  return {
-    open: true,
-    onCancel: () => setRepeatEventDrop(null),
-    updateCurrent: () => console.log("updateCurrent"),
-    updateCurrentOnward: () => console.log("updateCurrentOnward"),
-    updateAll: () => console.log("updateAll")
   };
 };
