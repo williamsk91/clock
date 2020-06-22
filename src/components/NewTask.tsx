@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { PlusSquareOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import styled from "styled-components";
-
-import { IconButton } from "./IconButton";
 
 interface Props {
   createTask: (title: string) => void;
@@ -31,8 +30,8 @@ export const NewTask = (props: Props) => {
       />
       <AddButton
         type="link"
-        onClick={() => createTask(title)}
         icon={<PlusSquareOutlined />}
+        onClick={() => createTask(title)}
       />
     </Container>
   );
@@ -55,7 +54,7 @@ const Input = styled.input`
   }
 `;
 
-const AddButton = styled(IconButton)`
+const AddButton = styled(Button)`
   transition: opacity 0.1s ease-in;
   opacity: 0;
   ${Container}:hover & {

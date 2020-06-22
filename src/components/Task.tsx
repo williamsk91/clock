@@ -4,12 +4,12 @@ import {
   CheckSquareOutlined,
   SettingOutlined
 } from "@ant-design/icons";
+import { Button } from "antd";
 import styled from "styled-components";
 
 import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { defaultEventColor } from "./Calendar/styles";
 import { formatDatetime, parseDate } from "./datetime";
-import { IconButton } from "./IconButton";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
 import { demuxUpdateTask } from "./utils";
@@ -73,15 +73,15 @@ export const Task: FC<IProp> = props => {
             )}
           </div>
           <Actions>
-            <IconButton
+            <Button
+              icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
               type="link"
               onClick={updateDone}
-              icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
             />
-            <IconButton
+            <Button
+              icon={<SettingOutlined />}
               type="link"
               onClick={() => goTask(id)}
-              icon={<SettingOutlined />}
             />
           </Actions>
         </TaskContainer>

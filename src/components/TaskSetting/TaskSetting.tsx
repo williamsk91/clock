@@ -125,7 +125,14 @@ export const TaskSetting = (props: Props) => {
             <ClearDateButton
               type="link"
               danger
-              onClick={() => updateDates([null, null])}
+              onClick={() => {
+                updateTask({
+                  ...task,
+                  start: null,
+                  end: null,
+                  repeat: null
+                });
+              }}
             >
               Clear date
             </ClearDateButton>
