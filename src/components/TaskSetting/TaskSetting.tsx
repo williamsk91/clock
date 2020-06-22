@@ -4,6 +4,7 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import React, { useMemo } from "react";
 import {
   CalendarOutlined,
+  CheckOutlined,
   ClockCircleOutlined,
   HighlightOutlined,
   LeftOutlined,
@@ -42,7 +43,8 @@ export const TaskSetting = (props: Props) => {
     setIncludeTime,
     updateRepeat,
     updateColor,
-    setTitle
+    setTitle,
+    setDone
   } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
 
   return (
@@ -55,6 +57,21 @@ export const TaskSetting = (props: Props) => {
         autoSize={{ minRows: 1, maxRows: 3 }}
         onChange={e => setTitle(e.currentTarget.value)}
       />
+
+      <IconContainer>
+        <CheckOutlined />
+      </IconContainer>
+      <div>
+        <Button
+          onClick={() => {
+            setDone(new Date().toISOString());
+            goBack();
+          }}
+          type="link"
+        >
+          Mark Completed
+        </Button>
+      </div>
 
       <IconContainer>
         <CalendarOutlined />
