@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { defaultEventColor } from "./Calendar/styles";
 import { formatDatetime, parseDate } from "./datetime";
-import { Spacer } from "./Spacer";
 import { Text } from "./Text";
 import { demuxUpdateTask } from "./utils";
 
@@ -46,48 +45,45 @@ export const Task: FC<IProp> = props => {
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
   return (
-    <>
-      <Container>
-        <TaskContainer>
-          <Banner color={color ?? defaultEventColor} />
-          <div>
-            <Input
-              done={!!done}
-              value={title}
-              onChange={e => setTitle(e.currentTarget.value)}
-              onKeyDown={e => {
-                if (e.ctrlKey && e.keyCode === 13) {
-                  updateDone();
-                }
-              }}
-            />
-            {start && (
-              <Text.Sub>
-                {formatDatetime(
-                  start,
-                  end ?? undefined,
-                  repeat ?? undefined,
-                  includeTime
-                )}
-              </Text.Sub>
-            )}
-          </div>
-          <Actions>
-            <Button
-              icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
-              type="link"
-              onClick={updateDone}
-            />
-            <Button
-              icon={<SettingOutlined />}
-              type="link"
-              onClick={() => goTask(id)}
-            />
-          </Actions>
-        </TaskContainer>
-      </Container>
-      <Spacer spacing="6" />
-    </>
+    <Container>
+      <TaskContainer>
+        <Banner color={color ?? defaultEventColor} />
+        <div>
+          <Input
+            done={!!done}
+            value={title}
+            onChange={e => setTitle(e.currentTarget.value)}
+            onKeyDown={e => {
+              if (e.ctrlKey && e.keyCode === 13) {
+                updateDone();
+              }
+            }}
+          />
+          {start && (
+            <Text.Sub>
+              {formatDatetime(
+                start,
+                end ?? undefined,
+                repeat ?? undefined,
+                includeTime
+              )}
+            </Text.Sub>
+          )}
+        </div>
+        <Actions>
+          <Button
+            icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
+            type="link"
+            onClick={updateDone}
+          />
+          <Button
+            icon={<SettingOutlined />}
+            type="link"
+            onClick={() => goTask(id)}
+          />
+        </Actions>
+      </TaskContainer>
+    </Container>
   );
 };
 

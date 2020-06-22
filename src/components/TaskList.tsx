@@ -1,5 +1,10 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable
+} from "react-beautiful-dnd";
 import styled from "styled-components";
 
 import {
@@ -7,6 +12,7 @@ import {
   TaskReorderInput,
   UpdateTaskInput
 } from "../graphql/generated";
+import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
 interface Props {
@@ -23,44 +29,47 @@ interface Props {
 export const TaskList = (props: Props) => {
   const { tasks, updateTask, taskReorder, goTask } = props;
 
+  const onDragEnd = (result: DropResult) => {
+    const destinationIndex = result.destination?.index;
+    if (destinationIndex === undefined) return;
+    const sourceIndex = result.source.index;
+    const [begin, end, reverse] =
+      destinationIndex > sourceIndex
+        ? [sourceIndex, destinationIndex, true]
+        : [destinationIndex, sourceIndex, false];
+    const taskSlice = tasks
+      .slice(begin, end + 1)
+      .map(({ id, order }) => ({ id, order }));
+    const taskSliceWithOrder = reverse ? taskSlice.reverse() : taskSlice;
+    taskReorder(taskSliceWithOrder);
+  };
+
   return (
     <Container>
-      <DragDropContext
-        onDragEnd={result => {
-          const destinationIndex = result.destination?.index;
-          if (destinationIndex === undefined) return;
-          const sourceIndex = result.source.index;
-          const [begin, end, reverse] =
-            destinationIndex > sourceIndex
-              ? [sourceIndex, destinationIndex, true]
-              : [destinationIndex, sourceIndex, false];
-          const taskSlice = tasks
-            .slice(begin, end + 1)
-            .map(({ id, order }) => ({ id, order }));
-          const taskSliceWithOrder = reverse ? taskSlice.reverse() : taskSlice;
-          taskReorder(taskSliceWithOrder);
-        }}
-      >
+      <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="list">
           {provided => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {tasks.map((t, i) => (
-                <Draggable key={t.id} draggableId={t.id} index={i}>
-                  {provided => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <Task
-                        key={i}
-                        {...t}
-                        updateTask={updateTask}
-                        goTask={goTask}
-                      />
-                    </div>
-                  )}
-                </Draggable>
+                <>
+                  <Draggable key={t.id} draggableId={t.id} index={i}>
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Task
+                          key={i}
+                          {...t}
+                          updateTask={updateTask}
+                          goTask={goTask}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                  <Spacer spacing="6" />
+                </>
               ))}
               {provided.placeholder}
             </div>
