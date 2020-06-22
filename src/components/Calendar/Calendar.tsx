@@ -1,7 +1,12 @@
 import "@fullcalendar/react";
 
-import React, { FC, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { EventInput } from "@fullcalendar/core";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar, { EventApi } from "@fullcalendar/react";
+import rrule from "@fullcalendar/rrule";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import {
   differenceInDays,
   differenceInMinutes,
@@ -11,13 +16,8 @@ import {
 } from "date-fns";
 import styled from "styled-components";
 
-import { EventInput } from "@fullcalendar/core";
-import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar, { EventApi } from "@fullcalendar/react";
-import rrule from "@fullcalendar/rrule";
-import timeGridPlugin from "@fullcalendar/timegrid";
-
 import { Task, UpdateTaskInput } from "../../graphql/generated";
+import { useCalendarContext } from "../context/CalendarContext";
 
 interface IProp {
   tasks: Task[];
@@ -28,15 +28,20 @@ interface IProp {
 export const Calendar: FC<IProp> = props => {
   const { tasks, updateTask, createTask } = props;
   const history = useHistory();
-
-  const cal = useRef<FullCalendar>(null);
+  const calRef = useRef<FullCalendar>(null);
+  const { setApi } = useCalendarContext();
 
   const events: EventInput[] = tasksToEventInput(tasks);
+
+  useEffect(() => {
+    if (!calRef.current) return;
+    setApi(calRef.current.getApi());
+  }, [calRef, setApi]);
 
   return (
     <Container>
       <FullCalendar
-        ref={cal}
+        ref={calRef}
         height="100%"
         initialView="timeGridWeek"
         plugins={[timeGridPlugin, rrule, interactionPlugin]}
@@ -48,11 +53,14 @@ export const Calendar: FC<IProp> = props => {
         eventBorderColor="transparent"
         editable
         // clicking
-        eventClick={({ event }) => history.push(`/task/${event.id}`)}
-        // selecting
+        eventClick={({ event }) => {
+          calRef.current?.getApi().unselect();
+          history.push(`/task/${event.id}`);
+        }}
+        // selecting - creating new task
         selectable
         selectMirror
-        unselectCancel=".new-calendar-event-input"
+        unselectAuto={false}
         snapDuration="00:30"
         select={({ start, end, allDay }) => createTask(start, end, !allDay)}
         // resizing

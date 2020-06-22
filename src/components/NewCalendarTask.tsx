@@ -3,6 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Button, Input } from "antd";
 import styled from "styled-components";
 
+import { useCalendarContext } from "./context/CalendarContext";
 import { formatDatetime } from "./datetime";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
@@ -34,6 +35,7 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
   const { onCancel, onConfirm } = props;
   const history = useHistory();
   const location = useLocation<LocationState>();
+  const { api } = useCalendarContext();
 
   const [title, setTitle] = useState("");
 
@@ -45,7 +47,7 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
   const { start, end, includeTime } = date;
 
   return (
-    <Container className="new-calendar-event-input">
+    <Container>
       <Card>
         <Input value={title} onChange={e => setTitle(e.currentTarget.value)} />
         <Spacer spacing="12" />
@@ -54,12 +56,22 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
         </Text.Sub>
         <Spacer spacing="12" />
         <ButtonGroup>
-          <Button onClick={onCancel} type="link" danger>
+          <Button
+            onClick={() => {
+              onCancel();
+              api?.unselect();
+            }}
+            type="link"
+            danger
+          >
             Cancel
           </Button>
           <Button
             onClick={() => {
-              onConfirm(title, start, end, includeTime);
+              if (title !== "") {
+                onConfirm(title, start, end, includeTime);
+                api?.unselect();
+              }
             }}
             type="primary"
           >

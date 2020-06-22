@@ -34,9 +34,7 @@ export const HomePage = (props: Props) => {
   const { tasks } = props;
   const history = useHistory();
 
-  const [createTask] = useCreateTaskMutation({
-    onCompleted: ({ createTask: { id } }) => history.push(`/task/${id}`)
-  });
+  const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [taskReorder] = useTaskReorderMutation();
 
@@ -63,9 +61,10 @@ export const HomePage = (props: Props) => {
               }))
             }
           });
+          history.push("/");
         }
       }),
-    [createTask]
+    [createTask, history]
   );
 
   const updateTaskOptimistic = useCallback(

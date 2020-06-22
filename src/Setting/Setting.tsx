@@ -46,7 +46,9 @@ export const SettingPage = () => {
             okType="danger"
             placement="right"
           >
-            <Button type="danger">Delete Account</Button>
+            <Button type="link" danger>
+              Delete Account
+            </Button>
           </Popconfirm>
         </Collapse.Panel>
       </Collapse>
