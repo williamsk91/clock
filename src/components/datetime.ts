@@ -55,11 +55,10 @@ export const formatDatetime = (
   // same day
   if (end && isSameDay(start, end)) {
     const dateString = formatDate(start, now);
-    const timeString = `${format(start, TIME_FORMAT)}~${format(
-      end,
-      TIME_FORMAT
-    )}`;
-    return `${dateString} ${timeString}`;
+    const timeString = includeTime
+      ? ` ${format(start, TIME_FORMAT)}~${format(end, TIME_FORMAT)}`
+      : "";
+    return `${dateString}${timeString}`;
   }
 
   const endString = end

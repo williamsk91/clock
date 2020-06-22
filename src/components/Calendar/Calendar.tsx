@@ -8,6 +8,7 @@ import FullCalendar, { EventApi } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {
+  addMinutes,
   differenceInDays,
   differenceInMinutes,
   differenceInMonths,
@@ -62,7 +63,10 @@ export const Calendar: FC<IProp> = props => {
         selectMirror
         unselectAuto={false}
         snapDuration="00:30"
-        select={({ start, end, allDay }) => createTask(start, end, !allDay)}
+        select={({ start, end, allDay }) =>
+          // end is modified as by default FullCalendar treats end as exclusive
+          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay)
+        }
         // resizing
         eventResize={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // dragging
