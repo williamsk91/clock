@@ -2,9 +2,8 @@ import "@fullcalendar/react";
 
 import React, { FC, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { EventInput } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar, { EventApi } from "@fullcalendar/react";
+import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {
@@ -13,7 +12,7 @@ import {
   differenceInMinutes,
   differenceInMonths,
   differenceInYears,
-  format
+  format,
 } from "date-fns";
 import styled from "styled-components";
 
@@ -26,13 +25,13 @@ interface IProp {
   createTask: (start: Date, end: Date, includeTime: boolean) => void;
 }
 
-export const Calendar: FC<IProp> = props => {
+export const Calendar: FC<IProp> = (props) => {
   const { tasks, updateTask, createTask } = props;
   const history = useHistory();
   const calRef = useRef<FullCalendar>(null);
   const { setApi } = useCalendarContext();
 
-  const events: EventInput[] = tasksToEventInput(tasks);
+  const events: EventInput[] = tasks.map(taskToEventInput);
 
   useEffect(() => {
     if (!calRef.current) return;
@@ -50,9 +49,26 @@ export const Calendar: FC<IProp> = props => {
         slotDuration="01:00"
         slotLabelFormat={{ hour: "numeric", minute: "numeric", hour12: false }}
         // events
-        events={events}
         eventBorderColor="transparent"
+        events={events}
         editable
+        droppable
+        // resizing & dragging
+        eventChange={({ event }) => {
+          updateTask(eventToTaskUpdateInput(event));
+        }}
+        // dropping - drop from task list
+        eventReceive={({ event, view }) => {
+          const updateInput = eventToTaskUpdateInput(event);
+          updateTask(updateInput);
+          /**
+           * Very bad hack to prevent duplicate events from rendering.
+           * To check if it safe to remove this try drag and drop an event
+           *  from TaskList to calendar. If there's only **1** event in the
+           *  calendar then it is safe to remove.
+           */
+          view.calendar.removeAllEvents();
+        }}
         // clicking
         eventClick={({ event }) => {
           calRef.current?.getApi().unselect();
@@ -67,14 +83,10 @@ export const Calendar: FC<IProp> = props => {
           // end is modified as by default FullCalendar treats end as exclusive
           createTask(start, allDay ? addMinutes(end, -1) : end, !allDay)
         }
-        // resizing
-        eventResize={({ event }) => updateTask(eventToTaskUpdateInput(event))}
-        // dragging
-        eventDrop={({ event }) => updateTask(eventToTaskUpdateInput(event))}
         // Labels
         headerToolbar={{
           left: "prev,today,next",
-          right: undefined
+          right: undefined,
         }}
         nowIndicator
         dayHeaderContent={({ date }) => (
@@ -228,52 +240,56 @@ const Container = styled.div`
 `;
 
 // ------------------------- Helper Functions -------------------------
-const tasksToEventInput = (tasks: Task[]): EventInput[] =>
-  tasks.map(t => {
-    const { id, title } = t;
+export const taskToEventInput = (task: Task): EventInput => {
+  const { id, title } = task;
 
-    delete t.repeat?.__typename;
+  delete task.repeat?.__typename;
 
-    // classNames for styling
-    const classNames = [];
-    t.start &&
-      t.end &&
-      differenceInMinutes(new Date(t.end), new Date(t.start)) <= 45 &&
-      classNames.push("short-duration-event");
+  // classNames for styling
+  const classNames = [];
+  task.start &&
+    task.end &&
+    differenceInMinutes(new Date(task.end), new Date(task.start)) <= 45 &&
+    classNames.push("short-duration-event");
 
-    return {
-      id,
-      title,
+  return {
+    id,
+    title,
 
-      /** Timestamp */
-      start: t.start ?? undefined,
-      end: t.end ?? undefined,
-      allDay: !t.includeTime,
+    /** Timestamp */
+    start: task.start ?? undefined,
+    end: task.end ?? undefined,
+    allDay: !task.includeTime,
 
-      /** Repeating tasks */
-      // dtstart is required
-      rrule: t.repeat ? { ...t.repeat, dtstart: t.start } : null,
-      /**
-       * Repeating task have requires special explicit duration.
-       */
-      duration: eventDuration(t.start, t.end, !!t.repeat, !t.includeTime),
-      // this is to move recurring dates together
-      groupId: id,
+    /** Repeating tasks */
+    // dtstart is required
+    rrule: task.repeat ? { ...task.repeat, dtstart: task.start } : null,
+    /**
+     * Repeating task have requires special explicit duration.
+     */
+    duration: eventDuration(
+      task.start,
+      task.end,
+      !!task.repeat,
+      !task.includeTime
+    ),
+    // this is to move recurring dates together
+    groupId: id,
 
-      /** Style */
-      backgroundColor: t.color ?? undefined,
-      classNames,
+    /** Style */
+    backgroundColor: task.color ?? undefined,
+    classNames,
 
-      /**
-       * Extra props are required to get full information of the task.
-       * Check eventToTaskUpdateInput
-       */
-      done: t.done,
-      order: t.order,
-      repeat: t.repeat,
-      eventColor: t.color
-    };
-  });
+    /**
+     * Extra props are required to get full information of the task.
+     * Check eventToTaskUpdateInput
+     */
+    done: task.done,
+    order: task.order,
+    repeat: task.repeat,
+    eventColor: task.color,
+  };
+};
 
 const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   id: e.id,
@@ -284,7 +300,7 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   includeTime: !e.allDay,
   color: e.extendedProps?.eventColor,
   order: e.extendedProps.order,
-  repeat: e.extendedProps?.repeat
+  repeat: e.extendedProps?.repeat,
 });
 
 /**
@@ -310,6 +326,6 @@ const eventDuration = (
     year: differenceInYears(endDate, startDate),
     month: differenceInMonths(endDate, startDate),
     day: differenceInDays(endDate, startDate),
-    minute: differenceInMinutes(endDate, startDate)
+    minute: differenceInMinutes(endDate, startDate),
   };
 };

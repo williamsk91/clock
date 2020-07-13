@@ -3,15 +3,16 @@ import {
   DragDropContext,
   Draggable,
   DropResult,
-  Droppable
+  Droppable,
 } from "react-beautiful-dnd";
 import styled from "styled-components";
 
 import {
   Task as TaskProps,
   TaskReorderInput,
-  UpdateTaskInput
+  UpdateTaskInput,
 } from "../graphql/generated";
+import { ExternalDraggableTask } from "./Calendar/ExternalDraggableTask";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
@@ -48,28 +49,30 @@ export const TaskList = (props: Props) => {
     <Container>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="list">
-          {provided => (
+          {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {tasks.map((t, i) => (
-                <>
-                  <Draggable key={t.id} draggableId={t.id} index={i}>
-                    {provided => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Task
-                          key={i}
-                          {...t}
-                          updateTask={updateTask}
-                          goTask={goTask}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                  <Spacer spacing="6" />
-                </>
+                <Draggable key={t.id} draggableId={t.id} index={i}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <>
+                        <ExternalDraggableTask task={t}>
+                          <Task
+                            key={i}
+                            {...t}
+                            updateTask={updateTask}
+                            goTask={goTask}
+                          />
+                        </ExternalDraggableTask>
+                        <Spacer spacing="6" />
+                      </>
+                    </div>
+                  )}
+                </Draggable>
               ))}
               {provided.placeholder}
             </div>

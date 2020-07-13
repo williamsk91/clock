@@ -5,7 +5,7 @@ import { Calendar } from "../components/Calendar";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
-import { hasDateP, isNotDoneP } from "../components/taskFilter";
+import { hasDateP } from "../components/taskFilter";
 import { cycleArray } from "../components/utils";
 import {
   CreateTaskInput,
@@ -125,6 +125,19 @@ export const HomePage = (props: Props) => {
     [taskReorder]
   );
 
+  const createCalendarTask = useCallback(
+    (start: Date, end: Date, includeTime: boolean) => {
+      history.push(`/newtask`, {
+        date: {
+          start,
+          end,
+          includeTime
+        }
+      });
+    },
+    [history]
+  );
+
   return (
     <Sidebar.Container>
       <Sidebar.SideBar>
@@ -170,17 +183,9 @@ export const HomePage = (props: Props) => {
       <Sidebar.Content>
         <Spacer spacing="12" />
         <Calendar
-          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
+          tasks={tasks.filter(hasDateP)}
           updateTask={updateTaskOptimistic}
-          createTask={(start, end, includeTime) =>
-            history.push(`/newtask`, {
-              date: {
-                start,
-                end,
-                includeTime
-              }
-            })
-          }
+          createTask={createCalendarTask}
         />
       </Sidebar.Content>
     </Sidebar.Container>

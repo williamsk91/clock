@@ -9,7 +9,7 @@ import {
   HighlightOutlined,
   LeftOutlined,
   RetweetOutlined,
-  WarningOutlined
+  WarningOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Switch } from "antd";
 import { isBefore } from "date-fns";
@@ -34,6 +34,7 @@ interface Props {
  */
 export const TaskSetting = (props: Props) => {
   const { task, updateTask, goBack } = props;
+
   const { includeTime, color, repeat, title } = task;
   const start = parseDate(task.start);
   const end = parseDate(task.end);
@@ -44,7 +45,7 @@ export const TaskSetting = (props: Props) => {
     updateRepeat,
     updateColor,
     setTitle,
-    setDone
+    setDone,
   } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
 
   return (
@@ -55,7 +56,7 @@ export const TaskSetting = (props: Props) => {
       <Title
         value={title}
         autoSize={{ minRows: 1, maxRows: 3 }}
-        onChange={e => setTitle(e.currentTarget.value)}
+        onChange={(e) => setTitle(e.currentTarget.value)}
       />
 
       <IconContainer>
@@ -94,7 +95,7 @@ export const TaskSetting = (props: Props) => {
         <Switch
           size="small"
           checked={includeTime}
-          onChange={checked => setIncludeTime(checked)}
+          onChange={(checked) => setIncludeTime(checked)}
         />
       </IncludeTimeRow>
 
@@ -130,7 +131,7 @@ export const TaskSetting = (props: Props) => {
                   ...task,
                   start: null,
                   end: null,
-                  repeat: null
+                  repeat: null,
                 });
               }}
             >
@@ -162,7 +163,7 @@ const IconContainer = styled.div<{ onClick?: () => void }>`
   margin: 6px auto;
 
   :hover {
-    cursor: ${p => (p.onClick ? "pointer" : "initial")};
+    cursor: ${(p) => (p.onClick ? "pointer" : "initial")};
   }
 `;
 
