@@ -53,11 +53,12 @@ export const TaskList = (props: Props) => {
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {tasks.map((t, i) => (
                 <Draggable key={t.id} draggableId={t.id} index={i}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      style={getStyle(provided.draggableProps.style, snapshot)}
                     >
                       <>
                         <ExternalDraggableTask task={t}>
@@ -86,3 +87,18 @@ export const TaskList = (props: Props) => {
 const Container = styled.div`
   overflow: auto;
 `;
+
+/**
+ * Skips drop animation
+ * https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/guides/drop-animation.md#skipping-the-drop-animation
+ */
+function getStyle(style: any, snapshot: any) {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    // cannot be 0, but make it super tiny
+    transitionDuration: `0.001s`,
+  };
+}
