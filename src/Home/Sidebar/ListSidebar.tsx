@@ -12,7 +12,7 @@ import { TaskList } from "../../components/TaskList";
 import {
   Task,
   TaskReorderInput,
-  UpdateTaskInput
+  UpdateTaskInput,
 } from "../../graphql/generated";
 
 interface Props {
@@ -32,7 +32,7 @@ export const ListSidebar = (props: Props) => {
       <div>
         <Button
           onClick={() => history.push("/setting")}
-          type="default"
+          type="text"
           icon={<SettingOutlined />}
         >
           setting
