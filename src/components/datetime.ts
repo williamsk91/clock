@@ -1,5 +1,5 @@
 import { format, isSameDay, isSameYear } from "date-fns";
-import RRule from "rrule";
+import RRule, { Frequency } from "rrule";
 
 import { Repeat } from "../graphql/generated";
 
@@ -32,7 +32,20 @@ const formatSingleDatetime = (
 /**
  * Format repeat date using RRule
  */
-const formatRRule = (rr: RRule) => rr.toText();
+const formatRRule = (rr: RRule): string => {
+  switch (rr.options.freq) {
+    case Frequency.DAILY:
+      return "daily";
+    case Frequency.WEEKLY:
+      return "weekly";
+    case Frequency.MONTHLY:
+      return "monthly";
+    case Frequency.YEARLY:
+      return "yearly";
+    default:
+      return "";
+  }
+};
 
 /**
  * Format date one of the following format
@@ -108,6 +121,6 @@ const repeatToRRule = (r: Repeat): RRule => {
 
   return new RRule({
     freq,
-    byweekday: r.byweekday
+    byweekday: r.byweekday,
   });
 };
