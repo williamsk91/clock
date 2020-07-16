@@ -1,12 +1,13 @@
 import React, { FC, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Button, Input } from "antd";
+import { Button } from "antd";
 import styled from "styled-components";
 
+import { defaultEventColor } from "./Calendar/styles";
 import { useCalendarContext } from "./context/CalendarContext";
 import { formatDatetime } from "./datetime";
 import { Spacer } from "./Spacer";
-import { Text } from "./Text";
+import { TaskTitleInput, TimeText } from "./Task";
 
 interface Props {
   onCancel: () => void;
@@ -49,11 +50,18 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
   return (
     <Container>
       <Card>
-        <Input value={title} onChange={e => setTitle(e.currentTarget.value)} />
-        <Spacer spacing="12" />
-        <Text.Sub>
-          {formatDatetime(start, end, undefined, includeTime)}
-        </Text.Sub>
+        <TaskContainer>
+          <TaskTitleInput
+            placeholder="title"
+            done={false}
+            color={defaultEventColor}
+            value={title}
+            onChange={(e) => setTitle(e.currentTarget.value)}
+          />
+          <TimeText>
+            {formatDatetime(start, end, undefined, includeTime)}
+          </TimeText>
+        </TaskContainer>
         <Spacer spacing="12" />
         <ButtonGroup>
           <Button
@@ -61,7 +69,7 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
               onCancel();
               api?.unselect();
             }}
-            type="link"
+            type="text"
             danger
           >
             Cancel
@@ -95,6 +103,19 @@ const Card = styled.div`
   box-sizing: border-box;
 
   background: #ffffff;
+`;
+
+const TaskContainer = styled.div`
+  min-width: 250px;
+
+  height: 48px;
+  width: 100%;
+
+  /* 1px larger than calendar's events because this is including border */
+  padding: 4px 5px;
+  border-radius: 3px;
+
+  background: ${defaultEventColor};
 `;
 
 const ButtonGroup = styled.div`

@@ -20,8 +20,8 @@ export const NewTask = (props: Props) => {
       <Input
         placeholder="Add a task"
         value={title}
-        onChange={e => setTitle(e.currentTarget.value)}
-        onKeyDown={e => {
+        onChange={(e) => setTitle(e.currentTarget.value)}
+        onKeyDown={(e) => {
           if (e.keyCode === 13) {
             title !== "" && createTask(title);
             setTitle("");
@@ -29,7 +29,7 @@ export const NewTask = (props: Props) => {
         }}
       />
       <AddButton
-        type="link"
+        type="text"
         icon={<PlusSquareOutlined />}
         onClick={() => createTask(title)}
       />

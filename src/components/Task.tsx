@@ -47,7 +47,7 @@ export const Task: FC<IProp> = (props) => {
   return (
     <Container color={color ?? defaultEventColor}>
       <div>
-        <Input
+        <TaskTitleInput
           done={!!done}
           color={color ?? defaultEventColor}
           value={title}
@@ -103,7 +103,7 @@ const Container = styled.div<{ color: string }>`
   background: ${(p) => p.color};
 `;
 
-const Input = styled.input<{ color: string; done: boolean }>`
+export const TaskTitleInput = styled.input<{ color: string; done: boolean }>`
   border: 0;
 
   padding: 0;
@@ -115,12 +115,17 @@ const Input = styled.input<{ color: string; done: boolean }>`
   background: ${(p) => p.color};
   color: white;
 
-  &:focus {
+  ::placeholder {
+    color: white;
+    opacity: 0.7;
+  }
+
+  :focus {
     outline: none;
   }
 `;
 
-const TimeText = styled(Text.Sub)`
+export const TimeText = styled(Text.Sub)`
   color: white;
   font-size: 12px;
 `;
