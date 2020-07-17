@@ -3,21 +3,21 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 import React, { useMemo } from "react";
 import {
+  BorderOutlined,
   CalendarOutlined,
-  CheckOutlined,
+  CheckSquareOutlined,
   ClockCircleOutlined,
+  CloseOutlined,
   HighlightOutlined,
-  LeftOutlined,
   RetweetOutlined,
-  WarningOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Switch } from "antd";
-import { isBefore } from "date-fns";
+import { Button, Divider, Input, Switch } from "antd";
 import styled from "styled-components";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
 import { DatePicker } from "../DatePicker";
 import { parseDate } from "../datetime";
+import { Spacer } from "../Spacer";
 import { demuxUpdateTask } from "../utils";
 import { ColorSelect } from "./ColorSelect";
 import { RepeatSelect } from "./RepeatSelect";
@@ -35,7 +35,7 @@ interface Props {
 export const TaskSetting = (props: Props) => {
   const { task, updateTask, goBack } = props;
 
-  const { includeTime, color, repeat, title } = task;
+  const { includeTime, color, repeat, title, done } = task;
   const start = parseDate(task.start);
   const end = parseDate(task.end);
 
@@ -50,121 +50,102 @@ export const TaskSetting = (props: Props) => {
 
   return (
     <Container>
-      <IconContainer onClick={goBack}>
-        <LeftOutlined />
-      </IconContainer>
+      <ActionButtons>
+        <Button onClick={goBack} icon={<CloseOutlined />} type="text" />
+        <Button
+          icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
+          onClick={() => {
+            setDone(new Date().toISOString());
+            goBack();
+          }}
+          type="text"
+        />
+      </ActionButtons>
+
+      <Divider />
+
       <Title
         value={title}
         autoSize={{ minRows: 1, maxRows: 3 }}
         onChange={(e) => setTitle(e.currentTarget.value)}
       />
 
-      <IconContainer>
-        <CheckOutlined />
-      </IconContainer>
-      <div>
-        <Button
-          onClick={() => {
-            setDone(new Date().toISOString());
-            goBack();
-          }}
-          type="link"
-        >
-          Mark Completed
-        </Button>
-      </div>
+      <Divider />
 
-      <IconContainer>
-        <CalendarOutlined />
-      </IconContainer>
-      <DatePicker
-        value={[start, end]}
-        onChange={([newStart, newEnd]) => {
-          // end is earlier than start restriction violated
-          if (newStart && newEnd && isBefore(newEnd, newStart)) return;
-          updateDates([newStart, newEnd]);
-        }}
-        includeTime={includeTime}
-      />
+      <Section>
+        <IconContainer>
+          <ClockCircleOutlined />
+        </IconContainer>
+        <IncludeTimeRow>
+          <div>Include Time</div>
+          <Switch
+            size="small"
+            checked={includeTime}
+            onChange={(checked) => setIncludeTime(checked)}
+          />
+        </IncludeTimeRow>
+      </Section>
 
-      <IconContainer>
-        <ClockCircleOutlined />
-      </IconContainer>
-      <IncludeTimeRow>
-        <div>Include Time</div>
-        <Switch
-          size="small"
-          checked={includeTime}
-          onChange={(checked) => setIncludeTime(checked)}
+      <Spacer spacing="12" />
+
+      <Section>
+        <IconContainer>
+          <CalendarOutlined />
+        </IconContainer>
+        <DatePicker
+          value={[start, end]}
+          onChange={([newStart, newEnd]) => updateDates([newStart, newEnd])}
+          includeTime={includeTime}
         />
-      </IncludeTimeRow>
+      </Section>
 
       {start && (
         <>
-          <IconContainer>
-            <RetweetOutlined />
-          </IconContainer>
-          <RepeatSelect
-            start={new Date(start)}
-            repeat={repeat}
-            updateRepeat={updateRepeat}
-          />
+          <Spacer spacing="12" />
+          <Section>
+            <IconContainer>
+              <RetweetOutlined />
+            </IconContainer>
+            <RepeatSelect
+              start={new Date(start)}
+              repeat={repeat}
+              updateRepeat={updateRepeat}
+            />
+          </Section>
         </>
       )}
 
-      <IconContainer>
-        <HighlightOutlined />
-      </IconContainer>
-      <ColorSelect activeColor={color} updateColor={updateColor} />
+      <Divider />
 
-      {(start || end) && (
-        <>
-          <IconContainer>
-            <WarningOutlined />
-          </IconContainer>
-          <span>
-            <ClearDateButton
-              type="link"
-              danger
-              onClick={() => {
-                updateTask({
-                  ...task,
-                  start: null,
-                  end: null,
-                  repeat: null,
-                });
-              }}
-            >
-              Clear date
-            </ClearDateButton>
-          </span>
-        </>
-      )}
+      <Section>
+        <IconContainer>
+          <HighlightOutlined />
+        </IconContainer>
+        <ColorSelect activeColor={color} updateColor={updateColor} />
+      </Section>
     </Container>
   );
 };
 
 const Container = styled.div`
-  height: 100%;
-  overflow: hidden auto;
-
   padding: 24px;
-
-  display: grid;
-  grid-template-columns: 24px auto;
-  grid-template-rows: min-content;
-  grid-auto-rows: min-content;
-  grid-gap: 24px 6px;
 
   background: #ffffff;
 `;
 
-const IconContainer = styled.div<{ onClick?: () => void }>`
-  margin: 6px auto;
+const ActionButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
-  :hover {
-    cursor: ${(p) => (p.onClick ? "pointer" : "initial")};
-  }
+const Section = styled.div`
+  display: grid;
+  grid-template-columns: 24px auto;
+  grid-column-gap: 6px;
+`;
+
+const IconContainer = styled.div`
+  margin: 6px auto;
 `;
 
 const Title = styled(Input.TextArea)`
@@ -176,8 +157,4 @@ const IncludeTimeRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const ClearDateButton = styled(Button)`
-  padding: 0;
 `;

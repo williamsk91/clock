@@ -24,7 +24,8 @@ interface Props {
 }
 
 /**
- * A Date and time range picker
+ * A Date and time range picker.
+ * endDate will never be before the startDate
  */
 export const DatePicker = (props: Props) => {
   const { value, onChange, includeTime } = props;
@@ -46,7 +47,7 @@ export const DatePicker = (props: Props) => {
         placeholder="start date"
         includeTime={includeTime}
       />
-      <Spacer spacing="12" />
+      <Spacer spacing="6" />
       <SingleDatePicker
         value={end}
         onChange={(d) => {
@@ -79,7 +80,7 @@ const SingleDatePicker = (props: SingleDatePickerProps) => {
   const { onChange, includeTime } = props;
   return (
     <SingleContainer>
-      <DateInput
+      <StyledDateInput
         {...props}
         // common props
         showActionsBar
@@ -104,4 +105,19 @@ const SingleDatePicker = (props: SingleDatePickerProps) => {
 
 const SingleContainer = styled.div`
   display: flex;
+`;
+
+const StyledDateInput = styled(DateInput)`
+  .DayPicker-Day--today {
+    &,
+    &:hover {
+      color: hsl(352, 98%, 54%) !important;
+    }
+  }
+  .DayPicker-Day--selected {
+    &,
+    &:hover {
+      color: white !important;
+    }
+  }
 `;

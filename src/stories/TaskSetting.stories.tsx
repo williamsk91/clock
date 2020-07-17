@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 
 import { TaskSetting } from "../components/TaskSetting";
 import { getTask } from "./mocks";
@@ -13,7 +14,7 @@ const Base = () => {
   return (
     <TaskSetting
       task={task}
-      updateTask={uti => {
+      updateTask={(uti) => {
         setTask(uti);
       }}
       goBack={() => console.log("go back")}
@@ -23,6 +24,16 @@ const Base = () => {
 
 export const base = () => (
   <SidebarOnlyLayout>
-    <Base />
+    <Container>
+      <Base />
+    </Container>
   </SidebarOnlyLayout>
 );
+
+const Container = styled.div`
+  height: 100%;
+  overflow: hidden auto;
+
+  display: flex;
+  align-items: center;
+`;

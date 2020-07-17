@@ -48,6 +48,7 @@ export const Task: FC<IProp> = (props) => {
     <Container color={color ?? defaultEventColor}>
       <div>
         <TaskTitleInput
+          placeholder="title"
           done={!!done}
           color={color ?? defaultEventColor}
           value={title}

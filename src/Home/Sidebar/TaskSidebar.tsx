@@ -17,7 +17,7 @@ interface Props {
 export const TaskSidebar = (props: Props) => {
   const { id } = useParams<{ id: string }>();
   const { data, loading, error } = useTaskQuery({
-    variables: { id }
+    variables: { id },
   });
 
   if (loading) return <Loading />;
@@ -49,5 +49,9 @@ const TaskSidebarWithData = (props: WithDataProps) => {
 };
 
 const Container = styled.div`
-  margin: 24px 0;
+  height: 100%;
+  overflow: hidden auto;
+
+  display: flex;
+  align-items: center;
 `;
