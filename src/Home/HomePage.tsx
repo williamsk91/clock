@@ -5,7 +5,7 @@ import { Calendar } from "../components/Calendar";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
-import { hasDateP } from "../components/taskFilter";
+import { hasDateP, isNotDoneP } from "../components/taskFilter";
 import { cycleArray } from "../components/utils";
 import {
   CreateTaskInput,
@@ -17,7 +17,7 @@ import {
   UpdateTaskInput,
   useCreateTaskMutation,
   useTaskReorderMutation,
-  useUpdateTaskMutation
+  useUpdateTaskMutation,
 } from "../graphql/generated";
 import { ListSidebar } from "./Sidebar/ListSidebar";
 import { NewTaskSidebar } from "./Sidebar/NewTaskSidebar";
@@ -44,7 +44,7 @@ export const HomePage = (props: Props) => {
         variables: { createTaskInput: task },
         update: (cache, { data }) => {
           const cachedData = cache.readQuery<TasksQuery>({
-            query: TasksDocument
+            query: TasksDocument,
           });
           const newTaskData = data?.createTask;
           if (!cachedData || !newTaskData) return;
@@ -52,17 +52,17 @@ export const HomePage = (props: Props) => {
           cache.writeQuery<TasksQuery>({
             query: TasksDocument,
             data: {
-              tasks: newTasks.map(t => ({
+              tasks: newTasks.map((t) => ({
                 ...t,
                 repeat: t.repeat && {
                   ...t.repeat,
-                  __typename: "Repeat"
-                }
-              }))
-            }
+                  __typename: "Repeat",
+                },
+              })),
+            },
           });
           history.push("/");
-        }
+        },
       }),
     [createTask, history]
   );
@@ -71,7 +71,7 @@ export const HomePage = (props: Props) => {
     (updateTaskInput: UpdateTaskInput) => {
       updateTask({
         variables: {
-          task: updateTaskInput
+          task: updateTaskInput,
         },
         optimisticResponse: {
           updateTask: {
@@ -80,11 +80,11 @@ export const HomePage = (props: Props) => {
             repeat: updateTaskInput.repeat
               ? {
                   __typename: "Repeat",
-                  ...updateTaskInput.repeat
+                  ...updateTaskInput.repeat,
                 }
-              : null
-          }
-        }
+              : null,
+          },
+        },
       });
     },
     [updateTask]
@@ -100,26 +100,26 @@ export const HomePage = (props: Props) => {
           taskReorder: taskReorderInput.map((t, i) => ({
             ...t,
             order: shiftedOrder[i].order,
-            __typename: "TaskReorder"
-          }))
+            __typename: "TaskReorder",
+          })),
         },
         update: (cache, { data }) => {
           if (!data?.taskReorder) return;
           data.taskReorder.forEach(({ id, order }) => {
             const cachedTask = cache.readFragment<Task>({
               id: `Task:${id}`,
-              fragment: TaskFragmentDoc
+              fragment: TaskFragmentDoc,
             });
             cache.writeFragment({
               id: `Task:${id}`,
               fragment: TaskFragmentDoc,
               data: {
                 ...cachedTask,
-                order
-              }
+                order,
+              },
             });
           });
-        }
+        },
       });
     },
     [taskReorder]
@@ -131,8 +131,8 @@ export const HomePage = (props: Props) => {
         date: {
           start,
           end,
-          includeTime
-        }
+          includeTime,
+        },
       });
     },
     [history]
@@ -145,7 +145,7 @@ export const HomePage = (props: Props) => {
           <PrivateRoute exact path="/">
             <ListSidebar
               tasks={tasks}
-              createTask={title =>
+              createTask={(title) =>
                 createTaskOptimistic({
                   title,
                   includeTime: false,
@@ -153,7 +153,7 @@ export const HomePage = (props: Props) => {
                   start: null,
                   end: null,
                   color: null,
-                  repeat: null
+                  repeat: null,
                 })
               }
               updateTask={updateTaskOptimistic}
@@ -173,7 +173,7 @@ export const HomePage = (props: Props) => {
                   start: start.toISOString(),
                   end: end.toISOString(),
                   color: null,
-                  repeat: null
+                  repeat: null,
                 })
               }
             />
@@ -183,7 +183,7 @@ export const HomePage = (props: Props) => {
       <Sidebar.Content>
         <Spacer spacing="12" />
         <Calendar
-          tasks={tasks.filter(hasDateP)}
+          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
           updateTask={updateTaskOptimistic}
           createTask={createCalendarTask}
         />
