@@ -1,4 +1,5 @@
 import { addHours, setHours } from "date-fns";
+import { addDays } from "date-fns/esm";
 
 import { eventColors } from "../components/Calendar/styles";
 import { Task } from "../graphql/generated";
@@ -14,9 +15,9 @@ export const getTask = (override?: Partial<Task>): Task => ({
   order: 1,
   repeat: {
     freq: "daily",
-    byweekday: null
+    byweekday: null,
   },
-  ...override
+  ...override,
 });
 
 export const getTasks = (): Task[] => [
@@ -29,7 +30,7 @@ export const getTasks = (): Task[] => [
     includeTime: false,
     color: null,
     order: 1,
-    repeat: null
+    repeat: null,
   },
   {
     id: "2",
@@ -43,8 +44,8 @@ export const getTasks = (): Task[] => [
     order: 2,
     repeat: {
       freq: "daily",
-      byweekday: null
-    }
+      byweekday: null,
+    },
   },
   {
     id: "3",
@@ -55,6 +56,28 @@ export const getTasks = (): Task[] => [
     includeTime: true,
     color: eventColors[0],
     order: 3,
-    repeat: null
-  }
+    repeat: null,
+  },
+  {
+    id: "4",
+    done: null,
+    title: "yesterday",
+    start: addDays(setHours(new Date(), 8), -1).toISOString(),
+    end: addDays(setHours(new Date(), 10), -1).toISOString(),
+    includeTime: true,
+    color: eventColors[4],
+    order: 4,
+    repeat: null,
+  },
+  {
+    id: "5",
+    done: null,
+    title: "In 2 hrs",
+    start: addHours(new Date(), 2).toISOString(),
+    end: addHours(new Date(), 4).toISOString(),
+    includeTime: true,
+    color: eventColors[10],
+    order: 5,
+    repeat: null,
+  },
 ];
