@@ -24,16 +24,23 @@ export const RepeatSelect = (props: Props) => {
         <Select
           style={{ width: "100%" }}
           value={repeat?.freq}
-          onChange={value => {
+          onChange={(value) => {
+            let byweekday: number[] | null = null;
+            if (value === "weekly") {
+              // date fns 0 is different from rrule 0
+              const weekday = getDay(start);
+              const startingWeekday = weekday === 0 ? 6 : weekday - 1;
+
+              byweekday = [startingWeekday];
+            }
+
             const newRepeat: RepeatInput | null = value
               ? {
                   freq: value,
-                  byweekday:
-                    value === "weekly"
-                      ? repeat?.byweekday ?? [getDay(start)]
-                      : null
+                  byweekday,
                 }
               : null;
+
             updateRepeat(newRepeat);
           }}
           placeholder="Repeat"
@@ -42,7 +49,7 @@ export const RepeatSelect = (props: Props) => {
             { value: "daily", label: "Daily" },
             { value: "weekly", label: "Weekly" },
             { value: "monthly", label: "Monthly" },
-            { value: "yearly", label: "Yearly" }
+            { value: "yearly", label: "Yearly" },
           ]}
         />
       </RepeatSelectContainer>
@@ -51,7 +58,7 @@ export const RepeatSelect = (props: Props) => {
           <Spacer spacing="6" />
           <WeeklySelect
             checkedWeekdays={repeat.byweekday}
-            onChange={byweekday => {
+            onChange={(byweekday) => {
               updateRepeat({ ...repeat, byweekday });
             }}
           />
@@ -80,10 +87,10 @@ const WeeklySelect = ({ checkedWeekdays, onChange }: WeeklySelectProps) => {
       checked,
       onClick: () => {
         const newCheckedWeekdays = checked
-          ? checkedWeekdays.filter(cw => cw !== weekday)
+          ? checkedWeekdays.filter((cw) => cw !== weekday)
           : [...checkedWeekdays, weekday];
         onChange(newCheckedWeekdays);
-      }
+      },
     };
   };
 
