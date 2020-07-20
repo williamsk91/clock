@@ -2,12 +2,11 @@ import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Divider } from "antd";
 import Cookies from "js-cookie";
-import styled from "styled-components";
 
 import loginImg from "../assets/login_undraw_navigator_a479.svg";
 import { UserContext } from "../components/context/UserContext";
 import { routes } from "../components/route";
-import { MiniLayout } from "../components/styles/layout";
+import { Mini } from "../components/styles/layout";
 
 /**
  * Login route is used to authenticate a user
@@ -37,28 +36,12 @@ interface Props {
 export const LoginPage = (props: Props) => {
   const { onGoogleSignIn } = props;
   return (
-    <MiniLayout>
-      <Container>
-        <Illustration src={loginImg} />
-        <Divider />
-        <Button type="primary" onClick={onGoogleSignIn}>
-          Login with Google
-        </Button>
-      </Container>
-    </MiniLayout>
+    <Mini.Container>
+      <Mini.Illustration src={loginImg} />
+      <Divider />
+      <Button type="primary" onClick={onGoogleSignIn}>
+        Login with Google
+      </Button>
+    </Mini.Container>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-`;
-
-const Illustration = styled.img`
-  width: 100%;
-
-  padding: 0 46px;
-  box-sizing: border-box;
-`;

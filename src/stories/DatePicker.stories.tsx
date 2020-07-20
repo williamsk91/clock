@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { DatePicker } from "../components/DatePicker";
-import { MiniLayout } from "../components/styles/layout";
+import { Mini } from "../components/styles/layout";
 
 export default { title: "Components / DatePicker" };
 
@@ -21,7 +21,7 @@ const Base = () => {
   );
 };
 export const base = () => (
-  <MiniLayout>
+  <Mini.Container>
     <Base />
-  </MiniLayout>
+  </Mini.Container>
 );

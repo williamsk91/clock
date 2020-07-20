@@ -10,16 +10,6 @@ export const Layout = styled.div`
   padding: 48px;
 `;
 
-/**
- * Small width layout
- */
-export const MiniLayout = styled.div`
-  min-width: 240px;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 120px 48px;
-`;
-
 // ------------------------- Sidebar Layout -------------------------
 const SidebarContainer = styled.div`
   width: 100vw;
@@ -43,8 +33,39 @@ const SidebarContent = styled.div`
 
   background: white;
 `;
+
 export const Sidebar = {
   Container: SidebarContainer,
   SideBar,
-  Content: SidebarContent
+  Content: SidebarContent,
+};
+
+// ------------------------- Simple Center Column layout  -------------------------
+
+/**
+ * Small width layout
+ */
+const MiniLayout = styled.div`
+  width: 100vw;
+  height: 100vh;
+
+  min-width: 240px;
+  max-width: 480px;
+
+  margin: 0 auto;
+  padding: 120px 48px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MiniIllustration = styled.img`
+  max-width: 300px;
+`;
+
+export const Mini = {
+  Container: MiniLayout,
+  Illustration: MiniIllustration,
 };

@@ -1,12 +1,12 @@
 import React from "react";
 
 import { NewTask } from "../components/NewTask";
-import { MiniLayout } from "../components/styles/layout";
+import { Mini } from "../components/styles/layout";
 
 export default { title: "Components / NewTask" };
 
 export const base = () => (
-  <MiniLayout>
-    <NewTask createTask={title => console.log("title: ", title)} />
-  </MiniLayout>
+  <Mini.Container>
+    <NewTask createTask={(title) => console.log("title: ", title)} />
+  </Mini.Container>
 );
