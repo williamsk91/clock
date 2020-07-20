@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Switch, useHistory } from "react-router-dom";
+import { Redirect, Switch, useHistory } from "react-router-dom";
 
 import { Calendar } from "../components/Calendar";
 import { routes } from "../components/route";
@@ -179,6 +179,7 @@ export const HomePage = (props: Props) => {
               }
             />
           </PrivateRoute>
+          <Redirect to={routes.error} />
         </Switch>
       </Sidebar.SideBar>
       <Sidebar.Content>
