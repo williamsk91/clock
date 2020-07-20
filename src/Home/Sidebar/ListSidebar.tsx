@@ -5,10 +5,12 @@ import { Button } from "antd";
 import { format } from "date-fns";
 import styled from "styled-components";
 
+import emptyListImg from "../../assets/undraw_cup_of_tea_6nqg.svg";
 import { NewTask } from "../../components/NewTask";
 import { Spacer } from "../../components/Spacer";
 import { isNotDoneP } from "../../components/taskFilter";
 import { TaskList } from "../../components/TaskList";
+import { Text } from "../../components/Text";
 import {
   Task,
   TaskReorderInput,
@@ -24,8 +26,9 @@ interface Props {
 
 export const ListSidebar = (props: Props) => {
   const { tasks, createTask, updateTask, taskReorder } = props;
-
   const history = useHistory();
+
+  const notDoneTask = tasks.filter(isNotDoneP);
 
   return (
     <Container>
@@ -43,12 +46,16 @@ export const ListSidebar = (props: Props) => {
         <NewTask createTask={createTask} />
         <Spacer spacing="12" />
       </div>
-      <TaskList
-        tasks={tasks.filter(isNotDoneP)}
-        updateTask={updateTask}
-        taskReorder={taskReorder}
-        goTask={(id: string) => history.push(`task/${id}`)}
-      />
+      {notDoneTask.length === 0 ? (
+        <EmptyList />
+      ) : (
+        <TaskList
+          tasks={notDoneTask}
+          updateTask={updateTask}
+          taskReorder={taskReorder}
+          goTask={(id: string) => history.push(`task/${id}`)}
+        />
+      )}
     </Container>
   );
 };
@@ -77,4 +84,31 @@ const TodayContainer = styled.div`
   font-size: 64px;
   color: rgba(55, 53, 47, 0.85);
   line-height: 1;
+`;
+
+const EmptyList = () => (
+  <EmptyListContainer>
+    <EmptyListImg src={emptyListImg} />
+    <Spacer spacing="12" />
+    <Text.Message>
+      All tasks completed{" "}
+      <span role="img" aria-label="confetti emoji">
+        🎉
+      </span>
+    </Text.Message>
+  </EmptyListContainer>
+);
+
+const EmptyListContainer = styled.div`
+  height: 100%;
+  margin: 60px auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const EmptyListImg = styled.img`
+  max-width: 180px;
 `;
