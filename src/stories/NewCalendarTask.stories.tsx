@@ -6,8 +6,8 @@ import { NewCalendarTask } from "../components/NewCalendarTask";
 import { SidebarOnlyLayout } from "./utils";
 
 export default {
-  title: "Components / NewCalendarTask",
-  component: NewCalendarTask
+  title: "Components / Sidebar / NewCalendarTask",
+  component: NewCalendarTask,
 };
 
 export const base = () => (
@@ -19,10 +19,10 @@ export const base = () => (
           date: {
             start: new Date(),
             end: addHours(new Date(), 3),
-            includeTime: true
-          }
-        }
-      }
+            includeTime: true,
+          },
+        },
+      },
     ]}
     initialIndex={0}
   >

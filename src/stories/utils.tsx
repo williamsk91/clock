@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Sidebar } from "../components/styles/layout";
 
-export const SidebarOnlyLayout: FC = props => (
+export const SidebarOnlyLayout: FC = (props) => (
   <Sidebar.Container>
     <Sidebar.SideBar>{props.children}</Sidebar.SideBar>
     <Sidebar.Content />

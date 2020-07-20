@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { DatePicker } from "../components/DatePicker";
+import { Mini } from "../components/styles/layout";
 import { TaskSetting } from "../components/TaskSetting";
 import { getTask } from "./mocks";
 import { SidebarOnlyLayout } from "./utils";
 
-export default { title: "Components / TaskSetting", component: TaskSetting };
+export default {
+  title: "Components / Sidebar / TaskSetting",
+  component: TaskSetting,
+};
 
 const Base = () => {
   const [task, setTask] = useState(
@@ -37,3 +42,25 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const DatePickerStory = () => {
+  const [start, setStart] = useState<Date | null>(new Date());
+  const [end, setEnd] = useState<Date | null>(null);
+
+  return (
+    <DatePicker
+      value={[start, end]}
+      onChange={([start, end]) => {
+        setStart(start);
+        setEnd(end);
+      }}
+      includeTime={true}
+    />
+  );
+};
+
+export const datePicker = () => (
+  <Mini.Container>
+    <DatePickerStory />
+  </Mini.Container>
+);

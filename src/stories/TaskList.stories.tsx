@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
+import { Mini } from "../components/styles/layout";
 import { TaskList } from "../components/TaskList";
 import { Task as TaskProps } from "../graphql/generated";
 import { getTasks } from "./mocks";
-import { SidebarOnlyLayout } from "./utils";
 
 export default { title: "Components / TaskList" };
 
@@ -14,20 +14,20 @@ const Base = () => {
   return (
     <TaskList
       tasks={tasks}
-      updateTask={updateTaskInput => {
-        const newTasks = tasks.map(t =>
+      updateTask={(updateTaskInput) => {
+        const newTasks = tasks.map((t) =>
           t.id === updateTaskInput.id ? { ...t, ...updateTaskInput } : t
         );
         setTasks(newTasks);
       }}
       taskReorder={() => console.log("swap order")}
-      goTask={id => console.log("goTask: ", id)}
+      goTask={(id) => console.log("goTask: ", id)}
     />
   );
 };
 
 export const base = () => (
-  <SidebarOnlyLayout>
+  <Mini.Container>
     <Base />
-  </SidebarOnlyLayout>
+  </Mini.Container>
 );
