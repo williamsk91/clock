@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import loginImg from "../assets/login_undraw_navigator_a479.svg";
 import { UserContext } from "../components/context/UserContext";
+import { routes } from "../components/route";
 import { MiniLayout } from "../components/styles/layout";
 
 /**
@@ -21,7 +22,7 @@ export const LoginRoute = () => {
     refreshTokenExists && setSignedIn(refreshTokenExists);
   }
 
-  if (signedIn) history.replace("/");
+  if (signedIn) history.replace(routes.home.index);
 
   return <LoginPage onGoogleSignIn={signIn} />;
 };

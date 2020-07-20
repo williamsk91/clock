@@ -4,6 +4,7 @@ import { LeftOutlined } from "@ant-design/icons";
 import { Button, Collapse, Popconfirm } from "antd";
 
 import { UserContext } from "../components/context/UserContext";
+import { routes } from "../components/route";
 import { Spacer } from "../components/Spacer";
 import { MiniLayout } from "../components/styles/layout";
 import { apolloClient } from "../data/apollo";
@@ -22,7 +23,7 @@ export const SettingPage = () => {
     onCompleted: () => {
       setSignedIn(false);
       apolloClient.clearStore();
-    }
+    },
   });
 
   return (
@@ -30,7 +31,7 @@ export const SettingPage = () => {
       <Button
         icon={<LeftOutlined />}
         type="primary"
-        onClick={() => history.push("/")}
+        onClick={() => history.push(routes.home.index)}
       >
         Go back
       </Button>

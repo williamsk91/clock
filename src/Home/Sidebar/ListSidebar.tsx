@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import emptyListImg from "../../assets/undraw_cup_of_tea_6nqg.svg";
 import { NewTask } from "../../components/NewTask";
+import { homeTaskRoute, routes } from "../../components/route";
 import { Spacer } from "../../components/Spacer";
 import { isNotDoneP } from "../../components/taskFilter";
 import { TaskList } from "../../components/TaskList";
@@ -34,7 +35,7 @@ export const ListSidebar = (props: Props) => {
     <Container>
       <div>
         <Button
-          onClick={() => history.push("/setting")}
+          onClick={() => history.push(routes.setting)}
           type="text"
           icon={<SettingOutlined />}
         >
@@ -53,7 +54,7 @@ export const ListSidebar = (props: Props) => {
           tasks={notDoneTask}
           updateTask={updateTask}
           taskReorder={taskReorder}
-          goTask={(id: string) => history.push(`task/${id}`)}
+          goTask={(id: string) => history.push(homeTaskRoute(id))}
         />
       )}
     </Container>

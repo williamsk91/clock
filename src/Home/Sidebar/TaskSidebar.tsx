@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
+import { routes } from "../../components/route";
 import { TaskSetting } from "../../components/TaskSetting";
 import { Task, UpdateTaskInput, useTaskQuery } from "../../graphql/generated";
 
@@ -42,7 +43,7 @@ const TaskSidebarWithData = (props: WithDataProps) => {
       <TaskSetting
         task={task}
         updateTask={updateTask}
-        goBack={() => history.push("/")}
+        goBack={() => history.push(routes.home.index)}
       />
     </Container>
   );

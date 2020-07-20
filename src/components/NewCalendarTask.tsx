@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { defaultEventColor } from "./Calendar/styles";
 import { useCalendarContext } from "./context/CalendarContext";
 import { formatDatetime } from "./datetime";
+import { routes } from "./route";
 import { Spacer } from "./Spacer";
 import { TaskTitleInput, TimeText } from "./Task";
 
@@ -42,7 +43,7 @@ export const NewCalendarTask: FC<Props> = (props: Props) => {
 
   const date = location.state.date;
   if (!date) {
-    history.push("/");
+    history.push(routes.home.index);
     return null;
   }
   const { start, end, includeTime } = date;

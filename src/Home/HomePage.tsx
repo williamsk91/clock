@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { Switch, useHistory } from "react-router-dom";
 
 import { Calendar } from "../components/Calendar";
+import { routes } from "../components/route";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
@@ -61,7 +62,7 @@ export const HomePage = (props: Props) => {
               })),
             },
           });
-          history.push("/");
+          history.push(routes.home.index);
         },
       }),
     [createTask, history]
@@ -127,7 +128,7 @@ export const HomePage = (props: Props) => {
 
   const createCalendarTask = useCallback(
     (start: Date, end: Date, includeTime: boolean) => {
-      history.push(`/newtask`, {
+      history.push(routes.home.newTask, {
         date: {
           start,
           end,
@@ -142,7 +143,7 @@ export const HomePage = (props: Props) => {
     <Sidebar.Container>
       <Sidebar.SideBar>
         <Switch>
-          <PrivateRoute exact path="/">
+          <PrivateRoute exact path={routes.home.index}>
             <ListSidebar
               tasks={tasks}
               createTask={(title) =>
@@ -160,10 +161,10 @@ export const HomePage = (props: Props) => {
               taskReorder={taskReorderOptimistic}
             />
           </PrivateRoute>
-          <PrivateRoute exact path="/task/:id">
+          <PrivateRoute exact path={routes.home.task}>
             <TaskSidebar updateTask={updateTaskOptimistic} />
           </PrivateRoute>
-          <PrivateRoute exact path="/newtask">
+          <PrivateRoute exact path={routes.home.newTask}>
             <NewTaskSidebar
               createTask={(title, start, end, includeTime) =>
                 createTaskOptimistic({

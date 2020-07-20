@@ -18,6 +18,7 @@ import styled from "styled-components";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
+import { homeTaskRoute } from "../route";
 
 interface IProp {
   tasks: Task[];
@@ -72,7 +73,7 @@ export const Calendar: FC<IProp> = (props) => {
         // clicking
         eventClick={({ event }) => {
           calRef.current?.getApi().unselect();
-          history.push(`/task/${event.id}`);
+          history.push(homeTaskRoute(event.id));
         }}
         // selecting - creating new task
         selectable

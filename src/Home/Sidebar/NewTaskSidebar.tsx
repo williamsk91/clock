@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 
 import { NewCalendarTask } from "../../components/NewCalendarTask";
+import { routes } from "../../components/route";
 
 interface Props {
   createTask: (
@@ -17,7 +18,7 @@ export const NewTaskSidebar = (props: Props) => {
   const history = useHistory();
   return (
     <NewCalendarTask
-      onCancel={() => history.push("/")}
+      onCancel={() => history.push(routes.home.index)}
       onConfirm={createTask}
     />
   );
