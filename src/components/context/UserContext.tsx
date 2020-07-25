@@ -19,11 +19,11 @@ export const UserContext = createContext<User>({
   signedIn: false,
   setSignedIn: () => null,
   signIn: () => null,
-  signOut: () => null
+  signOut: () => null,
 });
 
 export const UserProvider: FC = ({ children }) => {
-  const refreshToken = Cookies.get("T2_refresh_token");
+  const refreshToken = Cookies.get("overcast_refresh_token");
   const [signedIn, setSignedIn] = useState(!!refreshToken);
 
   const signIn = () =>
@@ -33,7 +33,7 @@ export const UserProvider: FC = ({ children }) => {
     onCompleted: () => {
       setSignedIn(false);
       apolloClient.clearStore();
-    }
+    },
   });
 
   const signOut = () => {

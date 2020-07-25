@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "Overcast",
+  "short_name": "Overcast",
   "icons": [
     {
       "src": "favicon.ico",
