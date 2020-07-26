@@ -17,7 +17,7 @@ export const LoginRoute = () => {
 
   // update signed in state if already signed in
   if (!signedIn) {
-    const refreshTokenExists = !!Cookies.get("T2_refresh_token");
+    const refreshTokenExists = !!Cookies.get("overcast_refresh_token");
     refreshTokenExists && setSignedIn(refreshTokenExists);
   }
 
