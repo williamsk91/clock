@@ -1,124 +1,125 @@
 import { gql } from 'graphql.macro';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: string,
-};
-
-export type CreateTaskInput = {
-  title: Scalars['String'],
-  done: Maybe<Scalars['DateTime']>,
-  start: Maybe<Scalars['DateTime']>,
-  end: Maybe<Scalars['DateTime']>,
-  includeTime: Scalars['Boolean'],
-  color: Maybe<Scalars['String']>,
-  repeat: Maybe<RepeatInput>,
-};
-
-
-export type Mutation = {
-   __typename?: 'Mutation',
-  signOut: Scalars['Boolean'],
-  /** Danger! Deletes a user account. */
-  deleteUser: Scalars['Boolean'],
-  createTask: Task,
-  updateTask: Task,
-  taskReorder: Array<TaskReorder>,
-};
-
-
-export type MutationCreateTaskArgs = {
-  task: CreateTaskInput
-};
-
-
-export type MutationUpdateTaskArgs = {
-  task: UpdateTaskInput
-};
-
-
-export type MutationTaskReorderArgs = {
-  tasks: Array<TaskReorderInput>
+  DateTime: string;
 };
 
 export type Query = {
-   __typename?: 'Query',
-  me: User,
-  task: Task,
-  tasks: Array<Task>,
-  completedTasks: Array<Task>,
+  __typename?: 'Query';
+  me: User;
+  task: Task;
+  tasks: Array<Task>;
+  completedTasks: Array<Task>;
 };
 
 
 export type QueryTaskArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+};
+
+export type Task = {
+  __typename?: 'Task';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+  repeat: Maybe<Repeat>;
+};
+
+
 export type Repeat = {
-   __typename?: 'Repeat',
-  freq: Scalars['String'],
-  byweekday: Maybe<Array<Scalars['Float']>>,
+  __typename?: 'Repeat';
+  freq: Scalars['String'];
+  byweekday: Maybe<Array<Scalars['Float']>>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  signOut: Scalars['Boolean'];
+  /** Danger! Deletes a user account. */
+  deleteUser: Scalars['Boolean'];
+  createTask: Task;
+  updateTask: Task;
+  taskReorder: Array<TaskReorder>;
+};
+
+
+export type MutationCreateTaskArgs = {
+  task: CreateTaskInput;
+};
+
+
+export type MutationUpdateTaskArgs = {
+  task: UpdateTaskInput;
+};
+
+
+export type MutationTaskReorderArgs = {
+  tasks: Array<TaskReorderInput>;
+};
+
+export type CreateTaskInput = {
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  repeat: Maybe<RepeatInput>;
 };
 
 /** Recurring task input data */
 export type RepeatInput = {
-  freq: Scalars['String'],
-  byweekday: Maybe<Array<Scalars['Float']>>,
-};
-
-export type Task = {
-   __typename?: 'Task',
-  id: Scalars['ID'],
-  title: Scalars['String'],
-  done: Maybe<Scalars['DateTime']>,
-  start: Maybe<Scalars['DateTime']>,
-  end: Maybe<Scalars['DateTime']>,
-  includeTime: Scalars['Boolean'],
-  color: Maybe<Scalars['String']>,
-  order: Scalars['Float'],
-  repeat: Maybe<Repeat>,
-};
-
-export type TaskReorder = {
-   __typename?: 'TaskReorder',
-  id: Scalars['ID'],
-  order: Scalars['Float'],
-};
-
-export type TaskReorderInput = {
-  id: Scalars['ID'],
-  order: Scalars['Float'],
+  freq: Scalars['String'];
+  byweekday: Maybe<Array<Scalars['Float']>>;
 };
 
 /** New task data */
 export type UpdateTaskInput = {
-  id: Scalars['ID'],
-  title: Scalars['String'],
-  done: Maybe<Scalars['DateTime']>,
-  start: Maybe<Scalars['DateTime']>,
-  end: Maybe<Scalars['DateTime']>,
-  includeTime: Scalars['Boolean'],
-  color: Maybe<Scalars['String']>,
-  order: Scalars['Float'],
-  repeat: Maybe<RepeatInput>,
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+  repeat: Maybe<RepeatInput>;
 };
 
-export type User = {
-   __typename?: 'User',
-  id: Scalars['ID'],
+export type TaskReorderInput = {
+  id: Scalars['ID'];
+  order: Scalars['Float'];
 };
 
-export type CreateTaskMutationVariables = {
-  createTaskInput: CreateTaskInput
+export type TaskReorder = {
+  __typename?: 'TaskReorder';
+  id: Scalars['ID'];
+  order: Scalars['Float'];
 };
+
+export type CreateTaskMutationVariables = Exact<{
+  createTaskInput: CreateTaskInput;
+}>;
 
 
 export type CreateTaskMutation = (
@@ -138,9 +139,9 @@ export type TaskFragment = (
   )> }
 );
 
-export type TaskQueryVariables = {
-  id: Scalars['ID']
-};
+export type TaskQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
 export type TaskQuery = (
@@ -151,9 +152,9 @@ export type TaskQuery = (
   ) }
 );
 
-export type TaskReorderMutationVariables = {
-  tasks: Array<TaskReorderInput>
-};
+export type TaskReorderMutationVariables = Exact<{
+  tasks: Array<TaskReorderInput>;
+}>;
 
 
 export type TaskReorderMutation = (
@@ -164,7 +165,7 @@ export type TaskReorderMutation = (
   )> }
 );
 
-export type TasksQueryVariables = {};
+export type TasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TasksQuery = (
@@ -175,9 +176,9 @@ export type TasksQuery = (
   )> }
 );
 
-export type UpdateTaskMutationVariables = {
-  task: UpdateTaskInput
-};
+export type UpdateTaskMutationVariables = Exact<{
+  task: UpdateTaskInput;
+}>;
 
 
 export type UpdateTaskMutation = (
@@ -188,7 +189,7 @@ export type UpdateTaskMutation = (
   ) }
 );
 
-export type DeleteUserMutationVariables = {};
+export type DeleteUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type DeleteUserMutation = (
@@ -196,7 +197,7 @@ export type DeleteUserMutation = (
   & Pick<Mutation, 'deleteUser'>
 );
 
-export type SignOutMutationVariables = {};
+export type SignOutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SignOutMutation = (
@@ -264,7 +265,7 @@ export const TaskDocument = gql`
  * __useTaskQuery__
  *
  * To run a query within a React component, call `useTaskQuery` and pass it any options that fit your needs.
- * When your component renders, `useTaskQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useTaskQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -330,7 +331,7 @@ export const TasksDocument = gql`
  * __useTasksQuery__
  *
  * To run a query within a React component, call `useTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;

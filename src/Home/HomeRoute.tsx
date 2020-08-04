@@ -15,7 +15,7 @@ export const HomeRoute = () => {
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
 
-  const orderedTasks = data.tasks.sort((a, b) => a.order - b.order);
+  const orderedTasks = data.tasks.slice().sort((a, b) => a.order - b.order);
 
   return <HomePage tasks={orderedTasks} />;
 };

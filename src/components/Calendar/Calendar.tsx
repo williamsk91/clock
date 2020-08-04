@@ -244,8 +244,6 @@ const Container = styled.div`
 export const taskToEventInput = (task: Task): EventInput => {
   const { id, title } = task;
 
-  delete task.repeat?.__typename;
-
   // classNames for styling
   const classNames = [];
   task.start &&
@@ -264,7 +262,13 @@ export const taskToEventInput = (task: Task): EventInput => {
 
     /** Repeating tasks */
     // dtstart is required
-    rrule: task.repeat ? { ...task.repeat, dtstart: task.start } : null,
+    rrule: task.repeat
+      ? {
+          byweekday: task.repeat.byweekday,
+          freq: task.repeat.freq,
+          dtstart: task.start,
+        }
+      : null,
     /**
      * Repeating task have requires special explicit duration.
      */

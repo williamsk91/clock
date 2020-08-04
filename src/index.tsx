@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
 
 import "./index.css";

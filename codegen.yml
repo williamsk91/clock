@@ -7,10 +7,12 @@ generates:
       - typescript-operations
       - typescript-react-apollo
     config:
+      apolloReactHooksImportFrom: "@apollo/client"
+      apolloReactCommonImportFrom: "@apollo/client"
+      gqlImport: graphql.macro#gql
       scalars:
         DateTime: string
       withHooks: true
       withComponent: false
       withHOC: false
       avoidOptionals: true
-      gqlImport: graphql.macro#gql

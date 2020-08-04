@@ -20,19 +20,17 @@ export const demuxUpdateTask = (
   updateRepeat: (r: RepeatInput | null) => void;
   updateColor: (r: string | null) => void;
 } => {
-  delete task.__typename;
-  delete task.repeat?.__typename;
   return {
     setDone: (d: string | null) => updateTask({ ...task, done: d }),
     updateDates: (dates: [Date | null, Date | null]) =>
       updateTask({
         ...task,
         start: dates[0]?.toISOString() ?? null,
-        end: dates[1]?.toISOString() ?? null
+        end: dates[1]?.toISOString() ?? null,
       }),
     setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
     setTitle: (t: string) => updateTask({ ...task, title: t }),
     updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r }),
-    updateColor: (c: string | null) => updateTask({ ...task, color: c })
+    updateColor: (c: string | null) => updateTask({ ...task, color: c }),
   };
 };
