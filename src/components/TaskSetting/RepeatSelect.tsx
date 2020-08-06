@@ -58,9 +58,9 @@ export const RepeatSelect = (props: Props) => {
           <Spacer spacing="6" />
           <WeeklySelect
             checkedWeekdays={repeat.byweekday}
-            onChange={(byweekday) => {
-              updateRepeat({ ...repeat, byweekday });
-            }}
+            onChange={(byweekday) =>
+              updateRepeat({ freq: repeat.freq, byweekday })
+            }
           />
         </>
       )}

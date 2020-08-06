@@ -9,7 +9,7 @@ generates:
     config:
       apolloReactHooksImportFrom: "@apollo/client"
       apolloReactCommonImportFrom: "@apollo/client"
-      gqlImport: graphql.macro#gql
+      gqlImport: "@apollo/client#gql"
       scalars:
         DateTime: string
       withHooks: true

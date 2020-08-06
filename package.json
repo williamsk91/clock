@@ -11,10 +11,8 @@
     "@fullcalendar/rrule": "^5.1.0",
     "@fullcalendar/timegrid": "^5.1.0",
     "antd": "^4.4.2",
-    "apollo-boost": "^0.4.7",
     "date-fns": "^2.12.0",
     "graphql": "^15.3.0",
-    "graphql.macro": "^1.4.2",
     "js-cookie": "^2.2.1",
     "moment": "^2.27.0",
     "react": "^16.13.1",
@@ -24,6 +22,7 @@
     "react-scripts": "3.4.1",
     "rrule": "^2.6.4",
     "styled-components": "^5.0.1",
+    "subscriptions-transport-ws": "^0.9.17",
     "typescript": "~3.7.2"
   },
   "scripts": {

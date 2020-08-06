@@ -305,7 +305,12 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
   includeTime: !e.allDay,
   color: e.extendedProps?.eventColor,
   order: e.extendedProps.order,
-  repeat: e.extendedProps?.repeat,
+  repeat: e.extendedProps?.repeat
+    ? {
+        freq: e.extendedProps.repeat.freq,
+        byweekday: e.extendedProps.repeat.byweekday,
+      }
+    : null,
 });
 
 /**

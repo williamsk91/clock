@@ -10,7 +10,7 @@ export const cycleArray = <T>(array: T[]): T[] =>
  * Demux an update task function to its individual task setting update
  */
 export const demuxUpdateTask = (
-  task: Task,
+  originalTask: Task,
   updateTask: (uti: UpdateTaskInput) => void
 ): {
   setDone: (d: string | null) => void;
@@ -20,6 +20,23 @@ export const demuxUpdateTask = (
   updateRepeat: (r: RepeatInput | null) => void;
   updateColor: (r: string | null) => void;
 } => {
+  const task = {
+    id: originalTask.id,
+    title: originalTask.title,
+    done: originalTask.done,
+    start: originalTask.start,
+    end: originalTask.end,
+    includeTime: originalTask.includeTime,
+    color: originalTask.color,
+    order: originalTask.order,
+    repeat: originalTask.repeat
+      ? {
+          freq: originalTask.repeat.freq,
+          byweekday: originalTask.repeat.byweekday,
+        }
+      : null,
+  };
+
   return {
     setDone: (d: string | null) => updateTask({ ...task, done: d }),
     updateDates: (dates: [Date | null, Date | null]) =>
