@@ -31,6 +31,8 @@ export const UserProvider: FC = ({ children }) => {
 
   const [signOutMutation] = useSignOutMutation({
     onCompleted: () => {
+      Cookies.remove("overcast_refresh_token");
+      Cookies.remove("overcast_access_token");
       setSignedIn(false);
       apolloClient.clearStore();
     },
