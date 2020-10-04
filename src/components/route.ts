@@ -3,7 +3,9 @@ export const routes = {
   setting: "/setting",
   home: {
     index: "/cal",
-    task: "/cal/task/:id",
+    list: "/list/:listId",
+    tasks: "cal/tasks/:listId",
+    task: "/cal/task/:taskId",
     newTask: "/cal/newTask",
   },
   // used for rerouting some error pages

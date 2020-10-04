@@ -5,6 +5,7 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
+
 import styled from "styled-components";
 
 import {
@@ -17,6 +18,8 @@ import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
 interface Props {
+  listId: string;
+  listColor: string | null;
   tasks: TaskProps[];
   updateTask: (uti: UpdateTaskInput) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
@@ -27,8 +30,8 @@ interface Props {
 /**
  * A list of Tasks
  */
-export const TaskList = (props: Props) => {
-  const { tasks, updateTask, taskReorder, goTask } = props;
+export const Tasks = (props: Props) => {
+  const { listId, listColor, tasks, updateTask, taskReorder, goTask } = props;
 
   const onDragEnd = (result: DropResult) => {
     const destinationIndex = result.destination?.index;
@@ -63,13 +66,15 @@ export const TaskList = (props: Props) => {
                       <>
                         <ExternalDraggableTask task={t}>
                           <Task
+                            listId={listId}
+                            listColor={listColor}
                             key={i}
                             {...t}
                             updateTask={updateTask}
-                            goTask={goTask}
+                            onClickTask={goTask}
                           />
                         </ExternalDraggableTask>
-                        <Spacer spacing="6" />
+                        <Spacer spacing="12" />
                       </>
                     </div>
                   )}

@@ -2,13 +2,14 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 import React from "react";
+
 import { CloseOutlined } from "@ant-design/icons";
 import { DateInput, DateRange, TimePrecision } from "@blueprintjs/datetime";
 import { Button } from "antd";
 import { addHours, format, isAfter, isBefore } from "date-fns";
 import styled from "styled-components";
 
-import { Spacer } from "./Spacer";
+import { Spacer } from "../Spacer";
 
 interface Props {
   value: DateRange;
@@ -108,6 +109,7 @@ const SingleContainer = styled.div`
 `;
 
 const StyledDateInput = styled(DateInput)`
+  width: 100%;
   .DayPicker-Day--today {
     &,
     &:hover {

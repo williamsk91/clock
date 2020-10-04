@@ -20,9 +20,9 @@ import {
   useTaskReorderMutation,
   useUpdateTaskMutation,
 } from "../graphql/generated";
-import { ListSidebar } from "./Sidebar/ListSidebar";
 import { NewTaskSidebar } from "./Sidebar/NewTaskSidebar";
-import { TaskSidebar } from "./Sidebar/TaskSidebar";
+import { TaskSettingSidebar } from "./Sidebar/TaskSettingSidebar";
+import { TasksSidebar } from "./Sidebar/TasksSidebar";
 
 interface Props {
   tasks: TasksQuery["tasks"];
@@ -143,8 +143,9 @@ export const HomePage = (props: Props) => {
     <Sidebar.Container>
       <Sidebar.SideBar>
         <Switch>
-          <PrivateRoute exact path={routes.home.index}>
-            <ListSidebar
+          <PrivateRoute exact path={routes.home.index}></PrivateRoute>
+          <PrivateRoute exact path={routes.home.tasks}>
+            <TasksSidebar
               tasks={tasks}
               createTask={(title) =>
                 createTaskOptimistic({
@@ -162,7 +163,7 @@ export const HomePage = (props: Props) => {
             />
           </PrivateRoute>
           <PrivateRoute exact path={routes.home.task}>
-            <TaskSidebar updateTask={updateTaskOptimistic} />
+            <TaskSettingSidebar updateTask={updateTaskOptimistic} />
           </PrivateRoute>
           <PrivateRoute exact path={routes.home.newTask}>
             <NewTaskSidebar

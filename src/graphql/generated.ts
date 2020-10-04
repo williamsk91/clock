@@ -14,22 +14,10 @@ export type Scalars = {
   DateTime: string;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  me: User;
-  task: Task;
-  tasks: Array<Task>;
-  completedTasks: Array<Task>;
-};
-
-
-export type QueryTaskArgs = {
-  id: Scalars['ID'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
+export type Repeat = {
+  __typename?: 'Repeat';
+  freq: Scalars['String'];
+  byweekday: Maybe<Array<Scalars['Float']>>;
 };
 
 export type Task = {
@@ -46,45 +34,36 @@ export type Task = {
 };
 
 
-export type Repeat = {
-  __typename?: 'Repeat';
-  freq: Scalars['String'];
-  byweekday: Maybe<Array<Scalars['Float']>>;
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  signOut: Scalars['Boolean'];
-  /** Danger! Deletes a user account. */
-  deleteUser: Scalars['Boolean'];
-  createTask: Task;
-  updateTask: Task;
-  taskReorder: Array<TaskReorder>;
-};
-
-
-export type MutationCreateTaskArgs = {
-  task: CreateTaskInput;
-};
-
-
-export type MutationUpdateTaskArgs = {
-  task: UpdateTaskInput;
-};
-
-
-export type MutationTaskReorderArgs = {
-  tasks: Array<TaskReorderInput>;
-};
-
-export type CreateTaskInput = {
+export type List = {
+  __typename?: 'List';
+  id: Scalars['ID'];
   title: Scalars['String'];
-  done: Maybe<Scalars['DateTime']>;
-  start: Maybe<Scalars['DateTime']>;
-  end: Maybe<Scalars['DateTime']>;
-  includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
-  repeat: Maybe<RepeatInput>;
+  order: Scalars['Float'];
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+};
+
+export type TaskReorder = {
+  __typename?: 'TaskReorder';
+  id: Scalars['ID'];
+  order: Scalars['Float'];
+};
+
+export type CreateListInput = {
+  title: Scalars['String'];
+  color: Maybe<Scalars['String']>;
+};
+
+/** New list data */
+export type UpdateListInput = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
 };
 
 /** Recurring task input data */
@@ -111,13 +90,98 @@ export type TaskReorderInput = {
   order: Scalars['Float'];
 };
 
-export type TaskReorder = {
-  __typename?: 'TaskReorder';
+export type CreateTaskInput = {
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  repeat: Maybe<RepeatInput>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  me: User;
+  list: List;
+  lists: Array<List>;
+  task: Task;
+  tasks: Array<Task>;
+  completedTasks: Array<Task>;
+};
+
+
+export type QueryListArgs = {
   id: Scalars['ID'];
-  order: Scalars['Float'];
+};
+
+
+export type QueryTaskArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTasksArgs = {
+  listId: Scalars['ID'];
+};
+
+
+export type QueryCompletedTasksArgs = {
+  listId: Scalars['ID'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  signOut: Scalars['Boolean'];
+  /** Danger! Deletes a user account. */
+  deleteUser: Scalars['Boolean'];
+  createList: List;
+  updateList: List;
+  deleteList: List;
+  createTask: Task;
+  updateTask: Task;
+  taskReorder: Array<TaskReorder>;
+  deleteTask: Task;
+};
+
+
+export type MutationCreateListArgs = {
+  list: CreateListInput;
+};
+
+
+export type MutationUpdateListArgs = {
+  list: UpdateListInput;
+};
+
+
+export type MutationDeleteListArgs = {
+  listId: Scalars['ID'];
+};
+
+
+export type MutationCreateTaskArgs = {
+  task: CreateTaskInput;
+  listId: Scalars['ID'];
+};
+
+
+export type MutationUpdateTaskArgs = {
+  task: UpdateTaskInput;
+};
+
+
+export type MutationTaskReorderArgs = {
+  tasks: Array<TaskReorderInput>;
+};
+
+
+export type MutationDeleteTaskArgs = {
+  id: Scalars['ID'];
 };
 
 export type CreateTaskMutationVariables = Exact<{
+  listId: Scalars['ID'];
   createTaskInput: CreateTaskInput;
 }>;
 
@@ -165,7 +229,9 @@ export type TaskReorderMutation = (
   )> }
 );
 
-export type TasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type TasksQueryVariables = Exact<{
+  listId: Scalars['ID'];
+}>;
 
 
 export type TasksQuery = (
@@ -222,8 +288,8 @@ export const TaskFragmentDoc = gql`
 }
     `;
 export const CreateTaskDocument = gql`
-    mutation CreateTask($createTaskInput: CreateTaskInput!) {
-  createTask(task: $createTaskInput) {
+    mutation CreateTask($listId: ID!, $createTaskInput: CreateTaskInput!) {
+  createTask(listId: $listId, task: $createTaskInput) {
     ...Task
   }
 }
@@ -243,6 +309,7 @@ export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTask
  * @example
  * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
  *   variables: {
+ *      listId: // value for 'listId'
  *      createTaskInput: // value for 'createTaskInput'
  *   },
  * });
@@ -320,8 +387,8 @@ export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMuta
 export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
 export type TaskReorderMutationOptions = ApolloReactCommon.BaseMutationOptions<TaskReorderMutation, TaskReorderMutationVariables>;
 export const TasksDocument = gql`
-    query Tasks {
-  tasks {
+    query Tasks($listId: ID!) {
+  tasks(listId: $listId) {
     ...Task
   }
 }
@@ -339,6 +406,7 @@ export const TasksDocument = gql`
  * @example
  * const { data, loading, error } = useTasksQuery({
  *   variables: {
+ *      listId: // value for 'listId'
  *   },
  * });
  */

@@ -1,9 +1,6 @@
 import React, { FC, useMemo } from "react";
-import {
-  BorderOutlined,
-  CheckSquareOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import styled from "styled-components";
 
@@ -14,9 +11,12 @@ import { Text } from "./Text";
 import { demuxUpdateTask } from "./utils";
 
 interface IProp extends TaskProps {
-  updateTask: (uti: UpdateTaskInput) => void;
+  listId: string;
+  listColor: string | null;
 
-  goTask: (id: string) => void;
+  onClickTask: (id: string) => void;
+
+  updateTask: (uti: UpdateTaskInput) => void;
 }
 
 /**
@@ -24,6 +24,8 @@ interface IProp extends TaskProps {
  */
 export const Task: FC<IProp> = (props) => {
   const {
+    listId,
+    listColor,
     id,
     done,
     title,
@@ -31,87 +33,91 @@ export const Task: FC<IProp> = (props) => {
     updateTask,
     repeat,
     color,
-    goTask,
+    onClickTask,
   } = props;
   const start = parseDate(props.start);
   const end = parseDate(props.end);
 
+  // mutations
   const task: TaskProps = { ...props };
   const { setDone, setTitle } = useMemo(
     () => demuxUpdateTask(task, updateTask),
     [task, updateTask]
   );
-
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
   return (
-    <Container color={color ?? defaultEventColor}>
-      <div>
-        <TaskTitleInput
-          placeholder="title"
-          done={!!done}
-          color={color ?? defaultEventColor}
-          value={title}
-          onChange={(e) => setTitle(e.currentTarget.value)}
-          onKeyDown={(e) => {
-            if (e.ctrlKey && e.keyCode === 13) {
-              updateDone();
-            }
-          }}
-        />
-        {start && (
-          <TimeText>
-            {formatDatetime(
-              start,
-              end ?? undefined,
-              repeat ?? undefined,
-              includeTime
-            )}
-          </TimeText>
-        )}
-      </div>
-      <Actions>
+    <Container>
+      <Banner color={listColor ?? defaultEventColor} />
+      <TaskContainer color={color ?? defaultEventColor}>
+        <div>
+          <TitleInput
+            placeholder="title"
+            color={color ?? defaultEventColor}
+            value={title}
+            onChange={(e) => setTitle(e.currentTarget.value)}
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.keyCode === 13) {
+                updateDone();
+              }
+            }}
+          />
+          {start && (
+            <TimeText>
+              {formatDatetime(
+                start,
+                end ?? undefined,
+                repeat ?? undefined,
+                includeTime
+              )}
+            </TimeText>
+          )}
+        </div>
         <ActionButton
-          icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
+          icon={done ? <CheckedIcon /> : <UncheckedIcon />}
+          done={!!done}
           type="text"
           onClick={updateDone}
         />
-        <ActionButton
-          icon={<SettingOutlined />}
-          type="text"
-          onClick={() => goTask(id)}
-        />
-      </Actions>
+      </TaskContainer>
     </Container>
   );
 };
 
-const Container = styled.div<{ color: string }>`
-  min-width: 250px;
-
-  height: 48px;
-  width: 100%;
-
-  /* 1px larger than calendar's events because this is including border */
-  padding: 4px 5px;
-  border-radius: 3px;
-
+const Container = styled.div`
   display: grid;
-  grid-template-columns: auto 64px;
-  align-items: center;
-  grid-gap: 6px;
+  grid-template-columns: 12px auto;
+  grid-gap: 3px;
+`;
+
+const Banner = styled.div<{ color: string }>`
+  width: 12px;
+  height: 48px;
 
   background: ${(p) => p.color};
 `;
 
-export const TaskTitleInput = styled.input<{ color: string; done: boolean }>`
+const TaskContainer = styled.div<{ color: string }>`
+  height: 48px;
+
+  /* 1px larger than calendar's events because this is including border */
+  padding: 4px 0 4px 9px;
+
+  display: grid;
+  grid-template-columns: auto 33px;
+  grid-gap: 12px;
+  align-items: center;
+
+  background: ${(p) => p.color};
+`;
+
+const TitleInput = styled.input<{ color: string }>`
   border: 0;
 
   padding: 0;
   margin-bottom: 1px;
 
-  font-size: 14px;
-  text-decoration: ${(p) => (p.done ? "line-through" : "initials")};
+  font-size: 16px;
 
   background: ${(p) => p.color};
   color: white;
@@ -131,21 +137,32 @@ export const TimeText = styled(Text.Sub)`
   font-size: 12px;
 `;
 
-const Actions = styled.div`
-  align-self: start;
-  display: grid;
-  grid-auto-flow: column;
+const ActionButton = styled(Button)<{ done: boolean }>`
+  width: 24px;
+  height: 24px;
+
+  margin-top: 3px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  :hover {
+    color: white;
+  }
 
   transition: opacity 0.1s ease-in;
-  opacity: 0;
+  opacity: ${(p) => (p.done ? 100 : 0)};
   ${Container}:hover & {
     opacity: 100;
   }
 `;
 
-const ActionButton = styled(Button)`
-  color: white;
-  :hover {
-    color: white;
-  }
+const CheckedIcon = styled(CheckSquareOutlined)`
+  font-size: 24px;
+`;
+
+const UncheckedIcon = styled(BorderOutlined)`
+  font-size: 24px;
 `;

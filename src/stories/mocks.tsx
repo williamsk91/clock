@@ -2,7 +2,39 @@ import { addHours, setHours } from "date-fns";
 import { addDays } from "date-fns/esm";
 
 import { eventColors } from "../components/Calendar/styles";
-import { Task } from "../graphql/generated";
+import { List, Task } from "../graphql/generated";
+
+// ------------------------- List -------------------------
+
+export const getList = (): List => ({
+  id: "listId0",
+  title: "list title",
+  color: null,
+  order: 0,
+});
+
+export const getLists = (): List[] => [
+  {
+    id: "listId1",
+    title: "Work",
+    color: null,
+    order: 1,
+  },
+  {
+    id: "listId2",
+    title: "Groceries",
+    color: eventColors[3],
+    order: 2,
+  },
+  {
+    id: "listId3",
+    title: "Family",
+    color: eventColors[5],
+    order: 3,
+  },
+];
+
+// ------------------------- Task -------------------------
 
 export const getTask = (override?: Partial<Task>): Task => ({
   id: "0",

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Select } from "antd";
 import styled from "styled-components";
 
@@ -10,7 +11,7 @@ interface Props {
 }
 
 /**
- * Select color for the task. Defaults to fullcalendar default color.
+ * Color picker with a default color.
  */
 export const ColorSelect = (props: Props) => {
   const { activeColor, updateColor } = props;
@@ -18,7 +19,7 @@ export const ColorSelect = (props: Props) => {
     <Select
       style={{ width: 60 }}
       value={activeColor ?? defaultEventColor}
-      onChange={c => updateColor(c === defaultEventColor ? null : c)}
+      onChange={(c) => updateColor(c === defaultEventColor ? null : c)}
     >
       <Select.Option value={defaultEventColor}>
         <ColorBlock color={defaultEventColor} aria-label="color block" />
@@ -37,5 +38,5 @@ const ColorBlock = styled.div<{ color: string }>`
   height: 12px;
   margin-top: 8px;
 
-  background: ${p => p.color};
+  background: ${(p) => p.color};
 `;

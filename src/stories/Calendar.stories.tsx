@@ -4,7 +4,7 @@ import { Calendar } from "../components/Calendar/Calendar";
 import { getTasks } from "./mocks";
 import { FullPageLayout } from "./utils";
 
-export default { title: "Components / Calendar" };
+export default { title: "Calendar / Calendar" };
 
 export const base = () => {
   const tasks = getTasks();

@@ -2,28 +2,63 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 import React, { useMemo } from "react";
+import { useHistory, useParams } from "react-router-dom";
+
 import {
-  BorderOutlined,
   CalendarOutlined,
-  CheckSquareOutlined,
   ClockCircleOutlined,
-  CloseOutlined,
   HighlightOutlined,
   RetweetOutlined,
 } from "@ant-design/icons";
-import { Button, Divider, Input, Switch } from "antd";
+import { Switch } from "antd";
 import styled from "styled-components";
 
-import { Task, UpdateTaskInput } from "../../graphql/generated";
-import { DatePicker } from "../DatePicker";
-import { parseDate } from "../datetime";
-import { Spacer } from "../Spacer";
-import { demuxUpdateTask } from "../utils";
-import { ColorSelect } from "./ColorSelect";
-import { RepeatSelect } from "./RepeatSelect";
+import { parseDate } from "../../components/datetime";
+import { Error } from "../../components/flow/Error";
+import { Loading } from "../../components/flow/Loading";
+import { routes } from "../../components/route";
+import { ColorSelect } from "../../components/Settings/ColorSelect";
+import { DatePicker } from "../../components/Settings/DatePicker";
+import { RepeatSelect } from "../../components/Settings/RepeatSelect";
+import { Spacer } from "../../components/Spacer";
+import { Task } from "../../components/Task";
+import { demuxUpdateTask } from "../../components/utils";
+import {
+  Task as TaskType,
+  UpdateTaskInput,
+  useTaskQuery,
+} from "../../graphql/generated";
+
+interface DataProps {
+  updateTask: (uti: UpdateTaskInput) => void;
+}
+
+/**
+ * Query task data and pass to `TaskSidebar`.
+ */
+export const TaskSidebarWithData = (props: DataProps) => {
+  const { updateTask } = props;
+  const { id } = useParams<{ id: string }>();
+  const history = useHistory();
+
+  const { data, loading, error } = useTaskQuery({
+    variables: { id },
+  });
+
+  if (loading) return <Loading />;
+  if (error || !data) return <Error />;
+
+  return (
+    <TaskSettingSidebar
+      task={data.task}
+      updateTask={updateTask}
+      goBack={() => history.push(routes.home.index)}
+    />
+  );
+};
 
 interface Props {
-  task: Task;
+  task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
 
   goBack: () => void;
@@ -32,10 +67,10 @@ interface Props {
 /**
  * Setting for a task
  */
-export const TaskSetting = (props: Props) => {
-  const { task, updateTask, goBack } = props;
+export const TaskSettingSidebar = (props: Props) => {
+  const { task, updateTask } = props;
 
-  const { includeTime, color, repeat, title, done } = task;
+  const { includeTime, color, repeat } = task;
   const start = parseDate(task.start);
   const end = parseDate(task.end);
 
@@ -44,33 +79,19 @@ export const TaskSetting = (props: Props) => {
     setIncludeTime,
     updateRepeat,
     updateColor,
-    setTitle,
-    setDone,
   } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
 
   return (
-    <Container>
-      <ActionButtons>
-        <Button onClick={goBack} icon={<CloseOutlined />} type="text" />
-        <Button
-          icon={done ? <CheckSquareOutlined /> : <BorderOutlined />}
-          onClick={() => {
-            setDone(new Date().toISOString());
-            goBack();
-          }}
-          type="text"
-        />
-      </ActionButtons>
-
-      <Divider />
-
-      <Title
-        value={title}
-        autoSize={{ minRows: 1, maxRows: 3 }}
-        onChange={(e) => setTitle(e.currentTarget.value)}
+    <div>
+      <Spacer spacing="60" />
+      <Task
+        listId="listId"
+        listColor={null}
+        onClickTask={() => console.log("click")}
+        updateTask={updateTask}
+        {...task}
       />
-
-      <Divider />
+      <Spacer spacing="48" />
 
       <Section>
         <IconContainer>
@@ -86,7 +107,7 @@ export const TaskSetting = (props: Props) => {
         </IncludeTimeRow>
       </Section>
 
-      <Spacer spacing="12" />
+      <Spacer spacing="24" />
 
       <Section>
         <IconContainer>
@@ -101,7 +122,7 @@ export const TaskSetting = (props: Props) => {
 
       {start && (
         <>
-          <Spacer spacing="12" />
+          <Spacer spacing="24" />
           <Section>
             <IconContainer>
               <RetweetOutlined />
@@ -115,7 +136,7 @@ export const TaskSetting = (props: Props) => {
         </>
       )}
 
-      <Divider />
+      <Spacer spacing="24" />
 
       <Section>
         <IconContainer>
@@ -123,33 +144,18 @@ export const TaskSetting = (props: Props) => {
         </IconContainer>
         <ColorSelect activeColor={color} updateColor={updateColor} />
       </Section>
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  padding: 24px;
-
-  background: #ffffff;
-`;
-
-const ActionButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
 
 const Section = styled.div`
   display: grid;
   grid-template-columns: 24px auto;
-  grid-column-gap: 6px;
+  grid-column-gap: 12px;
 `;
 
 const IconContainer = styled.div`
-  margin: 6px auto;
-`;
-
-const Title = styled(Input.TextArea)`
-  border: none;
+  font-size: 24px;
 `;
 
 const IncludeTimeRow = styled.div`

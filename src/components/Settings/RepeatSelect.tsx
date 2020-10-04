@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Select } from "antd";
 import { getDay } from "date-fns";
 import styled from "styled-components";
@@ -14,7 +15,10 @@ interface Props {
 }
 
 /**
- * A select to input repeat task.
+ * Repeat picker.
+ *
+ * This could be daily, weekly, monthly, or yearly.
+ * When set to weekly, days can be selected individually.
  */
 export const RepeatSelect = (props: Props) => {
   const { start, repeat, updateRepeat } = props;
@@ -109,6 +113,6 @@ const WeeklySelect = ({ checkedWeekdays, onChange }: WeeklySelectProps) => {
 
 const WeeklySelectContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
+  grid-template-columns: repeat(7, 30px);
+  grid-gap: 6px;
 `;
