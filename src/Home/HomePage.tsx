@@ -7,25 +7,15 @@ import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
 import { hasDateP, isNotDoneP } from "../components/taskFilter";
-import { cycleArray } from "../components/utils";
-import {
-  CreateTaskInput,
-  Task,
-  TaskFragmentDoc,
-  TaskReorderInput,
-  TasksDocument,
-  TasksQuery,
-  UpdateTaskInput,
-  useCreateTaskMutation,
-  useTaskReorderMutation,
-  useUpdateTaskMutation,
-} from "../graphql/generated";
-import { NewTaskSidebar } from "./Sidebar/NewTaskSidebar";
-import { TaskSettingSidebar } from "./Sidebar/TaskSettingSidebar";
-import { TasksSidebar } from "./Sidebar/TasksSidebar";
+import { useUpdateTask } from "../data/mutation/task";
+import { CalendarListsQuery } from "../graphql/generated";
+import { ListSettingSidebarWithData } from "./Sidebar/ListSettingSidebar";
+import { ListSidebarWithData } from "./Sidebar/ListSidebar";
+import { ListsSidebarWithData } from "./Sidebar/ListsSidebar";
+import { TaskSidebarWithData } from "./Sidebar/TaskSettingSidebar";
 
 interface Props {
-  tasks: TasksQuery["tasks"];
+  tasks: CalendarListsQuery["lists"][0]["tasks"];
 }
 
 /**
@@ -35,96 +25,7 @@ export const HomePage = (props: Props) => {
   const { tasks } = props;
   const history = useHistory();
 
-  const [createTask] = useCreateTaskMutation();
-  const [updateTask] = useUpdateTaskMutation();
-  const [taskReorder] = useTaskReorderMutation();
-
-  const createTaskOptimistic = useCallback(
-    (task: CreateTaskInput) =>
-      createTask({
-        variables: { createTaskInput: task },
-        update: (cache, { data }) => {
-          const cachedData = cache.readQuery<TasksQuery>({
-            query: TasksDocument,
-          });
-          const newTaskData = data?.createTask;
-          if (!cachedData || !newTaskData) return;
-          const newTasks = [...cachedData.tasks, newTaskData];
-          cache.writeQuery<TasksQuery>({
-            query: TasksDocument,
-            data: {
-              tasks: newTasks.map((t) => ({
-                ...t,
-                repeat: t.repeat && {
-                  ...t.repeat,
-                  __typename: "Repeat",
-                },
-              })),
-            },
-          });
-          history.push(routes.home.index);
-        },
-      }),
-    [createTask, history]
-  );
-
-  const updateTaskOptimistic = useCallback(
-    (updateTaskInput: UpdateTaskInput) => {
-      updateTask({
-        variables: {
-          task: updateTaskInput,
-        },
-        optimisticResponse: {
-          updateTask: {
-            __typename: "Task",
-            ...updateTaskInput,
-            repeat: updateTaskInput.repeat
-              ? {
-                  __typename: "Repeat",
-                  ...updateTaskInput.repeat,
-                }
-              : null,
-          },
-        },
-      });
-    },
-    [updateTask]
-  );
-
-  const taskReorderOptimistic = useCallback(
-    (taskReorderInput: TaskReorderInput[]) => {
-      const shiftedOrder = cycleArray(taskReorderInput);
-
-      taskReorder({
-        variables: { tasks: taskReorderInput },
-        optimisticResponse: {
-          taskReorder: taskReorderInput.map((t, i) => ({
-            ...t,
-            order: shiftedOrder[i].order,
-            __typename: "TaskReorder",
-          })),
-        },
-        update: (cache, { data }) => {
-          if (!data?.taskReorder) return;
-          data.taskReorder.forEach(({ id, order }) => {
-            const cachedTask = cache.readFragment<Task>({
-              id: `Task:${id}`,
-              fragment: TaskFragmentDoc,
-            });
-            cache.writeFragment({
-              id: `Task:${id}`,
-              fragment: TaskFragmentDoc,
-              data: {
-                ...cachedTask,
-                order,
-              },
-            });
-          });
-        },
-      });
-    },
-    [taskReorder]
-  );
+  const updateTask = useUpdateTask();
 
   const createCalendarTask = useCallback(
     (start: Date, end: Date, includeTime: boolean) => {
@@ -143,43 +44,26 @@ export const HomePage = (props: Props) => {
     <Sidebar.Container>
       <Sidebar.SideBar>
         <Switch>
-          <PrivateRoute exact path={routes.home.index}></PrivateRoute>
-          <PrivateRoute exact path={routes.home.tasks}>
-            <TasksSidebar
-              tasks={tasks}
-              createTask={(title) =>
-                createTaskOptimistic({
-                  title,
-                  includeTime: false,
-                  done: null,
-                  start: null,
-                  end: null,
-                  color: null,
-                  repeat: null,
-                })
-              }
-              updateTask={updateTaskOptimistic}
-              taskReorder={taskReorderOptimistic}
-            />
-          </PrivateRoute>
-          <PrivateRoute exact path={routes.home.task}>
-            <TaskSettingSidebar updateTask={updateTaskOptimistic} />
-          </PrivateRoute>
-          <PrivateRoute exact path={routes.home.newTask}>
-            <NewTaskSidebar
-              createTask={(title, start, end, includeTime) =>
-                createTaskOptimistic({
-                  title,
-                  includeTime,
-                  done: null,
-                  start: start.toISOString(),
-                  end: end.toISOString(),
-                  color: null,
-                  repeat: null,
-                })
-              }
-            />
-          </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={routes.home.index}
+            component={ListsSidebarWithData}
+          />
+          <PrivateRoute
+            exact
+            path={routes.home.list}
+            component={ListSidebarWithData}
+          />
+          <PrivateRoute
+            exact
+            path={routes.home.listSetting}
+            component={ListSettingSidebarWithData}
+          />
+          <PrivateRoute
+            exact
+            path={routes.home.taskSetting}
+            component={TaskSidebarWithData}
+          />
           <Redirect to={routes.error} />
         </Switch>
       </Sidebar.SideBar>
@@ -187,7 +71,7 @@ export const HomePage = (props: Props) => {
         <Spacer spacing="12" />
         <Calendar
           tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
-          updateTask={updateTaskOptimistic}
+          updateTask={updateTask}
           createTask={createCalendarTask}
         />
       </Sidebar.Content>

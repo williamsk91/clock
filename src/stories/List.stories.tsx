@@ -2,17 +2,13 @@ import React, { useState } from "react";
 
 import { List } from "../components/List";
 import { Mini } from "../components/styles/layout";
+import { getList } from "./mocks";
 
 export default { title: "Components / List", component: List };
 
 export const base = () => (
   <Mini.Container>
-    <List
-      id="listId"
-      title="List"
-      taskCount={5}
-      onClick={() => console.log("clicked")}
-    />
+    <List {...getList()} onClick={() => console.log("clicked")} />
   </Mini.Container>
 );
 
@@ -21,10 +17,9 @@ const EditableList = () => {
   return (
     <Mini.Container>
       <List
-        id="listId"
+        {...getList()}
         title={title}
         onTitleEdit={(t) => setTitle(t)}
-        taskCount={5}
         onClick={() => console.log("clicked")}
       />
     </Mini.Container>

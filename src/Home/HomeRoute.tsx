@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Error } from "../components/flow/Error";
-import { Loading } from "../components/flow/Loading";
-import { useTasksQuery } from "../graphql/generated";
+import { Error, Loading } from "../components";
+import { Task, useCalendarListsQuery } from "../graphql/generated";
 import { HomePage } from "./HomePage";
 
 /**
@@ -10,12 +9,13 @@ import { HomePage } from "./HomePage";
  *  functionalities will be available.
  */
 export const HomeRoute = () => {
-  const { data, loading, error } = useTasksQuery();
+  const { data, loading, error } = useCalendarListsQuery();
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
 
-  const orderedTasks = data.tasks.slice().sort((a, b) => a.order - b.order);
+  const tasks: Task[] = data.lists.flatMap((l) => l.tasks);
+  const orderedTasks: Task[] = tasks.slice().sort((a, b) => a.order - b.order);
 
   return <HomePage tasks={orderedTasks} />;
 };

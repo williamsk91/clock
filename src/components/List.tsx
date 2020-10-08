@@ -1,16 +1,19 @@
 import React from "react";
 
+import { SettingOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import styled from "styled-components";
 
 import { List as ListProps } from "../graphql/generated";
 import { defaultEventColor } from "./Calendar/styles";
 
-interface IProp extends ListProps {
+interface IProp extends Omit<ListProps, "tasks"> {
   /**
    * Pass `onTitleEdit` prop to make the title of the list editable
    */
   onTitleEdit?: (t: string) => void;
   onClick?: () => void;
+  onClickSetting?: (id: string) => void;
 }
 
 /**
@@ -18,15 +21,18 @@ interface IProp extends ListProps {
  *  number of uncompleted tasks remaining.
  */
 export const List = (props: IProp) => {
-  const { title, color, onClick, onTitleEdit } = props;
+  const { id, title, color, onClick, onTitleEdit, onClickSetting } = props;
 
   const isEditable = !!onTitleEdit;
   const isClickable = !!onClick;
 
+  /** How many action buttons are there */
+  const actionCount = onClickSetting ? 1 : 0;
+
   return (
     <Container isClickable={isClickable}>
       <Banner color={color ?? defaultEventColor} />
-      <ListContainer>
+      <ListContainer actionCount={actionCount}>
         <TitleInput
           placeholder="Title"
           value={title}
@@ -34,6 +40,13 @@ export const List = (props: IProp) => {
           onChange={(e) => isEditable && onTitleEdit?.(e.currentTarget.value)}
           onClick={() => isClickable && onClick?.()}
         />
+        {onClickSetting && (
+          <ActionButton
+            icon={<SettingIcon />}
+            type="text"
+            onClick={() => onClickSetting(id)}
+          />
+        )}
       </ListContainer>
     </Container>
   );
@@ -56,14 +69,14 @@ const Banner = styled.div<{ color: string }>`
   background: ${(p) => p.color};
 `;
 
-const ListContainer = styled.div`
+const ListContainer = styled.div<{ actionCount: number }>`
   height: 48px;
 
   /* 1px larger than calendar's events because this is including border */
   padding: 4px 0 4px 9px;
 
   display: grid;
-  grid-template-columns: auto 33px;
+  grid-template-columns: auto ${(p) => `repeat(${p.actionCount}, 33px)`};
   grid-gap: 12px;
   align-items: center;
 
@@ -94,14 +107,27 @@ const TitleInput = styled.input`
   }
 `;
 
-// const Count = styled.div`
-//   width: 24px;
-//   height: 24px;
+const ActionButton = styled(Button)`
+  width: 24px;
+  height: 24px;
 
-//   background: #c4c4c4;
-//   color: white;
+  margin-top: 3px;
 
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #828282;
+  :hover {
+    color: #828282;
+  }
+
+  transition: opacity 0.1s ease-in;
+  ${Container}:hover & {
+    opacity: 100;
+  }
+`;
+
+const SettingIcon = styled(SettingOutlined)`
+  font-size: 24px;
+`;

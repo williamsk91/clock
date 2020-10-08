@@ -1,0 +1,11 @@
+#import "./tasks-fragment.graphql"
+#import "./list-fragment.graphql"
+
+query CalendarLists {
+  lists {
+    tasks {
+      ...Task
+    }
+    ...List
+  }
+}

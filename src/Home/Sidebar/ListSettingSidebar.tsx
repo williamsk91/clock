@@ -1,19 +1,50 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
 import { HighlightOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
+import { Error, Loading } from "../../components";
 import { List } from "../../components/List";
 import { ColorSelect } from "../../components/Settings";
 import { Spacer } from "../../components/Spacer";
-import { List as ListType, UpdateListInput } from "../../graphql/generated";
+import { useUpdateList } from "../../data/mutation/list";
+import {
+  List as ListType,
+  UpdateListInput,
+  useListQuery,
+} from "../../graphql/generated";
+
+/**
+ * Query task data and pass to `ListSidebar`.
+ */
+export const ListSettingSidebarWithData = () => {
+  const { listId } = useParams<{ listId: string }>();
+
+  const { data, loading, error } = useListQuery({
+    variables: { listId },
+  });
+
+  const updateList = useUpdateList();
+
+  if (loading) return <Loading />;
+  if (error || !data) return <Error />;
+
+  const { id, title, color, order } = data.list;
+  const list = { id, title, color, order };
+
+  return <ListSettingSidebar list={list} updateList={updateList} />;
+};
 
 interface Props {
-  list: ListType;
+  list: Omit<ListType, "tasks">;
 
   updateList: (uli: UpdateListInput) => void;
 }
 
+/**
+ * Displays settings for a List
+ */
 export const ListSettingSidebar = (props: Props) => {
   const { list, updateList } = props;
 

@@ -23,7 +23,7 @@
     "rrule": "^2.6.4",
     "styled-components": "^5.0.1",
     "subscriptions-transport-ws": "^0.9.17",
-    "typescript": "~3.7.2"
+    "typescript": "^4.0.3"
   },
   "scripts": {
     "start": "PORT=2000 react-scripts start",

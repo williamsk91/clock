@@ -24,14 +24,21 @@ interface Props {
   updateTask: (uti: UpdateTaskInput) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
 
-  goTask: (id: string) => void;
+  onClickSetting: (id: string) => void;
 }
 
 /**
  * A list of Tasks
  */
 export const Tasks = (props: Props) => {
-  const { listId, listColor, tasks, updateTask, taskReorder, goTask } = props;
+  const {
+    listId,
+    listColor,
+    tasks,
+    updateTask,
+    taskReorder,
+    onClickSetting,
+  } = props;
 
   const onDragEnd = (result: DropResult) => {
     const destinationIndex = result.destination?.index;
@@ -71,7 +78,7 @@ export const Tasks = (props: Props) => {
                             key={i}
                             {...t}
                             updateTask={updateTask}
-                            onClickTask={goTask}
+                            onClickSetting={onClickSetting}
                           />
                         </ExternalDraggableTask>
                         <Spacer spacing="12" />

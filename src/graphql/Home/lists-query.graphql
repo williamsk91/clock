@@ -1,0 +1,7 @@
+#import "./list-fragment.graphql"
+
+query Lists {
+  lists {
+    ...List
+  }
+}

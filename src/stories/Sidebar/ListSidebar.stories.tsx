@@ -1,22 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { ListSettingSidebar } from "../../Home/Sidebar/ListSettingSidebar";
+import { ListSidebar } from "../../Home/Sidebar/ListSidebar";
 import { getList } from "../mocks";
 import { SidebarOnlyLayout } from "../utils";
 
 export default {
-  title: "Sidebar / ListSetting",
-  component: ListSettingSidebar,
-};
-
-const Base = () => {
-  const [list, setList] = useState(getList());
-
-  return <ListSettingSidebar list={list} updateList={(uli) => setList(uli)} />;
+  title: "Sidebar / List",
+  component: ListSidebar,
+  decorators: [
+    (Story: any) => (
+      <SidebarOnlyLayout>
+        <Story />
+      </SidebarOnlyLayout>
+    ),
+  ],
 };
 
 export const base = () => (
-  <SidebarOnlyLayout>
-    <Base />
-  </SidebarOnlyLayout>
+  <ListSidebar
+    list={getList()}
+    createTask={() => console.log("createTask")}
+    updateTask={() => console.log("updateTask")}
+    taskReorder={() => console.log("taskReorder")}
+    onClickListSetting={() => console.log("onClickListSetting")}
+    onClickTaskSetting={() => console.log("onClickTaskSetting")}
+  />
+);
+
+export const noTasks = () => (
+  <ListSidebar
+    list={getList()}
+    createTask={() => console.log("createTask")}
+    updateTask={() => console.log("updateTask")}
+    taskReorder={() => console.log("taskReorder")}
+    onClickListSetting={() => console.log("onClickListSetting")}
+    onClickTaskSetting={() => console.log("onClickTaskSetting")}
+  />
 );

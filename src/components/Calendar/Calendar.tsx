@@ -2,6 +2,7 @@ import "@fullcalendar/react";
 
 import React, { FC, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
@@ -18,7 +19,7 @@ import styled from "styled-components";
 
 import { Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
-import { homeTaskRoute } from "../route";
+import { homeTaskSettingRoute } from "../route";
 
 interface IProp {
   tasks: Task[];
@@ -73,7 +74,7 @@ export const Calendar: FC<IProp> = (props) => {
         // clicking
         eventClick={({ event }) => {
           calRef.current?.getApi().unselect();
-          history.push(homeTaskRoute(event.id));
+          history.push(homeTaskSettingRoute("calendarEventListId", event.id));
         }}
         // selecting - creating new task
         selectable

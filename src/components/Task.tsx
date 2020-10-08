@@ -1,6 +1,10 @@
 import React, { FC, useMemo } from "react";
 
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { Button } from "antd";
 import styled from "styled-components";
 
@@ -14,9 +18,9 @@ interface IProp extends TaskProps {
   listId: string;
   listColor: string | null;
 
-  onClickTask: (id: string) => void;
-
   updateTask: (uti: UpdateTaskInput) => void;
+
+  onClickSetting?: (id: string) => void;
 }
 
 /**
@@ -24,7 +28,6 @@ interface IProp extends TaskProps {
  */
 export const Task: FC<IProp> = (props) => {
   const {
-    listId,
     listColor,
     id,
     done,
@@ -33,7 +36,7 @@ export const Task: FC<IProp> = (props) => {
     updateTask,
     repeat,
     color,
-    onClickTask,
+    onClickSetting,
   } = props;
   const start = parseDate(props.start);
   const end = parseDate(props.end);
@@ -46,10 +49,16 @@ export const Task: FC<IProp> = (props) => {
   );
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
+  /** How many action buttons are there */
+  const actionCount = onClickSetting ? 2 : 1;
+
   return (
     <Container>
       <Banner color={listColor ?? defaultEventColor} />
-      <TaskContainer color={color ?? defaultEventColor}>
+      <TaskContainer
+        actionCount={actionCount}
+        color={color ?? defaultEventColor}
+      >
         <div>
           <TitleInput
             placeholder="title"
@@ -73,6 +82,13 @@ export const Task: FC<IProp> = (props) => {
             </TimeText>
           )}
         </div>
+        {onClickSetting && (
+          <ActionButton
+            icon={<SettingIcon />}
+            type="text"
+            onClick={() => onClickSetting(id)}
+          />
+        )}
         <ActionButton
           icon={done ? <CheckedIcon /> : <UncheckedIcon />}
           done={!!done}
@@ -97,14 +113,14 @@ const Banner = styled.div<{ color: string }>`
   background: ${(p) => p.color};
 `;
 
-const TaskContainer = styled.div<{ color: string }>`
+const TaskContainer = styled.div<{ actionCount: number; color: string }>`
   height: 48px;
 
   /* 1px larger than calendar's events because this is including border */
   padding: 4px 0 4px 9px;
 
   display: grid;
-  grid-template-columns: auto 33px;
+  grid-template-columns: auto ${(p) => `repeat(${p.actionCount}, 33px)`};
   grid-gap: 12px;
   align-items: center;
 
@@ -112,6 +128,7 @@ const TaskContainer = styled.div<{ color: string }>`
 `;
 
 const TitleInput = styled.input<{ color: string }>`
+  width: 100%;
   border: 0;
 
   padding: 0;
@@ -137,7 +154,7 @@ export const TimeText = styled(Text.Sub)`
   font-size: 12px;
 `;
 
-const ActionButton = styled(Button)<{ done: boolean }>`
+const ActionButton = styled(Button)<{ done?: boolean }>`
   width: 24px;
   height: 24px;
 
@@ -164,5 +181,9 @@ const CheckedIcon = styled(CheckSquareOutlined)`
 `;
 
 const UncheckedIcon = styled(BorderOutlined)`
+  font-size: 24px;
+`;
+
+const SettingIcon = styled(SettingOutlined)`
   font-size: 24px;
 `;

@@ -11,6 +11,7 @@ export const getList = (): List => ({
   title: "list title",
   color: null,
   order: 0,
+  tasks: getTasks(),
 });
 
 export const getLists = (): List[] => [
@@ -19,18 +20,21 @@ export const getLists = (): List[] => [
     title: "Work",
     color: null,
     order: 1,
+    tasks: getTasks(),
   },
   {
     id: "listId2",
     title: "Groceries",
     color: eventColors[3],
     order: 2,
+    tasks: getTasks(),
   },
   {
     id: "listId3",
     title: "Family",
     color: eventColors[5],
     order: 3,
+    tasks: getTasks(),
   },
 ];
 

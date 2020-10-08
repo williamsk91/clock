@@ -23,33 +23,33 @@ import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
 import { demuxUpdateTask } from "../../components/utils";
+import { useUpdateTask } from "../../data/mutation/task";
 import {
+  List,
   Task as TaskType,
   UpdateTaskInput,
   useTaskQuery,
 } from "../../graphql/generated";
 
-interface DataProps {
-  updateTask: (uti: UpdateTaskInput) => void;
-}
-
 /**
  * Query task data and pass to `TaskSidebar`.
  */
-export const TaskSidebarWithData = (props: DataProps) => {
-  const { updateTask } = props;
-  const { id } = useParams<{ id: string }>();
+export const TaskSidebarWithData = () => {
+  const { listId, taskId } = useParams<{ listId: string; taskId: string }>();
   const history = useHistory();
 
   const { data, loading, error } = useTaskQuery({
-    variables: { id },
+    variables: { listId, taskId },
   });
+
+  const updateTask = useUpdateTask();
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
 
   return (
     <TaskSettingSidebar
+      list={data.list}
       task={data.task}
       updateTask={updateTask}
       goBack={() => history.push(routes.home.index)}
@@ -58,6 +58,7 @@ export const TaskSidebarWithData = (props: DataProps) => {
 };
 
 interface Props {
+  list: Omit<List, "tasks">;
   task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
 
@@ -65,10 +66,10 @@ interface Props {
 }
 
 /**
- * Setting for a task
+ * Displays settings for a Task
  */
 export const TaskSettingSidebar = (props: Props) => {
-  const { task, updateTask } = props;
+  const { list, task, updateTask } = props;
 
   const { includeTime, color, repeat } = task;
   const start = parseDate(task.start);
@@ -85,9 +86,8 @@ export const TaskSettingSidebar = (props: Props) => {
     <div>
       <Spacer spacing="60" />
       <Task
-        listId="listId"
-        listColor={null}
-        onClickTask={() => console.log("click")}
+        listId={list.id}
+        listColor={list.color}
         updateTask={updateTask}
         {...task}
       />

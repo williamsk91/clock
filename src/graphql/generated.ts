@@ -40,6 +40,7 @@ export type List = {
   title: Scalars['String'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
+  tasks: Array<Task>;
 };
 
 export type User = {
@@ -50,19 +51,6 @@ export type User = {
 export type TaskReorder = {
   __typename?: 'TaskReorder';
   id: Scalars['ID'];
-  order: Scalars['Float'];
-};
-
-export type CreateListInput = {
-  title: Scalars['String'];
-  color: Maybe<Scalars['String']>;
-};
-
-/** New list data */
-export type UpdateListInput = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
 };
 
@@ -100,19 +88,27 @@ export type CreateTaskInput = {
   repeat: Maybe<RepeatInput>;
 };
 
+export type CreateListInput = {
+  title: Scalars['String'];
+  color: Maybe<Scalars['String']>;
+};
+
+/** New list data */
+export type UpdateListInput = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
   me: User;
-  list: List;
-  lists: Array<List>;
   task: Task;
   tasks: Array<Task>;
   completedTasks: Array<Task>;
-};
-
-
-export type QueryListArgs = {
-  id: Scalars['ID'];
+  list: List;
+  lists: Array<List>;
 };
 
 
@@ -130,33 +126,23 @@ export type QueryCompletedTasksArgs = {
   listId: Scalars['ID'];
 };
 
+
+export type QueryListArgs = {
+  id: Scalars['ID'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   signOut: Scalars['Boolean'];
   /** Danger! Deletes a user account. */
   deleteUser: Scalars['Boolean'];
-  createList: List;
-  updateList: List;
-  deleteList: List;
   createTask: Task;
   updateTask: Task;
   taskReorder: Array<TaskReorder>;
   deleteTask: Task;
-};
-
-
-export type MutationCreateListArgs = {
-  list: CreateListInput;
-};
-
-
-export type MutationUpdateListArgs = {
-  list: UpdateListInput;
-};
-
-
-export type MutationDeleteListArgs = {
-  listId: Scalars['ID'];
+  createList: List;
+  updateList: List;
+  deleteList: List;
 };
 
 
@@ -180,6 +166,49 @@ export type MutationDeleteTaskArgs = {
   id: Scalars['ID'];
 };
 
+
+export type MutationCreateListArgs = {
+  list: CreateListInput;
+};
+
+
+export type MutationUpdateListArgs = {
+  list: UpdateListInput;
+};
+
+
+export type MutationDeleteListArgs = {
+  listId: Scalars['ID'];
+};
+
+export type CalendarListsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CalendarListsQuery = (
+  { __typename?: 'Query' }
+  & { lists: Array<(
+    { __typename?: 'List' }
+    & { tasks: Array<(
+      { __typename?: 'Task' }
+      & TaskFragment
+    )> }
+    & ListFragment
+  )> }
+);
+
+export type CreateListMutationVariables = Exact<{
+  createListInput: CreateListInput;
+}>;
+
+
+export type CreateListMutation = (
+  { __typename?: 'Mutation' }
+  & { createList: (
+    { __typename?: 'List' }
+    & ListFragment
+  ) }
+);
+
 export type CreateTaskMutationVariables = Exact<{
   listId: Scalars['ID'];
   createTaskInput: CreateTaskInput;
@@ -194,6 +223,39 @@ export type CreateTaskMutation = (
   ) }
 );
 
+export type ListFragment = (
+  { __typename?: 'List' }
+  & Pick<List, 'id' | 'title' | 'color' | 'order'>
+);
+
+export type ListQueryVariables = Exact<{
+  listId: Scalars['ID'];
+}>;
+
+
+export type ListQuery = (
+  { __typename?: 'Query' }
+  & { list: (
+    { __typename?: 'List' }
+    & { tasks: Array<(
+      { __typename?: 'Task' }
+      & TaskFragment
+    )> }
+    & ListFragment
+  ) }
+);
+
+export type ListsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListsQuery = (
+  { __typename?: 'Query' }
+  & { lists: Array<(
+    { __typename?: 'List' }
+    & ListFragment
+  )> }
+);
+
 export type TaskFragment = (
   { __typename?: 'Task' }
   & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'color' | 'order'>
@@ -204,13 +266,17 @@ export type TaskFragment = (
 );
 
 export type TaskQueryVariables = Exact<{
-  id: Scalars['ID'];
+  listId: Scalars['ID'];
+  taskId: Scalars['ID'];
 }>;
 
 
 export type TaskQuery = (
   { __typename?: 'Query' }
-  & { task: (
+  & { list: (
+    { __typename?: 'List' }
+    & ListFragment
+  ), task: (
     { __typename?: 'Task' }
     & TaskFragment
   ) }
@@ -229,17 +295,17 @@ export type TaskReorderMutation = (
   )> }
 );
 
-export type TasksQueryVariables = Exact<{
-  listId: Scalars['ID'];
+export type UpdateListMutationVariables = Exact<{
+  list: UpdateListInput;
 }>;
 
 
-export type TasksQuery = (
-  { __typename?: 'Query' }
-  & { tasks: Array<(
-    { __typename?: 'Task' }
-    & TaskFragment
-  )> }
+export type UpdateListMutation = (
+  { __typename?: 'Mutation' }
+  & { updateList: (
+    { __typename?: 'List' }
+    & ListFragment
+  ) }
 );
 
 export type UpdateTaskMutationVariables = Exact<{
@@ -271,6 +337,14 @@ export type SignOutMutation = (
   & Pick<Mutation, 'signOut'>
 );
 
+export const ListFragmentDoc = gql`
+    fragment List on List {
+  id
+  title
+  color
+  order
+}
+    `;
 export const TaskFragmentDoc = gql`
     fragment Task on Task {
   id
@@ -287,6 +361,74 @@ export const TaskFragmentDoc = gql`
   }
 }
     `;
+export const CalendarListsDocument = gql`
+    query CalendarLists {
+  lists {
+    tasks {
+      ...Task
+    }
+    ...List
+  }
+}
+    ${TaskFragmentDoc}
+${ListFragmentDoc}`;
+
+/**
+ * __useCalendarListsQuery__
+ *
+ * To run a query within a React component, call `useCalendarListsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCalendarListsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCalendarListsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCalendarListsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CalendarListsQuery, CalendarListsQueryVariables>) {
+        return ApolloReactHooks.useQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, baseOptions);
+      }
+export function useCalendarListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CalendarListsQuery, CalendarListsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, baseOptions);
+        }
+export type CalendarListsQueryHookResult = ReturnType<typeof useCalendarListsQuery>;
+export type CalendarListsLazyQueryHookResult = ReturnType<typeof useCalendarListsLazyQuery>;
+export type CalendarListsQueryResult = ApolloReactCommon.QueryResult<CalendarListsQuery, CalendarListsQueryVariables>;
+export const CreateListDocument = gql`
+    mutation CreateList($createListInput: CreateListInput!) {
+  createList(list: $createListInput) {
+    ...List
+  }
+}
+    ${ListFragmentDoc}`;
+export type CreateListMutationFn = ApolloReactCommon.MutationFunction<CreateListMutation, CreateListMutationVariables>;
+
+/**
+ * __useCreateListMutation__
+ *
+ * To run a mutation, you first call `useCreateListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createListMutation, { data, loading, error }] = useCreateListMutation({
+ *   variables: {
+ *      createListInput: // value for 'createListInput'
+ *   },
+ * });
+ */
+export function useCreateListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateListMutation, CreateListMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateListMutation, CreateListMutationVariables>(CreateListDocument, baseOptions);
+      }
+export type CreateListMutationHookResult = ReturnType<typeof useCreateListMutation>;
+export type CreateListMutationResult = ApolloReactCommon.MutationResult<CreateListMutation>;
+export type CreateListMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateListMutation, CreateListMutationVariables>;
 export const CreateTaskDocument = gql`
     mutation CreateTask($listId: ID!, $createTaskInput: CreateTaskInput!) {
   createTask(listId: $listId, task: $createTaskInput) {
@@ -320,13 +462,86 @@ export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const ListDocument = gql`
+    query List($listId: ID!) {
+  list(id: $listId) {
+    tasks {
+      ...Task
+    }
+    ...List
+  }
+}
+    ${TaskFragmentDoc}
+${ListFragmentDoc}`;
+
+/**
+ * __useListQuery__
+ *
+ * To run a query within a React component, call `useListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListQuery({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *   },
+ * });
+ */
+export function useListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListQuery, ListQueryVariables>) {
+        return ApolloReactHooks.useQuery<ListQuery, ListQueryVariables>(ListDocument, baseOptions);
+      }
+export function useListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListQuery, ListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ListQuery, ListQueryVariables>(ListDocument, baseOptions);
+        }
+export type ListQueryHookResult = ReturnType<typeof useListQuery>;
+export type ListLazyQueryHookResult = ReturnType<typeof useListLazyQuery>;
+export type ListQueryResult = ApolloReactCommon.QueryResult<ListQuery, ListQueryVariables>;
+export const ListsDocument = gql`
+    query Lists {
+  lists {
+    ...List
+  }
+}
+    ${ListFragmentDoc}`;
+
+/**
+ * __useListsQuery__
+ *
+ * To run a query within a React component, call `useListsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
+        return ApolloReactHooks.useQuery<ListsQuery, ListsQueryVariables>(ListsDocument, baseOptions);
+      }
+export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListsQuery, ListsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ListsQuery, ListsQueryVariables>(ListsDocument, baseOptions);
+        }
+export type ListsQueryHookResult = ReturnType<typeof useListsQuery>;
+export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>;
+export type ListsQueryResult = ApolloReactCommon.QueryResult<ListsQuery, ListsQueryVariables>;
 export const TaskDocument = gql`
-    query Task($id: ID!) {
-  task(id: $id) {
+    query Task($listId: ID!, $taskId: ID!) {
+  list(id: $listId) {
+    ...List
+  }
+  task(id: $taskId) {
     ...Task
   }
 }
-    ${TaskFragmentDoc}`;
+    ${ListFragmentDoc}
+${TaskFragmentDoc}`;
 
 /**
  * __useTaskQuery__
@@ -340,7 +555,8 @@ export const TaskDocument = gql`
  * @example
  * const { data, loading, error } = useTaskQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      listId: // value for 'listId'
+ *      taskId: // value for 'taskId'
  *   },
  * });
  */
@@ -386,39 +602,38 @@ export function useTaskReorderMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMutation>;
 export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
 export type TaskReorderMutationOptions = ApolloReactCommon.BaseMutationOptions<TaskReorderMutation, TaskReorderMutationVariables>;
-export const TasksDocument = gql`
-    query Tasks($listId: ID!) {
-  tasks(listId: $listId) {
-    ...Task
+export const UpdateListDocument = gql`
+    mutation UpdateList($list: UpdateListInput!) {
+  updateList(list: $list) {
+    ...List
   }
 }
-    ${TaskFragmentDoc}`;
+    ${ListFragmentDoc}`;
+export type UpdateListMutationFn = ApolloReactCommon.MutationFunction<UpdateListMutation, UpdateListMutationVariables>;
 
 /**
- * __useTasksQuery__
+ * __useUpdateListMutation__
  *
- * To run a query within a React component, call `useTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useUpdateListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useTasksQuery({
+ * const [updateListMutation, { data, loading, error }] = useUpdateListMutation({
  *   variables: {
- *      listId: // value for 'listId'
+ *      list: // value for 'list'
  *   },
  * });
  */
-export function useTasksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TasksQuery, TasksQueryVariables>) {
-        return ApolloReactHooks.useQuery<TasksQuery, TasksQueryVariables>(TasksDocument, baseOptions);
+export function useUpdateListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateListMutation, UpdateListMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument, baseOptions);
       }
-export function useTasksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TasksQuery, TasksQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, baseOptions);
-        }
-export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
-export type TasksLazyQueryHookResult = ReturnType<typeof useTasksLazyQuery>;
-export type TasksQueryResult = ApolloReactCommon.QueryResult<TasksQuery, TasksQueryVariables>;
+export type UpdateListMutationHookResult = ReturnType<typeof useUpdateListMutation>;
+export type UpdateListMutationResult = ApolloReactCommon.MutationResult<UpdateListMutation>;
+export type UpdateListMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateListMutation, UpdateListMutationVariables>;
 export const UpdateTaskDocument = gql`
     mutation UpdateTask($task: UpdateTaskInput!) {
   updateTask(task: $task) {

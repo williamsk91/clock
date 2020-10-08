@@ -12,9 +12,10 @@ export const base = () => (
   <Mini.Container>
     <Task
       listId="listId"
+      listColor={null}
       {...getTask()}
       updateTask={(t) => console.log("update task: ", t)}
-      onClickTask={(id) => console.log("goTask: ", id)}
+      onClickSetting={(id) => console.log("onClickSetting: ", id)}
     />
   </Mini.Container>
 );
@@ -23,9 +24,9 @@ export const checked = () => (
   <Mini.Container>
     <Task
       listId="listId"
+      listColor={null}
       {...getTask({ done: new Date().toISOString() })}
       updateTask={(t) => console.log("update task: ", t)}
-      onClickTask={(id) => console.log("goTask: ", id)}
     />
   </Mini.Container>
 );
@@ -38,7 +39,6 @@ export const colored = () => (
       {...getTask({ done: new Date().toISOString() })}
       color="#50D989"
       updateTask={(t) => console.log("update task: ", t)}
-      onClickTask={(id) => console.log("goTask: ", id)}
     />
   </Mini.Container>
 );
