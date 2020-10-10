@@ -17,23 +17,29 @@ import {
 } from "date-fns";
 import styled from "styled-components";
 
-import { Task, UpdateTaskInput } from "../../graphql/generated";
+import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { homeTaskSettingRoute } from "../route";
+import { hasDateP, isNotDoneP } from "../taskFilter";
 
 interface IProp {
-  tasks: Task[];
+  lists: List[];
   updateTask: (uti: UpdateTaskInput) => void;
   createTask: (start: Date, end: Date, includeTime: boolean) => void;
 }
 
 export const Calendar: FC<IProp> = (props) => {
-  const { tasks, updateTask, createTask } = props;
+  const { lists, updateTask, createTask } = props;
   const history = useHistory();
   const calRef = useRef<FullCalendar>(null);
   const { setApi } = useCalendarContext();
 
-  const events: EventInput[] = tasks.map(taskToEventInput);
+  const events: EventInput[] = lists.flatMap((l) =>
+    l.tasks
+      .filter(hasDateP)
+      .filter(isNotDoneP)
+      .map((t) => taskToEventInput(l, t))
+  );
 
   useEffect(() => {
     if (!calRef.current) return;
@@ -74,7 +80,9 @@ export const Calendar: FC<IProp> = (props) => {
         // clicking
         eventClick={({ event }) => {
           calRef.current?.getApi().unselect();
-          history.push(homeTaskSettingRoute("calendarEventListId", event.id));
+          history.push(
+            homeTaskSettingRoute(event.extendedProps.listId, event.id)
+          );
         }}
         // selecting - creating new task
         selectable
@@ -195,6 +203,7 @@ const Container = styled.div`
       :hover {
         text-decoration: none;
       }
+      border-width: 0 0 0 6px;
     }
 
     /* event */
@@ -203,6 +212,7 @@ const Container = styled.div`
       :hover {
         text-decoration: none;
       }
+      border-width: 0 0 0 6px;
       &.short-duration-event .fc-event-main {
         display: flex;
         .fc-event-time {
@@ -242,7 +252,8 @@ const Container = styled.div`
 `;
 
 // ------------------------- Helper Functions -------------------------
-export const taskToEventInput = (task: Task): EventInput => {
+
+export const taskToEventInput = (list: List, task: Task): EventInput => {
   const { id, title } = task;
 
   // classNames for styling
@@ -284,12 +295,14 @@ export const taskToEventInput = (task: Task): EventInput => {
 
     /** Style */
     backgroundColor: task.color ?? undefined,
+    borderColor: list.color ?? undefined,
     classNames,
 
     /**
      * Extra props are required to get full information of the task.
-     * Check eventToTaskUpdateInput
+     * Check `eventToTaskUpdateInput`
      */
+    listId: list.id,
     done: task.done,
     order: task.order,
     repeat: task.repeat,

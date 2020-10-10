@@ -20,14 +20,14 @@ export const getLists = (): List[] => [
     title: "Work",
     color: null,
     order: 1,
-    tasks: getTasks(),
+    tasks: [getTask()],
   },
   {
     id: "listId2",
     title: "Groceries",
     color: eventColors[3],
     order: 2,
-    tasks: getTasks(),
+    tasks: [],
   },
   {
     id: "listId3",

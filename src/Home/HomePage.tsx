@@ -1,45 +1,20 @@
-import React, { useCallback } from "react";
-import { Redirect, Switch, useHistory } from "react-router-dom";
+import React from "react";
+import { Redirect, Switch } from "react-router-dom";
 
-import { Calendar } from "../components/Calendar";
 import { routes } from "../components/route";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
-import { hasDateP, isNotDoneP } from "../components/taskFilter";
-import { useUpdateTask } from "../data/mutation/task";
-import { CalendarListsQuery } from "../graphql/generated";
+import { CalendarWithData } from "./CalendarWithData";
 import { ListSettingSidebarWithData } from "./Sidebar/ListSettingSidebar";
 import { ListSidebarWithData } from "./Sidebar/ListSidebar";
 import { ListsSidebarWithData } from "./Sidebar/ListsSidebar";
 import { TaskSidebarWithData } from "./Sidebar/TaskSettingSidebar";
 
-interface Props {
-  tasks: CalendarListsQuery["lists"][0]["tasks"];
-}
-
 /**
  * Displays a list of task and a weekly calendar
  */
-export const HomePage = (props: Props) => {
-  const { tasks } = props;
-  const history = useHistory();
-
-  const updateTask = useUpdateTask();
-
-  const createCalendarTask = useCallback(
-    (start: Date, end: Date, includeTime: boolean) => {
-      history.push(routes.home.newTask, {
-        date: {
-          start,
-          end,
-          includeTime,
-        },
-      });
-    },
-    [history]
-  );
-
+export const HomePage = () => {
   return (
     <Sidebar.Container>
       <Sidebar.SideBar>
@@ -69,11 +44,7 @@ export const HomePage = (props: Props) => {
       </Sidebar.SideBar>
       <Sidebar.Content>
         <Spacer spacing="12" />
-        <Calendar
-          tasks={tasks.filter(hasDateP).filter(isNotDoneP)}
-          updateTask={updateTask}
-          createTask={createCalendarTask}
-        />
+        <CalendarWithData />
       </Sidebar.Content>
     </Sidebar.Container>
   );

@@ -10,8 +10,12 @@ import {
   Today,
   homeListRoute,
 } from "../../components";
-import { useCreateList } from "../../data/mutation/list";
-import { List as ListType, useListsQuery } from "../../graphql/generated";
+import { useCreateList, useUpdateList } from "../../data/mutation/list";
+import {
+  List as ListType,
+  UpdateListInput,
+  useListsQuery,
+} from "../../graphql/generated";
 
 /**
  * Query task data and pass to `ListsSidebar`
@@ -22,11 +26,12 @@ export const ListsSidebarWithData = () => {
   const { data, loading, error } = useListsQuery();
 
   const createList = useCreateList();
+  const updateList = useUpdateList();
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
 
-  const onClickList = (id: string) => {
+  const onClickSetting = (id: string) => {
     history.push(homeListRoute(id));
   };
 
@@ -34,15 +39,19 @@ export const ListsSidebarWithData = () => {
     <ListsSidebar
       lists={data.lists}
       createList={createList}
-      onClickList={onClickList}
+      onUpdateList={updateList}
+      onClickSetting={onClickSetting}
     />
   );
 };
 
 interface Props {
   lists: Omit<ListType, "tasks">[];
+
   createList: (t: string) => void;
-  onClickList: (id: string) => void;
+  onUpdateList: (uli: UpdateListInput) => void;
+
+  onClickSetting: (id: string) => void;
 }
 
 /**
@@ -52,7 +61,7 @@ interface Props {
  *  3. Available lists
  */
 export const ListsSidebar = (props: Props) => {
-  const { lists, createList, onClickList } = props;
+  const { lists, createList, onUpdateList, onClickSetting } = props;
   return (
     <div>
       <Spacer spacing="60" />
@@ -63,7 +72,18 @@ export const ListsSidebar = (props: Props) => {
 
       {lists.map((l) => (
         <React.Fragment key={l.id}>
-          <List {...l} onClick={() => onClickList(l.id)} />
+          <List
+            {...l}
+            onTitleEdit={(t: string) =>
+              onUpdateList({
+                id: l.id,
+                title: t,
+                color: l.color,
+                order: l.order,
+              })
+            }
+            onClickSetting={() => onClickSetting(l.id)}
+          />
           <Spacer spacing="12" />
         </React.Fragment>
       ))}

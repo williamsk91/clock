@@ -21,6 +21,7 @@ export const base = () => (
   <ListsSidebar
     lists={getLists()}
     createList={() => console.log("createList")}
-    onClickList={() => console.log("onClickList")}
+    onUpdateList={() => console.log("onClickList")}
+    onClickSetting={() => console.log("onClickSetting")}
   />
 );

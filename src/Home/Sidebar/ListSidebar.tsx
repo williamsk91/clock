@@ -114,8 +114,7 @@ export const ListSidebar = (props: Props) => {
         <EmptyList />
       ) : (
         <Tasks
-          listId={list.id}
-          listColor={list.color}
+          list={list}
           tasks={notDoneTask}
           updateTask={updateTask}
           taskReorder={taskReorder}

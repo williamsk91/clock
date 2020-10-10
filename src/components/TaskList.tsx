@@ -9,6 +9,7 @@ import {
 import styled from "styled-components";
 
 import {
+  List,
   Task as TaskProps,
   TaskReorderInput,
   UpdateTaskInput,
@@ -18,8 +19,7 @@ import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
 interface Props {
-  listId: string;
-  listColor: string | null;
+  list: List;
   tasks: TaskProps[];
   updateTask: (uti: UpdateTaskInput) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
@@ -31,14 +31,7 @@ interface Props {
  * A list of Tasks
  */
 export const Tasks = (props: Props) => {
-  const {
-    listId,
-    listColor,
-    tasks,
-    updateTask,
-    taskReorder,
-    onClickSetting,
-  } = props;
+  const { list, tasks, updateTask, taskReorder, onClickSetting } = props;
 
   const onDragEnd = (result: DropResult) => {
     const destinationIndex = result.destination?.index;
@@ -71,10 +64,10 @@ export const Tasks = (props: Props) => {
                       style={getStyle(provided.draggableProps.style, snapshot)}
                     >
                       <>
-                        <ExternalDraggableTask task={t}>
+                        <ExternalDraggableTask list={list} task={t}>
                           <Task
-                            listId={listId}
-                            listColor={listColor}
+                            listId={list.id}
+                            listColor={list.color}
                             key={i}
                             {...t}
                             updateTask={updateTask}
