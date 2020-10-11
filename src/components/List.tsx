@@ -5,7 +5,7 @@ import { Button } from "antd";
 import styled from "styled-components";
 
 import { List as ListProps } from "../graphql/generated";
-import { defaultEventColor } from "./Calendar/styles";
+import { EventColor, defaultEventColor, eventColors } from "./Calendar/styles";
 
 interface IProp extends Omit<ListProps, "tasks"> {
   /**
@@ -31,7 +31,7 @@ export const List = (props: IProp) => {
 
   return (
     <Container isClickable={isClickable}>
-      <Banner color={color ?? defaultEventColor} />
+      <Banner color={(color as EventColor | null) ?? defaultEventColor} />
       <ListContainer actionCount={actionCount}>
         <TitleInput
           placeholder="Title"
@@ -62,11 +62,11 @@ const Container = styled.div<{ isClickable: boolean }>`
   }
 `;
 
-const Banner = styled.div<{ color: string }>`
+const Banner = styled.div<{ color: EventColor }>`
   width: 12px;
   height: 48px;
 
-  background: ${(p) => p.color};
+  background: ${(p) => eventColors[p.color]};
 `;
 
 const ListContainer = styled.div<{ actionCount: number }>`

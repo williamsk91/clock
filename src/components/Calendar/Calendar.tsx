@@ -20,7 +20,13 @@ import styled from "styled-components";
 import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { homeTaskSettingRoute } from "../route";
-import { hasDateP, isNotDoneP } from "../taskFilter";
+import { hasDateP } from "../taskFilter";
+import {
+  EventColor,
+  defaultEventColor,
+  eventColors,
+  eventColors50,
+} from "./styles";
 
 interface IProp {
   lists: List[];
@@ -35,10 +41,7 @@ export const Calendar: FC<IProp> = (props) => {
   const { setApi } = useCalendarContext();
 
   const events: EventInput[] = lists.flatMap((l) =>
-    l.tasks
-      .filter(hasDateP)
-      .filter(isNotDoneP)
-      .map((t) => taskToEventInput(l, t))
+    l.tasks.filter(hasDateP).map((t) => taskToEventInput(l, t))
   );
 
   useEffect(() => {
@@ -263,6 +266,8 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
     differenceInMinutes(new Date(task.end), new Date(task.start)) <= 45 &&
     classNames.push("short-duration-event");
 
+  const colorSet = task.done ? eventColors50 : eventColors;
+
   return {
     id,
     title,
@@ -294,8 +299,8 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
     groupId: id,
 
     /** Style */
-    backgroundColor: task.color ?? undefined,
-    borderColor: list.color ?? undefined,
+    backgroundColor: colorSet[(task.color as EventColor) ?? defaultEventColor],
+    borderColor: colorSet[(list.color as EventColor) ?? defaultEventColor],
     classNames,
 
     /**

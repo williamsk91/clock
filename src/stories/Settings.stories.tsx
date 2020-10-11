@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { EventColor } from "../components/Calendar/styles";
 import { ColorSelect, DatePicker, RepeatSelect } from "../components/Settings";
 import { Mini } from "../components/styles/layout";
 import { Repeat } from "../graphql/generated";
@@ -16,7 +17,7 @@ export default {
 };
 
 const ColorSelectStory = () => {
-  const [color, setColor] = useState<string | null>(null);
+  const [color, setColor] = useState<EventColor | null>(null);
   return <ColorSelect activeColor={color} updateColor={(c) => setColor(c)} />;
 };
 

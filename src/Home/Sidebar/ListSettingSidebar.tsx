@@ -5,6 +5,7 @@ import { HighlightOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import { Error, Loading } from "../../components";
+import { EventColor } from "../../components/Calendar/styles";
 import { List } from "../../components/List";
 import { ColorSelect } from "../../components/Settings";
 import { Spacer } from "../../components/Spacer";
@@ -61,7 +62,7 @@ export const ListSettingSidebar = (props: Props) => {
           <HighlightOutlined />
         </IconContainer>
         <ColorSelect
-          activeColor={list.color}
+          activeColor={list.color as EventColor | null}
           updateColor={(color) => updateList({ ...list, color })}
         />
       </Section>

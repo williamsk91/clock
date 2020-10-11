@@ -13,6 +13,7 @@ import {
 import { Switch } from "antd";
 import styled from "styled-components";
 
+import { EventColor } from "../../components/Calendar/styles";
 import { parseDate } from "../../components/datetime";
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
@@ -87,7 +88,7 @@ export const TaskSettingSidebar = (props: Props) => {
       <Spacer spacing="60" />
       <Task
         listId={list.id}
-        listColor={list.color}
+        listColor={list.color as EventColor | null}
         updateTask={updateTask}
         {...task}
       />
@@ -142,7 +143,10 @@ export const TaskSettingSidebar = (props: Props) => {
         <IconContainer>
           <HighlightOutlined />
         </IconContainer>
-        <ColorSelect activeColor={color} updateColor={updateColor} />
+        <ColorSelect
+          activeColor={color as EventColor | null}
+          updateColor={updateColor}
+        />
       </Section>
     </div>
   );

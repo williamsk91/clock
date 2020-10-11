@@ -35,9 +35,9 @@ export const colored = () => (
   <Mini.Container>
     <Task
       listId="listId"
-      listColor="#FF4D4F"
+      listColor="lime"
       {...getTask({ done: new Date().toISOString() })}
-      color="#50D989"
+      color="red"
       updateTask={(t) => console.log("update task: ", t)}
     />
   </Mini.Container>

@@ -194,6 +194,7 @@ const getSelectedItem = (path: string): SelectableItems | undefined => {
 
   match = matchPath(path, {
     path: routes.home.index,
+    exact: true,
   });
   if (match) return SelectableItems.Home;
 

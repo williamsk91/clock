@@ -3,11 +3,11 @@ import React from "react";
 import { Select } from "antd";
 import styled from "styled-components";
 
-import { defaultEventColor, eventColors } from "../Calendar/styles";
+import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
 
 interface Props {
-  activeColor: string | null;
-  updateColor: (c: string | null) => void;
+  activeColor: EventColor | null;
+  updateColor: (c: EventColor | null) => void;
 }
 
 /**
@@ -15,6 +15,7 @@ interface Props {
  */
 export const ColorSelect = (props: Props) => {
   const { activeColor, updateColor } = props;
+
   return (
     <Select
       style={{ width: 60 }}
@@ -22,11 +23,14 @@ export const ColorSelect = (props: Props) => {
       onChange={(c) => updateColor(c === defaultEventColor ? null : c)}
     >
       <Select.Option value={defaultEventColor}>
-        <ColorBlock color={defaultEventColor} aria-label="color block" />
+        <ColorBlock
+          color={eventColors[defaultEventColor]}
+          aria-label="color block"
+        />
       </Select.Option>
-      {eventColors.map((ec, i) => (
-        <Select.Option key={i} value={ec}>
-          <ColorBlock color={ec} aria-label="color block" />
+      {Object.entries(eventColors).map(([key, value], i) => (
+        <Select.Option key={i} value={key}>
+          <ColorBlock color={value} aria-label="color block" />
         </Select.Option>
       ))}
     </Select>

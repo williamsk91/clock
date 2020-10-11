@@ -15,6 +15,7 @@ import {
   UpdateTaskInput,
 } from "../graphql/generated";
 import { ExternalDraggableTask } from "./Calendar/ExternalDraggableTask";
+import { EventColor } from "./Calendar/styles";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
@@ -67,7 +68,7 @@ export const Tasks = (props: Props) => {
                         <ExternalDraggableTask list={list} task={t}>
                           <Task
                             listId={list.id}
-                            listColor={list.color}
+                            listColor={list.color as EventColor | null}
                             key={i}
                             {...t}
                             updateTask={updateTask}

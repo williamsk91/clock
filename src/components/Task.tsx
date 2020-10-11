@@ -9,14 +9,14 @@ import { Button } from "antd";
 import styled from "styled-components";
 
 import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
-import { defaultEventColor } from "./Calendar/styles";
+import { EventColor, defaultEventColor, eventColors } from "./Calendar/styles";
 import { formatDatetime, parseDate } from "./datetime";
 import { Text } from "./Text";
 import { demuxUpdateTask } from "./utils";
 
 interface IProp extends TaskProps {
   listId: string;
-  listColor: string | null;
+  listColor: EventColor | null;
 
   updateTask: (uti: UpdateTaskInput) => void;
 
@@ -57,12 +57,12 @@ export const Task: FC<IProp> = (props) => {
       <Banner color={listColor ?? defaultEventColor} />
       <TaskContainer
         actionCount={actionCount}
-        color={color ?? defaultEventColor}
+        color={(color as EventColor | null) ?? defaultEventColor}
       >
         <div>
           <TitleInput
             placeholder="title"
-            color={color ?? defaultEventColor}
+            color={(color as EventColor | null) ?? defaultEventColor}
             value={title}
             onChange={(e) => setTitle(e.currentTarget.value)}
             onKeyDown={(e) => {
@@ -106,14 +106,14 @@ const Container = styled.div`
   grid-gap: 3px;
 `;
 
-const Banner = styled.div<{ color: string }>`
+const Banner = styled.div<{ color: EventColor }>`
   width: 12px;
   height: 48px;
 
-  background: ${(p) => p.color};
+  background: ${(p) => eventColors[p.color]};
 `;
 
-const TaskContainer = styled.div<{ actionCount: number; color: string }>`
+const TaskContainer = styled.div<{ actionCount: number; color: EventColor }>`
   height: 48px;
 
   /* 1px larger than calendar's events because this is including border */
@@ -124,10 +124,10 @@ const TaskContainer = styled.div<{ actionCount: number; color: string }>`
   grid-gap: 12px;
   align-items: center;
 
-  background: ${(p) => p.color};
+  background: ${(p) => eventColors[p.color]};
 `;
 
-const TitleInput = styled.input<{ color: string }>`
+const TitleInput = styled.input<{ color: EventColor }>`
   width: 100%;
   border: 0;
 
@@ -136,7 +136,7 @@ const TitleInput = styled.input<{ color: string }>`
 
   font-size: 16px;
 
-  background: ${(p) => p.color};
+  background: ${(p) => eventColors[p.color]};
   color: white;
 
   ::placeholder {
