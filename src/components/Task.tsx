@@ -91,7 +91,7 @@ export const Task: FC<IProp> = (props) => {
         )}
         <ActionButton
           icon={done ? <CheckedIcon /> : <UncheckedIcon />}
-          done={!!done}
+          done={done ? true : undefined}
           type="text"
           onClick={updateDone}
         />
