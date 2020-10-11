@@ -10,6 +10,7 @@ export * from "./Task";
 export * from "./taskFilter";
 export * from "./TaskList";
 export * from "./Text";
+export * from "./Track";
 export * from "./utils";
 export * from "./context";
 export * from "./Settings";

@@ -26,7 +26,7 @@ export const ExternalDraggableTask: FC<Props> = (props) => {
       mirrorSelector: `#${taskContainerId}`,
       eventData,
     });
-  }, [taskRef, taskContainerId, task]);
+  }, [taskRef, taskContainerId, list, task]);
 
   return (
     <div ref={taskRef} id={taskContainerId}>

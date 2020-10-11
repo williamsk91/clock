@@ -1,6 +1,7 @@
 import React from "react";
 import { Redirect, Switch } from "react-router-dom";
 
+import { TrackWithRoutes } from "../components";
 import { routes } from "../components/route";
 import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
@@ -17,6 +18,7 @@ import { TaskSidebarWithData } from "./Sidebar/TaskSettingSidebar";
 export const HomePage = () => {
   return (
     <Sidebar.Container>
+      <TrackWithRoutes />
       <Sidebar.SideBar>
         <Switch>
           <PrivateRoute

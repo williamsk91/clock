@@ -15,12 +15,13 @@ const SidebarContainer = styled.div`
   width: 100vw;
   height: 100vh;
 
-  display: grid;
-  grid-template-columns: 365px 1fr;
+  display: flex;
 `;
 
 const SideBar = styled.div`
+  width: 365px;
   height: 100vh;
+
   padding: 0 24px;
   box-sizing: border-box;
 
@@ -28,6 +29,7 @@ const SideBar = styled.div`
 `;
 
 const SidebarContent = styled.div`
+  flex-grow: 1;
   margin-left: 12px;
   overflow: hidden;
 
