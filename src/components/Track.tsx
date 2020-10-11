@@ -4,16 +4,16 @@ import { matchPath, useHistory, useLocation } from "react-router-dom";
 import {
   CaretLeftFilled,
   CheckSquareFilled,
+  CloudFilled,
   HomeFilled,
   NotificationFilled,
   PieChartFilled,
   SettingFilled,
 } from "@ant-design/icons";
-import { Menu as AMenu, Divider } from "antd";
+import { Menu as AMenu } from "antd";
 import styled from "styled-components";
 
 import { homeListRoute, routes } from "./route";
-import { Spacer } from "./Spacer";
 
 /**
  * `Track` component with routing setup
@@ -79,14 +79,14 @@ export const Track = (props: Props) => {
   return (
     <Container>
       <Menu selectable={false}>
-        <Spacer spacing="60" />
+        <MenuItem selected={false} icon={<CloudFilled />} />
         <MenuItem
           onClick={goBack}
           selected={false}
           icon={<CaretLeftFilled />}
           disabled={!goBack}
         />
-        <Divider />
+        <Menu.Divider />
         <MenuItem
           selected={selectedItem === SelectableItems.Home}
           onClick={goHome}
@@ -102,10 +102,10 @@ export const Track = (props: Props) => {
           onClick={goCompletedTask}
           icon={<CheckSquareFilled />}
         />
-        <Divider />
+        <Menu.Divider />
       </Menu>
       <Menu selectable={false}>
-        <Divider />
+        <Menu.Divider />
         <MenuItem
           selected={selectedItem === SelectableItems.Feedback}
           onClick={goFeedback}
