@@ -17,7 +17,8 @@ const Base = () => {
     <TaskSettingSidebar
       list={getList()}
       task={task}
-      updateTask={(uti) => setTask(uti)}
+      updateTask={(uti) => setTask({ ...uti, deleted: null })}
+      deleteTask={() => console.log("delete task")}
       goBack={() => console.log("go back")}
     />
   );

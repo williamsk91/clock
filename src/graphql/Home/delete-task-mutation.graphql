@@ -1,0 +1,7 @@
+#import "./task-fragment.graphql"
+
+mutation DeleteTask($taskId: ID!) {
+  deleteTask(id: $taskId) {
+    ...Task
+  }
+}

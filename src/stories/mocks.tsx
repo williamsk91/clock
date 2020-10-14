@@ -53,6 +53,7 @@ export const getTask = (override?: Partial<Task>): Task => ({
     freq: "daily",
     byweekday: null,
   },
+  deleted: null,
   ...override,
 });
 
@@ -67,6 +68,7 @@ export const getTasks = (): Task[] => [
     color: null,
     order: 1,
     repeat: null,
+    deleted: null,
   },
   {
     id: "2",
@@ -82,6 +84,7 @@ export const getTasks = (): Task[] => [
       freq: "daily",
       byweekday: null,
     },
+    deleted: null,
   },
   {
     id: "3",
@@ -93,6 +96,7 @@ export const getTasks = (): Task[] => [
     color: eventColors.magenta,
     order: 3,
     repeat: null,
+    deleted: null,
   },
   {
     id: "4",
@@ -104,6 +108,7 @@ export const getTasks = (): Task[] => [
     color: eventColors.lime,
     order: 4,
     repeat: null,
+    deleted: null,
   },
   {
     id: "5",
@@ -115,5 +120,6 @@ export const getTasks = (): Task[] => [
     color: eventColors.black,
     order: 5,
     repeat: null,
+    deleted: null,
   },
 ];

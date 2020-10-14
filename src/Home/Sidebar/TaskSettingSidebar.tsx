@@ -7,24 +7,25 @@ import { useHistory, useParams } from "react-router-dom";
 import {
   CalendarOutlined,
   ClockCircleOutlined,
+  DeleteOutlined,
   HighlightOutlined,
   RetweetOutlined,
 } from "@ant-design/icons";
-import { Switch } from "antd";
+import { Button, Divider, Popconfirm, Switch } from "antd";
 import styled from "styled-components";
 
 import { EventColor } from "../../components/Calendar/styles";
 import { parseDate } from "../../components/datetime";
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
-import { routes } from "../../components/route";
+import { homeListRoute, routes } from "../../components/route";
 import { ColorSelect } from "../../components/Settings/ColorSelect";
 import { DatePicker } from "../../components/Settings/DatePicker";
 import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
 import { demuxUpdateTask } from "../../components/utils";
-import { useUpdateTask } from "../../data/mutation/task";
+import { useDeleteTask, useUpdateTask } from "../../data/mutation/task";
 import {
   List,
   Task as TaskType,
@@ -44,6 +45,9 @@ export const TaskSidebarWithData = () => {
   });
 
   const updateTask = useUpdateTask();
+  const deleteTask = useDeleteTask({
+    onCompleted: () => history.push(homeListRoute(listId)),
+  });
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
@@ -53,6 +57,7 @@ export const TaskSidebarWithData = () => {
       list={data.list}
       task={data.task}
       updateTask={updateTask}
+      deleteTask={deleteTask}
       goBack={() => history.push(routes.home.index)}
     />
   );
@@ -62,6 +67,7 @@ interface Props {
   list: Omit<List, "tasks">;
   task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
+  deleteTask: (taskId: string) => void;
 
   goBack: () => void;
 }
@@ -70,7 +76,7 @@ interface Props {
  * Displays settings for a Task
  */
 export const TaskSettingSidebar = (props: Props) => {
-  const { list, task, updateTask } = props;
+  const { list, task, updateTask, deleteTask } = props;
 
   const { includeTime, color, repeat } = task;
   const start = parseDate(task.start);
@@ -147,6 +153,27 @@ export const TaskSettingSidebar = (props: Props) => {
           activeColor={color as EventColor | null}
           updateColor={updateColor}
         />
+      </Section>
+
+      <Spacer spacing="24" />
+
+      <Divider />
+
+      <Section>
+        <IconContainer>
+          <DeleteOutlined />
+        </IconContainer>
+        <div>
+          <Popconfirm
+            title="Are you sure?"
+            cancelText="no"
+            okText="yes"
+            onConfirm={() => deleteTask(task.id)}
+            placement="right"
+          >
+            <Button danger>delete</Button>
+          </Popconfirm>
+        </div>
       </Section>
     </div>
   );

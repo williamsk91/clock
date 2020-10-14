@@ -1,8 +1,12 @@
 import { useCallback } from "react";
 
+import { MutationHookOptions } from "@apollo/client";
+
 import { cycleArray } from "../../components";
 import {
   CreateTaskInput,
+  DeleteTaskMutation,
+  DeleteTaskMutationVariables,
   ListDocument,
   ListQuery,
   ListQueryVariables,
@@ -11,6 +15,7 @@ import {
   TaskReorderInput,
   UpdateTaskInput,
   useCreateTaskMutation,
+  useDeleteTaskMutation,
   useTaskReorderMutation,
   useUpdateTaskMutation,
 } from "../../graphql/generated";
@@ -75,6 +80,7 @@ export const useUpdateTask = () => {
           updateTask: {
             __typename: "Task",
             ...updateTaskInput,
+            deleted: null,
             repeat: updateTaskInput.repeat
               ? {
                   __typename: "Repeat",
@@ -91,6 +97,30 @@ export const useUpdateTask = () => {
   return updateTask;
 };
 
+/**
+ * Delete task
+ */
+export const useDeleteTask = (
+  options?: MutationHookOptions<DeleteTaskMutation, DeleteTaskMutationVariables>
+) => {
+  const [deleteTaskMutation] = useDeleteTaskMutation(options);
+  const deleteTask = useCallback(
+    (taskId: string) => {
+      deleteTaskMutation({
+        variables: {
+          taskId,
+        },
+      });
+    },
+    [deleteTaskMutation]
+  );
+
+  return deleteTask;
+};
+
+/**
+ * Task reorder with cache update
+ */
 export const useTaskReorder = () => {
   const [taskReorderMutation] = useTaskReorderMutation();
   const taskReorder = useCallback(
