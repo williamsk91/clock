@@ -13,7 +13,13 @@ export default {
 const Base = () => {
   const [list, setList] = useState<Omit<List, "tasks">>(getList());
 
-  return <ListSettingSidebar list={list} updateList={(uli) => setList(uli)} />;
+  return (
+    <ListSettingSidebar
+      list={list}
+      updateList={(uli) => setList({ ...uli, deleted: null })}
+      deleteList={() => console.log("deleteList")}
+    />
+  );
 };
 
 export const base = () => (

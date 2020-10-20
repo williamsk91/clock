@@ -1,15 +1,16 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
-import { HighlightOutlined } from "@ant-design/icons";
+import { DeleteOutlined, HighlightOutlined } from "@ant-design/icons";
+import { Button, Divider, Popconfirm } from "antd";
 import styled from "styled-components";
 
-import { Error, Loading } from "../../components";
+import { Error, Loading, routes } from "../../components";
 import { EventColor } from "../../components/Calendar/styles";
 import { List } from "../../components/List";
 import { ColorSelect } from "../../components/Settings";
 import { Spacer } from "../../components/Spacer";
-import { useUpdateList } from "../../data/mutation/list";
+import { useDeleteList, useUpdateList } from "../../data/mutation/list";
 import {
   List as ListType,
   UpdateListInput,
@@ -21,33 +22,44 @@ import {
  */
 export const ListSettingSidebarWithData = () => {
   const { listId } = useParams<{ listId: string }>();
+  const history = useHistory();
 
   const { data, loading, error } = useListQuery({
     variables: { listId },
   });
 
   const updateList = useUpdateList();
+  const deleteList = useDeleteList({
+    onCompleted: () => history.push(routes.home.index),
+  });
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;
 
-  const { id, title, color, order } = data.list;
-  const list = { id, title, color, order };
+  const { id, title, color, order, deleted } = data.list;
+  const list = { id, title, color, order, deleted };
 
-  return <ListSettingSidebar list={list} updateList={updateList} />;
+  return (
+    <ListSettingSidebar
+      list={list}
+      updateList={updateList}
+      deleteList={deleteList}
+    />
+  );
 };
 
 interface Props {
   list: Omit<ListType, "tasks">;
 
   updateList: (uli: UpdateListInput) => void;
+  deleteList: (listId: string) => void;
 }
 
 /**
  * Displays settings for a List
  */
 export const ListSettingSidebar = (props: Props) => {
-  const { list, updateList } = props;
+  const { list, updateList, deleteList } = props;
 
   return (
     <div>
@@ -65,6 +77,27 @@ export const ListSettingSidebar = (props: Props) => {
           activeColor={list.color as EventColor | null}
           updateColor={(color) => updateList({ ...list, color })}
         />
+      </Section>
+
+      <Spacer spacing="24" />
+
+      <Divider />
+
+      <Section>
+        <IconContainer>
+          <DeleteOutlined />
+        </IconContainer>
+        <div>
+          <Popconfirm
+            title="Are you sure?"
+            cancelText="no"
+            okText="yes"
+            onConfirm={() => deleteList(list.id)}
+            placement="right"
+          >
+            <Button danger>delete</Button>
+          </Popconfirm>
+        </div>
       </Section>
     </div>
   );

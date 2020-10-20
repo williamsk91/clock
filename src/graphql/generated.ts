@@ -41,6 +41,7 @@ export type List = {
   title: Scalars['String'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
+  deleted: Maybe<Scalars['DateTime']>;
   tasks: Array<Task>;
 };
 
@@ -224,6 +225,19 @@ export type CreateTaskMutation = (
   ) }
 );
 
+export type DeleteListMutationVariables = Exact<{
+  listId: Scalars['ID'];
+}>;
+
+
+export type DeleteListMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteList: (
+    { __typename?: 'List' }
+    & ListFragment
+  ) }
+);
+
 export type DeleteTaskMutationVariables = Exact<{
   taskId: Scalars['ID'];
 }>;
@@ -239,7 +253,7 @@ export type DeleteTaskMutation = (
 
 export type ListFragment = (
   { __typename?: 'List' }
-  & Pick<List, 'id' | 'title' | 'color' | 'order'>
+  & Pick<List, 'id' | 'title' | 'color' | 'order' | 'deleted'>
 );
 
 export type ListQueryVariables = Exact<{
@@ -357,6 +371,7 @@ export const ListFragmentDoc = gql`
   title
   color
   order
+  deleted
 }
     `;
 export const TaskFragmentDoc = gql`
@@ -477,6 +492,38 @@ export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const DeleteListDocument = gql`
+    mutation DeleteList($listId: ID!) {
+  deleteList(listId: $listId) {
+    ...List
+  }
+}
+    ${ListFragmentDoc}`;
+export type DeleteListMutationFn = ApolloReactCommon.MutationFunction<DeleteListMutation, DeleteListMutationVariables>;
+
+/**
+ * __useDeleteListMutation__
+ *
+ * To run a mutation, you first call `useDeleteListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteListMutation, { data, loading, error }] = useDeleteListMutation({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *   },
+ * });
+ */
+export function useDeleteListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteListMutation, DeleteListMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, baseOptions);
+      }
+export type DeleteListMutationHookResult = ReturnType<typeof useDeleteListMutation>;
+export type DeleteListMutationResult = ApolloReactCommon.MutationResult<DeleteListMutation>;
+export type DeleteListMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteListMutation, DeleteListMutationVariables>;
 export const DeleteTaskDocument = gql`
     mutation DeleteTask($taskId: ID!) {
   deleteTask(id: $taskId) {

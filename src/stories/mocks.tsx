@@ -12,6 +12,7 @@ export const getList = (): List => ({
   color: null,
   order: 0,
   tasks: getTasks(),
+  deleted: null,
 });
 
 export const getLists = (): List[] => [
@@ -21,6 +22,7 @@ export const getLists = (): List[] => [
     color: null,
     order: 1,
     tasks: [getTask()],
+    deleted: null,
   },
   {
     id: "listId2",
@@ -28,6 +30,7 @@ export const getLists = (): List[] => [
     color: eventColors.red,
     order: 2,
     tasks: [],
+    deleted: null,
   },
   {
     id: "listId3",
@@ -35,6 +38,7 @@ export const getLists = (): List[] => [
     color: eventColors.cyan,
     order: 3,
     tasks: getTasks(),
+    deleted: null,
   },
 ];
 

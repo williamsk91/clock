@@ -14,8 +14,8 @@ import {
   Text,
   homeListSettingRoute,
   homeTaskSettingRoute,
-  isNotDeleted,
-  isNotDoneP,
+  taskIsNotDeleted,
+  taskIsNotDoneP,
 } from "../../components";
 import {
   useCreateTask,
@@ -102,7 +102,9 @@ export const ListSidebar = (props: Props) => {
     onClickTaskSetting,
   } = props;
 
-  const notDoneTask = list.tasks.filter(isNotDeleted).filter(isNotDoneP);
+  const notDoneTask = list.tasks
+    .filter(taskIsNotDeleted)
+    .filter(taskIsNotDoneP);
 
   return (
     <Container>

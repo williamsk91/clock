@@ -1,11 +1,16 @@
 import { useCallback } from "react";
 
+import { MutationHookOptions } from "@apollo/client";
+
 import { defaultEventColor } from "../../components/Calendar/styles";
 import {
+  DeleteListMutation,
+  DeleteListMutationVariables,
   ListsDocument,
   ListsQuery,
   UpdateListInput,
   useCreateListMutation,
+  useDeleteListMutation,
   useUpdateListMutation,
 } from "../../graphql/generated";
 
@@ -54,6 +59,7 @@ export const useUpdateList = () => {
         optimisticResponse: {
           updateList: {
             __typename: "List",
+            deleted: null,
             ...updateListInput,
           },
         },
@@ -63,4 +69,25 @@ export const useUpdateList = () => {
   );
 
   return updateList;
+};
+
+/**
+ * Delete list
+ */
+export const useDeleteList = (
+  options?: MutationHookOptions<DeleteListMutation, DeleteListMutationVariables>
+) => {
+  const [deleteListMutation] = useDeleteListMutation(options);
+  const deleteList = useCallback(
+    (listId: string) => {
+      deleteListMutation({
+        variables: {
+          listId,
+        },
+      });
+    },
+    [deleteListMutation]
+  );
+
+  return deleteList;
 };

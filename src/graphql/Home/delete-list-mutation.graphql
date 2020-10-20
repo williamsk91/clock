@@ -1,0 +1,7 @@
+#import "./list-fragment.graphql"
+
+mutation DeleteList($listId: ID!) {
+  deleteList(listId: $listId) {
+    ...List
+  }
+}

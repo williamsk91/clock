@@ -3,4 +3,5 @@ fragment List on List {
   title
   color
   order
+  deleted
 }

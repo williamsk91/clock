@@ -10,6 +10,7 @@ import {
   Today,
   homeListRoute,
 } from "../../components";
+import { listIsNotDeleted } from "../../components/listFilter";
 import { useCreateList, useUpdateList } from "../../data/mutation/list";
 import {
   List as ListType,
@@ -61,7 +62,10 @@ interface Props {
  *  3. Available lists
  */
 export const ListsSidebar = (props: Props) => {
-  const { lists, createList, onUpdateList, onClickSetting } = props;
+  const { createList, onUpdateList, onClickSetting } = props;
+
+  const lists = props.lists.filter(listIsNotDeleted);
+
   return (
     <div>
       <Spacer spacing="60" />

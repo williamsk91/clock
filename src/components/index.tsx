@@ -8,6 +8,7 @@ export * from "./route";
 export * from "./Spacer";
 export * from "./Task";
 export * from "./taskFilter";
+export * from "./listFilter";
 export * from "./TaskList";
 export * from "./Text";
 export * from "./Track";
