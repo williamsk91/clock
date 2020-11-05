@@ -21,7 +21,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.0",
     "rrule": "^2.6.4",
     "styled-components": "^5.0.1",
     "subscriptions-transport-ws": "^0.9.17",
