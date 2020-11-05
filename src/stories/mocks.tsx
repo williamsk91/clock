@@ -1,5 +1,7 @@
-import { addHours, setHours } from "date-fns";
+import { addHours, addWeeks, setHours } from "date-fns";
 import { addDays } from "date-fns/esm";
+import * as faker from "faker";
+import { random } from "faker";
 
 import { eventColors } from "../components/Calendar/styles";
 import { List, Task } from "../graphql/generated";
@@ -12,6 +14,18 @@ export const getList = (): List => ({
   color: null,
   order: 0,
   tasks: getTasks(),
+  deleted: null,
+});
+
+export const getRandomLists = (count: number = 3): List[] =>
+  [...Array(count).fill(0)].map(() => getRandomList());
+
+export const getRandomList = (): List => ({
+  id: faker.random.uuid(),
+  title: faker.random.words(2),
+  color: null,
+  order: faker.random.number(),
+  tasks: getRandomTasks(faker.random.number(10)),
   deleted: null,
 });
 
@@ -60,6 +74,32 @@ export const getTask = (override?: Partial<Task>): Task => ({
   deleted: null,
   ...override,
 });
+
+export const getRandomTasks = (count: number = 5): Task[] =>
+  [...Array(count).fill(0)].map(() => getRandomTask());
+
+export const getRandomTask = (): Task => {
+  const start = faker.date.between(
+    addWeeks(new Date(), -1),
+    addWeeks(new Date(), 1)
+  );
+  const end = addHours(start, random.number(20));
+  return {
+    id: faker.random.uuid(),
+    done: null,
+    title: faker.random.words(2),
+    start: start.toISOString(),
+    end: end.toISOString(),
+    includeTime: faker.random.boolean(),
+    color: null,
+    order: 1,
+    repeat: {
+      freq: "daily",
+      byweekday: null,
+    },
+    deleted: null,
+  };
+};
 
 export const getTasks = (): Task[] => [
   {
