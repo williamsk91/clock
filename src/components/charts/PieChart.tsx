@@ -15,7 +15,7 @@ interface Props {
 }
 
 /**
- * Pie chart from a
+ * Pie chart
  */
 export const PieChart = (props: Props) => {
   const { data } = props;

@@ -5,7 +5,6 @@ import { differenceInMinutes, getDay, isSameWeek } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
-import { getRandomTasks } from "../../stories/mocks";
 import { taskHasDateP } from "../taskFilter";
 
 interface Datum extends BarDatum {
@@ -16,21 +15,28 @@ interface Props {
   data: Datum[];
 }
 
+/**
+ * Weekly chart of multiple lists represented as stacked bar chart
+ */
 export const WeekChart = (props: Props) => {
   const { data } = props;
-  console.log("data: ", data);
+
+  const keys = Object.keys(data[0]).filter((k) => k !== "day");
+
   return (
     <Container>
       <ResponsiveBar
         data={data}
-        keys={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+        keys={keys}
         indexBy="day"
         margin={{ top: 40, bottom: 80 }}
         padding={0.9}
-        innerPadding={1}
+        innerPadding={6}
+        borderRadius={6}
         enableLabel={false}
+        enableGridY={false}
+        axisBottom={{ tickSize: 0, tickPadding: 12 }}
         colors={{ scheme: "nivo" }}
-        labelSkipWidth={12}
         labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
         animate={true}
         motionStiffness={90}
@@ -41,6 +47,7 @@ export const WeekChart = (props: Props) => {
 };
 
 const Container = styled.div`
+  min-width: 720px;
   height: 360px;
 `;
 
@@ -51,19 +58,15 @@ export const listsToWeekData = (
   lists: List[],
   now: Date = new Date()
 ): Datum[] => {
-  console.log("lists: ", lists);
   // get the hours spent each day this week for each list
   const listsWeekDatum = lists.map((l) => listToWeekDatum(l, now));
-  console.log("listsWeekDatum: ", listsWeekDatum);
 
   // combine all lists array into a single array
-  const mergedListsWeekDatum = listsWeekDatum.reduce(
-    (allWeekDatum, weekDatum) => {
-      weekDatum.forEach((wd, i) => {
-        allWeekDatum[i] = { ...allWeekDatum[i], ...wd };
-      });
-      return weekDatum;
-    }
+  const mergedListsWeekDatum: Record<string, number | string>[] = [];
+  listsWeekDatum.forEach((wd) =>
+    wd.forEach((d, i) => {
+      mergedListsWeekDatum[i] = { ...mergedListsWeekDatum[i], ...d };
+    })
   );
 
   // adds day information

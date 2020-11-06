@@ -5,6 +5,6 @@ import { getRandomLists } from "../mocks";
 
 export default { title: "Charts / WeekChart", component: WeekChart };
 
-export const base = () => (
-  <WeekChart data={listsToWeekData(getRandomLists())} />
-);
+const data = listsToWeekData(getRandomLists(5));
+
+export const base = () => <WeekChart data={data} />;
