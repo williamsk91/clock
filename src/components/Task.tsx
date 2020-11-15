@@ -1,5 +1,4 @@
 import React, { FC, useMemo } from "react";
-
 import {
   BorderOutlined,
   CheckSquareOutlined,
@@ -12,7 +11,7 @@ import { Task as TaskProps, UpdateTaskInput } from "../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "./Calendar/styles";
 import { formatDatetime, parseDate } from "./datetime";
 import { Text } from "./Text";
-import { demuxUpdateTask } from "./utils";
+import { demuxUpdateTask } from "./utils/task";
 
 interface IProp extends TaskProps {
   listId: string;
@@ -42,11 +41,10 @@ export const Task: FC<IProp> = (props) => {
   const end = parseDate(props.end);
 
   // mutations
-  const task: TaskProps = { ...props };
-  const { setDone, setTitle } = useMemo(
-    () => demuxUpdateTask(task, updateTask),
-    [task, updateTask]
-  );
+  const { setDone, setTitle } = useMemo(() => {
+    const task: TaskProps = { ...props };
+    return demuxUpdateTask(task, updateTask);
+  }, [props, updateTask]);
   const updateDone = () => setDone(done ? null : new Date().toISOString());
 
   /** How many action buttons are there */

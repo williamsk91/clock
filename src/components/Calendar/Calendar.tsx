@@ -2,7 +2,6 @@ import "@fullcalendar/react";
 
 import React, { FC, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
@@ -21,7 +20,7 @@ import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
-import { taskHasDateP, taskIsNotDeleted } from "../taskFilter";
+import { taskHasDateP, taskIsNotDeleted } from "../utils/taskFilter";
 import {
   EventColor,
   defaultEventColor,

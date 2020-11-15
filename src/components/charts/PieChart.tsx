@@ -1,5 +1,4 @@
 import React from "react";
-
 import { PieDatum, ResponsivePie } from "@nivo/pie";
 import { differenceInMinutes } from "date-fns";
 import styled from "styled-components";
@@ -12,16 +11,17 @@ interface Datum extends PieDatum {
 
 interface Props {
   data: Datum[];
+  className?: string;
 }
 
 /**
  * Pie chart
  */
 export const PieChart = (props: Props) => {
-  const { data } = props;
+  const { data, className } = props;
 
   return (
-    <Container>
+    <Container className={className}>
       <ResponsivePie
         data={data}
         padAngle={2}
@@ -35,11 +35,10 @@ export const PieChart = (props: Props) => {
         radialLabelsLinkColor={{ from: "color" }}
         slicesLabelsSkipAngle={10}
         slicesLabelsTextColor="#333333"
-        margin={{ top: 40, bottom: 80 }}
+        margin={{ top: 40, bottom: 40, left: 80, right: 80 }}
         animate={true}
         motionStiffness={90}
         motionDamping={15}
-        isInteractive={false}
       />
     </Container>
   );

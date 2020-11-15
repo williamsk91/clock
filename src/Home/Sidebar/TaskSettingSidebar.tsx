@@ -3,7 +3,6 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 import React, { useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
-
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -24,7 +23,7 @@ import { DatePicker } from "../../components/Settings/DatePicker";
 import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
-import { demuxUpdateTask } from "../../components/utils";
+import { demuxUpdateTask } from "../../components/utils/task";
 import { useDeleteTask, useUpdateTask } from "../../data/mutation/task";
 import {
   List,

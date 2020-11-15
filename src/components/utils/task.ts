@@ -1,4 +1,4 @@
-import { RepeatInput, Task, UpdateTaskInput } from "../graphql/generated";
+import { RepeatInput, Task, UpdateTaskInput } from "../../graphql/generated";
 
 /**
  * Cycles the element of the array
