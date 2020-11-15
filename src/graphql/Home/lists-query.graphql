@@ -1,7 +1,10 @@
 #import "./list-fragment.graphql"
 
-query Lists {
+query Lists($withTasks: Boolean!) {
   lists {
     ...List
+    tasks @include(if: $withTasks) {
+      ...Task
+    }
   }
 }

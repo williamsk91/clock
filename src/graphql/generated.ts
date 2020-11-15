@@ -273,13 +273,19 @@ export type ListQuery = (
   ) }
 );
 
-export type ListsQueryVariables = Exact<{ [key: string]: never; }>;
+export type ListsQueryVariables = Exact<{
+  withTasks: Scalars['Boolean'];
+}>;
 
 
 export type ListsQuery = (
   { __typename?: 'Query' }
   & { lists: Array<(
     { __typename?: 'List' }
+    & { tasks: Array<(
+      { __typename?: 'Task' }
+      & TaskFragment
+    )> }
     & ListFragment
   )> }
 );
@@ -594,12 +600,16 @@ export type ListQueryHookResult = ReturnType<typeof useListQuery>;
 export type ListLazyQueryHookResult = ReturnType<typeof useListLazyQuery>;
 export type ListQueryResult = ApolloReactCommon.QueryResult<ListQuery, ListQueryVariables>;
 export const ListsDocument = gql`
-    query Lists {
+    query Lists($withTasks: Boolean!) {
   lists {
     ...List
+    tasks @include(if: $withTasks) {
+      ...Task
+    }
   }
 }
-    ${ListFragmentDoc}`;
+    ${ListFragmentDoc}
+${TaskFragmentDoc}`;
 
 /**
  * __useListsQuery__
@@ -613,6 +623,7 @@ export const ListsDocument = gql`
  * @example
  * const { data, loading, error } = useListsQuery({
  *   variables: {
+ *      withTasks: // value for 'withTasks'
  *   },
  * });
  */

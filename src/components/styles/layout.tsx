@@ -1,20 +1,30 @@
 import styled from "styled-components";
 
-/**
- * Page level layout
- */
-export const Layout = styled.div`
-  min-width: 600px;
-  max-width: 840px;
-  margin: 0 auto;
-  padding: 48px;
+// ------------------------- Full Page Layout -------------------------
+const FullPageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
 `;
+
+const FullPageContent = styled.div`
+  min-width: 600px;
+  width: 100%;
+
+  padding: 48px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+`;
+
+export const FullPage = {
+  Container: FullPageContainer,
+  Content: FullPageContent,
+};
 
 // ------------------------- Sidebar Layout -------------------------
 const SidebarContainer = styled.div`
   width: 100vw;
   height: 100vh;
-
   display: flex;
 `;
 
