@@ -7,6 +7,7 @@ import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {
+  addHours,
   addMinutes,
   differenceInDays,
   differenceInMinutes,
@@ -318,22 +319,33 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
   };
 };
 
-const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
-  id: e.id,
-  title: e.title,
-  done: e.extendedProps?.done,
-  start: e.start?.toISOString() ?? null,
-  end: e.end?.toISOString() ?? null,
-  includeTime: !e.allDay,
-  color: e.extendedProps?.eventColor,
-  order: e.extendedProps.order,
-  repeat: e.extendedProps?.repeat
-    ? {
-        freq: e.extendedProps.repeat.freq,
-        byweekday: e.extendedProps.repeat.byweekday,
-      }
-    : null,
-});
+const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
+  const start = e.start?.toISOString() ?? null;
+  const end = e.end?.toISOString() ?? null;
+  /**
+   * Ensures that end is also defined when start is defined.
+   * Defaults to 1 hr after start
+   */
+  const validatedEnd =
+    end || (start ? addHours(new Date(start), 1).toString() : null);
+
+  return {
+    id: e.id,
+    title: e.title,
+    done: e.extendedProps?.done,
+    start,
+    end: validatedEnd,
+    includeTime: !e.allDay,
+    color: e.extendedProps?.eventColor,
+    order: e.extendedProps.order,
+    repeat: e.extendedProps?.repeat
+      ? {
+          freq: e.extendedProps.repeat.freq,
+          byweekday: e.extendedProps.repeat.byweekday,
+        }
+      : null,
+  };
+};
 
 /**
  * Get event duration.
