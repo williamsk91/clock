@@ -9,4 +9,4 @@ export const taskIsNotDoneP = (task: Task): boolean => !task.done;
 export const taskIsNotDeleted = (task: Task): boolean => !task.deleted;
 
 export const sameWeekTask = (task: Task, week: Date = new Date()) =>
-  isSameWeek(new Date(task.start as string), week);
+  isSameWeek(new Date(task.start as string), week, { weekStartsOn: 1 });

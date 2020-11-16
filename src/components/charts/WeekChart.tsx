@@ -4,6 +4,7 @@ import { differenceInMinutes, getDay } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
+import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/taskFilter";
 
 interface Datum extends BarDatum {
@@ -91,12 +92,16 @@ const listToWeekDatum = (list: List, now: Date = new Date()): BarDatum[] => {
 /**
  * Bins list's tasks hours into different days starting from Monday
  */
-const listDaysHours = (list: List, now: Date = new Date()): number[] => {
+const listDaysHours = (
+  list: List,
+  now: Date = new Date(),
+  weekStartOn: number = 1
+): number[] => {
   const tasksThisWeek = list.tasks
     .filter(taskHasDateP)
     .filter((t) => sameWeekTask(t, now));
 
-  return tasksThisWeek.reduce(
+  const weekBins = tasksThisWeek.reduce(
     (days, t) => {
       if (!t.start || !t.end) return days;
 
@@ -109,4 +114,6 @@ const listDaysHours = (list: List, now: Date = new Date()): number[] => {
     },
     [0, 0, 0, 0, 0, 0, 0]
   );
+
+  return cycleArray(weekBins, -weekStartOn);
 };

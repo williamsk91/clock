@@ -1,8 +1,7 @@
 import { useCallback } from "react";
-
 import { MutationHookOptions } from "@apollo/client";
 
-import { cycleArray } from "../../components";
+import { cycleArray } from "../../components/utils/array";
 import {
   CreateTaskInput,
   DeleteTaskMutation,
