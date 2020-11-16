@@ -3,6 +3,7 @@ import "@fullcalendar/react";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
+import { AnalyticsRoute } from "./Analytics/Analytics";
 import { CalendarProvider } from "./components/context/CalendarContext";
 import { Error } from "./components/flow/Error";
 import { routes } from "./components/route";
@@ -17,7 +18,7 @@ function App() {
       <Switch>
         <Redirect exact path="/" to={routes.home.index} />
         <Route exact path={routes.login} component={LoginRoute} />
-        <PrivateRoute exact path={routes.data} component={SettingRoute} />
+        <PrivateRoute exact path={routes.data} component={AnalyticsRoute} />
         <PrivateRoute exact path={routes.setting} component={SettingRoute} />
         <PrivateRoute path={routes.home.index} component={HomeRoute} />
         <Route path="/" component={Error} />

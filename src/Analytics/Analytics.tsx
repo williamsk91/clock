@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { BorderOutlined, CoffeeOutlined } from "@ant-design/icons";
 import { format } from "date-fns";
 import styled from "styled-components";
 
@@ -15,7 +14,7 @@ import {
   listsToPieData,
   listsToWeekData,
 } from "../components";
-import { Overview, OverviewsContainer } from "../components/Overview";
+import { Overview } from "../components/Overview";
 import { sameWeekList } from "../components/utils/listFilter";
 import { List, useListsQuery } from "../graphql/generated";
 

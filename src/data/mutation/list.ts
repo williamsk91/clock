@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-
 import { MutationHookOptions } from "@apollo/client";
 
 import { defaultEventColor } from "../../components/Calendar/styles";
@@ -33,7 +32,7 @@ export const useCreateList = () => {
           cache.writeQuery<ListsQuery>({
             query: ListsDocument,
             data: {
-              lists: newLists,
+              lists: newLists.map((l) => ({ ...l, tasks: [] })),
             },
           });
         },
