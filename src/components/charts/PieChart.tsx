@@ -35,6 +35,7 @@ export const PieChart = (props: Props) => {
         radialLabelsLinkColor={{ from: "color" }}
         slicesLabelsSkipAngle={10}
         slicesLabelsTextColor="#333333"
+        isInteractive={false}
         margin={{ top: 40, bottom: 40, left: 80, right: 80 }}
         animate={true}
         motionStiffness={90}
