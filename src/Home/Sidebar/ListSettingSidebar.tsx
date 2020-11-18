@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
-
 import { DeleteOutlined, HighlightOutlined } from "@ant-design/icons";
 import { Button, Divider, Popconfirm } from "antd";
 import styled from "styled-components";
@@ -10,6 +9,7 @@ import { EventColor } from "../../components/Calendar/styles";
 import { List } from "../../components/List";
 import { ColorSelect } from "../../components/Settings";
 import { Spacer } from "../../components/Spacer";
+import { demuxUpdateList } from "../../components/utils/list";
 import { useDeleteList, useUpdateList } from "../../data/mutation/list";
 import {
   List as ListType,
@@ -61,11 +61,16 @@ interface Props {
 export const ListSettingSidebar = (props: Props) => {
   const { list, updateList, deleteList } = props;
 
+  const { setTitle, updateColor } = useMemo(
+    () => demuxUpdateList(list, updateList),
+    [list, updateList]
+  );
+
   return (
     <div>
       <Spacer spacing="60" />
 
-      <List {...list} onTitleEdit={(title) => updateList({ ...list, title })} />
+      <List {...list} onTitleEdit={setTitle} />
 
       <Spacer spacing="48" />
 
@@ -75,7 +80,7 @@ export const ListSettingSidebar = (props: Props) => {
         </IconContainer>
         <ColorSelect
           activeColor={list.color as EventColor | null}
-          updateColor={(color) => updateList({ ...list, color })}
+          updateColor={updateColor}
         />
       </Section>
 
