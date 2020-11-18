@@ -4,9 +4,12 @@ import { differenceInMinutes } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
+import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
+import { chartTheme } from "./theme";
 
 interface Datum extends PieDatum {
   title: string;
+  color: string;
 }
 
 interface Props {
@@ -24,22 +27,28 @@ export const PieChart = (props: Props) => {
     <Container className={className}>
       <ResponsivePie
         data={data}
-        padAngle={2}
-        sortByValue
-        innerRadius={0.4}
-        cornerRadius={6}
-        colors={{ scheme: "nivo" }}
+        /**
+         * Radial labels
+         */
         radialLabel={(d) => d.title as string}
         radialLabelsSkipAngle={10}
         radialLabelsLinkStrokeWidth={2}
         radialLabelsLinkColor={{ from: "color" }}
-        slicesLabelsSkipAngle={10}
-        slicesLabelsTextColor="#333333"
+        /**
+         * Slice labels
+         */
+        slicesLabelsTextColor="white"
+        /**
+         * Style
+         */
+        theme={chartTheme}
+        padAngle={2}
+        innerRadius={0.4}
+        cornerRadius={6}
+        sortByValue
         isInteractive={false}
+        colors={(d) => d.color as string}
         margin={{ top: 40, bottom: 40, left: 80, right: 80 }}
-        animate={true}
-        motionStiffness={90}
-        motionDamping={15}
       />
     </Container>
   );
@@ -59,6 +68,7 @@ const listToPieDatum = (list: List): Datum => ({
   id: list.id,
   value: listTaskHr(list),
   title: list.title,
+  color: eventColors[(list.color as EventColor) || defaultEventColor],
 });
 
 /**

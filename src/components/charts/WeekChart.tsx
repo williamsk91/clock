@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { List } from "../../graphql/generated";
 import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/taskFilter";
+import { chartTheme } from "./theme";
 
 interface Datum extends BarDatum {
   day: string;
@@ -30,6 +31,7 @@ export const WeekChart = (props: Props) => {
         data={data}
         keys={keys}
         indexBy="day"
+        theme={chartTheme}
         margin={{ top: 40, bottom: 80 }}
         padding={0.9}
         innerPadding={6}

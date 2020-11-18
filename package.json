@@ -11,6 +11,7 @@
     "@fullcalendar/rrule": "^5.4.0",
     "@fullcalendar/timegrid": "^5.4.0",
     "@nivo/bar": "^0.63.0",
+    "@nivo/core": "^0.63.0",
     "@nivo/pie": "^0.63.0",
     "antd": "^4.7.0",
     "date-fns": "^2.12.0",
