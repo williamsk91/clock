@@ -4,6 +4,7 @@ import { differenceInMinutes, getDay } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
+import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
 import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/taskFilter";
 import { chartTheme } from "./theme";
@@ -39,11 +40,7 @@ export const WeekChart = (props: Props) => {
         enableLabel={false}
         enableGridY={false}
         axisBottom={{ tickSize: 0, tickPadding: 12 }}
-        colors={{ scheme: "nivo" }}
-        labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
-        animate={true}
-        motionStiffness={90}
-        motionDamping={15}
+        colors={(d) => d.data[d.id + "Color"] as string}
       />
     </Container>
   );
@@ -88,6 +85,9 @@ const listToWeekDatum = (list: List, now: Date = new Date()): BarDatum[] => {
   const dayHours = listDaysHours(list, now);
   return dayHours.map((h) => ({
     [list.title]: h,
+    [list.title + "Color"]: eventColors[
+      (list.color as EventColor) || defaultEventColor
+    ],
   }));
 };
 
