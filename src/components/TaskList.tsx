@@ -5,7 +5,6 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
-
 import styled from "styled-components";
 
 import {
@@ -32,7 +31,9 @@ interface Props {
  * A list of Tasks
  */
 export const Tasks = (props: Props) => {
-  const { list, tasks, updateTask, taskReorder, onClickSetting } = props;
+  const { list, updateTask, taskReorder, onClickSetting } = props;
+
+  const tasks = props.tasks.sort((a, b) => a.order - b.order);
 
   const onDragEnd = (result: DropResult) => {
     const destinationIndex = result.destination?.index;
