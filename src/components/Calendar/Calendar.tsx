@@ -21,7 +21,11 @@ import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
-import { taskHasDateP, taskIsNotDeleted } from "../utils/taskFilter";
+import {
+  taskHasDateP,
+  taskIsNotDeleted,
+  taskIsNotDoneP,
+} from "../utils/taskFilter";
 import {
   EventColor,
   defaultEventColor,
@@ -45,6 +49,7 @@ export const Calendar: FC<IProp> = (props) => {
     l.tasks
       .filter(taskIsNotDeleted)
       .filter(taskHasDateP)
+      .filter(taskIsNotDoneP)
       .map((t) => taskToEventInput(l, t))
   );
 
