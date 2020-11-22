@@ -163,7 +163,9 @@ const ActionButton = styled(Button)<{ done?: boolean }>`
   align-items: center;
 
   color: white;
-  :hover {
+  :hover,
+  :focus,
+  :active {
     color: white;
   }
 
