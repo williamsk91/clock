@@ -18,7 +18,7 @@ export const getList = (): List => ({
 });
 
 interface PartialList extends Partial<List> {
-  taskOverride?: Partial<Task>;
+  taskOverride?: () => Partial<Task>;
 }
 
 export const getRandomLists = (
@@ -32,7 +32,7 @@ export const getRandomList = (override?: PartialList): List => ({
   color: null,
   order: faker.random.number(),
   tasks: getRandomTasks(faker.random.number(10)).map((t) =>
-    override ? { ...t, ...override.taskOverride } : t
+    override ? { ...t, ...override.taskOverride?.() } : t
   ),
   deleted: null,
   ...override,

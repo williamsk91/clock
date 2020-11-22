@@ -7,6 +7,7 @@ import { PrivateRoute } from "../components/Route/PrivateRoute";
 import { Spacer } from "../components/Spacer";
 import { Sidebar } from "../components/styles/layout";
 import { CalendarWithData } from "./CalendarWithData";
+import { CompletedTasksSidebarWithData } from "./Sidebar/CompletedTasksSidebar";
 import { ListSettingSidebarWithData } from "./Sidebar/ListSettingSidebar";
 import { ListSidebarWithData } from "./Sidebar/ListSidebar";
 import { ListsSidebarWithData } from "./Sidebar/ListsSidebar";
@@ -40,6 +41,11 @@ export const HomePage = () => {
             exact
             path={routes.home.taskSetting}
             component={TaskSidebarWithData}
+          />
+          <PrivateRoute
+            exact
+            path={routes.home.completedTask}
+            component={CompletedTasksSidebarWithData}
           />
           <Redirect to={routes.error} />
         </Switch>
