@@ -1,6 +1,5 @@
 import React from "react";
 import { matchPath, useHistory, useLocation } from "react-router-dom";
-
 import {
   CaretLeftFilled,
   CheckSquareFilled,
@@ -13,6 +12,7 @@ import {
 import { Menu as AMenu } from "antd";
 import styled from "styled-components";
 
+import { eventColors } from "./Calendar/styles";
 import { homeListRoute, routes } from "./route";
 
 /**
@@ -144,7 +144,8 @@ const MenuItem = styled(Menu.Item).attrs({
 
   svg {
     font-size: 24px;
-    fill: ${(p) => (p.disabled ? "#f7f8f7" : "#828282")};
+    fill: ${(p) =>
+      p.disabled ? "#f7f8f7" : p.selected ? eventColors.red : "#828282"};
   }
 
   background: ${(p) => (p.selected ? "#f7f8f7" : "initial")};
