@@ -8,7 +8,7 @@ export * from "./RoundCheck";
 export * from "./route";
 export * from "./Spacer";
 export * from "./Task";
-export * from "./utils/taskFilter";
+export * from "./utils/filter";
 export * from "./listFilter";
 export * from "./TaskList";
 export * from "./Text";

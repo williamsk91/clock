@@ -17,16 +17,25 @@ export const getList = (): List => ({
   deleted: null,
 });
 
-export const getRandomLists = (count: number = 3): List[] =>
-  [...Array(count).fill(0)].map(() => getRandomList());
+interface PartialList extends Partial<List> {
+  taskOverride?: Partial<Task>;
+}
 
-export const getRandomList = (): List => ({
+export const getRandomLists = (
+  count: number = 3,
+  override?: PartialList
+): List[] => [...Array(count).fill(0)].map(() => getRandomList(override));
+
+export const getRandomList = (override?: PartialList): List => ({
   id: faker.random.uuid(),
   title: faker.random.words(2),
   color: null,
   order: faker.random.number(),
-  tasks: getRandomTasks(faker.random.number(10)),
+  tasks: getRandomTasks(faker.random.number(10)).map((t) =>
+    override ? { ...t, ...override.taskOverride } : t
+  ),
   deleted: null,
+  ...override,
 });
 
 export const getLists = (): List[] => [

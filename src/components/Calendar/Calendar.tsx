@@ -25,7 +25,7 @@ import {
   taskHasDateP,
   taskIsNotDeleted,
   taskIsNotDoneP,
-} from "../utils/taskFilter";
+} from "../utils/filter";
 import {
   EventColor,
   defaultEventColor,

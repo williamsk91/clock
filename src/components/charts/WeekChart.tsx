@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { List } from "../../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
 import { cycleArray } from "../utils/array";
-import { sameWeekTask, taskHasDateP } from "../utils/taskFilter";
+import { sameWeekTask, taskHasDateP } from "../utils/filter";
 import { chartTheme } from "./theme";
 
 interface Datum extends BarDatum {

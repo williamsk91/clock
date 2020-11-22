@@ -15,7 +15,7 @@ import {
   listsToWeekData,
 } from "../components";
 import { Overview } from "../components/Overview";
-import { sameWeekList } from "../components/utils/listFilter";
+import { applyFilterOnTask, sameWeekTask } from "../components/utils/filter";
 import { List, useListsQuery } from "../graphql/generated";
 
 export const AnalyticsRoute = () => {
@@ -45,7 +45,7 @@ export const AnalyticsPage = (props: Props) => {
   const { lists } = props;
 
   const pieData = useMemo(() => {
-    const thisWeekLists = lists.filter((l) => sameWeekList(l));
+    const thisWeekLists = lists.map(applyFilterOnTask([sameWeekTask]));
     return listsToPieData(thisWeekLists);
   }, [lists]);
   const weekData = useMemo(() => listsToWeekData(lists), [lists]);
@@ -93,7 +93,7 @@ const Week = styled(WeekChart)`
  * Calculate task count remaining this week
  */
 const calcTaskRemainingCount = (lists: List[]): number => {
-  const thisWeekList = lists.filter((l) => sameWeekList(l));
+  const thisWeekList = lists.map(applyFilterOnTask([sameWeekTask]));
   const taskCount = thisWeekList.reduce((tc, l) => tc + l.tasks.length, 0);
   return taskCount;
 };
