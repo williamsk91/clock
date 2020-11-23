@@ -4,6 +4,7 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import React, { useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
+  BookOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
   DeleteOutlined,
@@ -17,14 +18,19 @@ import { EventColor } from "../../components/Calendar/styles";
 import { parseDate } from "../../components/datetime";
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
-import { homeListRoute, routes } from "../../components/route";
+import { homeListRoute, homeTaskSettingRoute } from "../../components/route";
 import { ColorSelect } from "../../components/Settings/ColorSelect";
 import { DatePicker } from "../../components/Settings/DatePicker";
+import { ListSelect } from "../../components/Settings/ListSelect";
 import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
 import { demuxUpdateTask } from "../../components/utils/task";
-import { useDeleteTask, useUpdateTask } from "../../data/mutation/task";
+import {
+  useDeleteTask,
+  useUpdateTask,
+  useUpdateTaskList,
+} from "../../data/mutation/task";
 import {
   List,
   Task as TaskType,
@@ -44,6 +50,12 @@ export const TaskSidebarWithData = () => {
   });
 
   const updateTask = useUpdateTask();
+  const updateTaskList = useUpdateTaskList();
+  const updateTaskListWithRedirect = (id: string, newListId: string) => {
+    updateTaskList(id, newListId);
+    history.push(homeTaskSettingRoute(newListId, id));
+  };
+
   const deleteTask = useDeleteTask({
     onCompleted: () => history.push(homeListRoute(listId)),
   });
@@ -54,28 +66,36 @@ export const TaskSidebarWithData = () => {
   return (
     <TaskSettingSidebar
       list={data.list}
+      availableLists={data.lists}
       task={data.task}
       updateTask={updateTask}
+      updateTaskList={updateTaskListWithRedirect}
       deleteTask={deleteTask}
-      goBack={() => history.push(routes.home.index)}
     />
   );
 };
 
 interface Props {
   list: Omit<List, "tasks">;
+  availableLists: Pick<List, "id" | "title">[];
   task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
+  updateTaskList: (id: string, newListId: string) => void;
   deleteTask: (taskId: string) => void;
-
-  goBack: () => void;
 }
 
 /**
  * Displays settings for a Task
  */
 export const TaskSettingSidebar = (props: Props) => {
-  const { list, task, updateTask, deleteTask } = props;
+  const {
+    list,
+    availableLists,
+    task,
+    updateTask,
+    updateTaskList,
+    deleteTask,
+  } = props;
 
   const { includeTime, color, repeat } = task;
   const start = parseDate(task.start);
@@ -98,6 +118,19 @@ export const TaskSettingSidebar = (props: Props) => {
         {...task}
       />
       <Spacer spacing="48" />
+
+      <Section>
+        <IconContainer>
+          <BookOutlined />
+        </IconContainer>
+        <ListSelect
+          currentList={list}
+          lists={availableLists}
+          updateList={(listId) => updateTaskList(task.id, listId)}
+        />
+      </Section>
+
+      <Spacer spacing="24" />
 
       <Section>
         <IconContainer>

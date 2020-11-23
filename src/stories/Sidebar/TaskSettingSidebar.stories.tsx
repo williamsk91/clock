@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { TaskSettingSidebar } from "../../Home/Sidebar/TaskSettingSidebar";
-import { getList, getTask } from "../mocks";
+import { getList, getLists, getTask } from "../mocks";
 import { SidebarOnlyLayout } from "../utils";
 
 export default {
@@ -16,10 +16,11 @@ const Base = () => {
   return (
     <TaskSettingSidebar
       list={getList()}
+      availableLists={getLists()}
       task={task}
       updateTask={(uti) => setTask({ ...uti, deleted: null })}
+      updateTaskList={() => null}
       deleteTask={() => console.log("delete task")}
-      goBack={() => console.log("go back")}
     />
   );
 };

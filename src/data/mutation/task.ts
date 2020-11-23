@@ -13,9 +13,12 @@ import {
   TaskFragmentDoc,
   TaskReorderInput,
   UpdateTaskInput,
+  UpdateTaskListMutation,
+  UpdateTaskListMutationVariables,
   useCreateTaskMutation,
   useDeleteTaskMutation,
   useTaskReorderMutation,
+  useUpdateTaskListMutation,
   useUpdateTaskMutation,
 } from "../../graphql/generated";
 
@@ -62,6 +65,31 @@ export const useCreateTask = () => {
   );
 
   return createTask;
+};
+
+/**
+ * Update the list the task belongs to
+ */
+export const useUpdateTaskList = (
+  options?: MutationHookOptions<
+    UpdateTaskListMutation,
+    UpdateTaskListMutationVariables
+  >
+) => {
+  const [updateTaskListMutation] = useUpdateTaskListMutation(options);
+  const updateTaskList = useCallback(
+    (id: string, newListId: string) => {
+      updateTaskListMutation({
+        variables: {
+          id,
+          newListId,
+        },
+      });
+    },
+    [updateTaskListMutation]
+  );
+
+  return updateTaskList;
 };
 
 /**

@@ -139,6 +139,7 @@ export type Mutation = {
   /** Danger! Deletes a user account. */
   deleteUser: Scalars['Boolean'];
   createTask: Task;
+  updateTaskList: Task;
   updateTask: Task;
   taskReorder: Array<TaskReorder>;
   deleteTask: Task;
@@ -151,6 +152,12 @@ export type Mutation = {
 export type MutationCreateTaskArgs = {
   task: CreateTaskInput;
   listId: Scalars['ID'];
+};
+
+
+export type MutationUpdateTaskListArgs = {
+  newListId: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 
@@ -299,23 +306,6 @@ export type TaskFragment = (
   )> }
 );
 
-export type TaskQueryVariables = Exact<{
-  listId: Scalars['ID'];
-  taskId: Scalars['ID'];
-}>;
-
-
-export type TaskQuery = (
-  { __typename?: 'Query' }
-  & { list: (
-    { __typename?: 'List' }
-    & ListFragment
-  ), task: (
-    { __typename?: 'Task' }
-    & TaskFragment
-  ) }
-);
-
 export type TaskReorderMutationVariables = Exact<{
   tasks: Array<TaskReorderInput>;
 }>;
@@ -329,6 +319,26 @@ export type TaskReorderMutation = (
   )> }
 );
 
+export type TaskQueryVariables = Exact<{
+  listId: Scalars['ID'];
+  taskId: Scalars['ID'];
+}>;
+
+
+export type TaskQuery = (
+  { __typename?: 'Query' }
+  & { lists: Array<(
+    { __typename?: 'List' }
+    & Pick<List, 'id' | 'title'>
+  )>, list: (
+    { __typename?: 'List' }
+    & ListFragment
+  ), task: (
+    { __typename?: 'Task' }
+    & TaskFragment
+  ) }
+);
+
 export type UpdateListMutationVariables = Exact<{
   list: UpdateListInput;
 }>;
@@ -339,6 +349,20 @@ export type UpdateListMutation = (
   & { updateList: (
     { __typename?: 'List' }
     & ListFragment
+  ) }
+);
+
+export type UpdateTaskListMutationVariables = Exact<{
+  id: Scalars['ID'];
+  newListId: Scalars['ID'];
+}>;
+
+
+export type UpdateTaskListMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTaskList: (
+    { __typename?: 'Task' }
+    & TaskFragment
   ) }
 );
 
@@ -636,8 +660,45 @@ export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type ListsQueryHookResult = ReturnType<typeof useListsQuery>;
 export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>;
 export type ListsQueryResult = ApolloReactCommon.QueryResult<ListsQuery, ListsQueryVariables>;
+export const TaskReorderDocument = gql`
+    mutation TaskReorder($tasks: [TaskReorderInput!]!) {
+  taskReorder(tasks: $tasks) {
+    id
+    order
+  }
+}
+    `;
+export type TaskReorderMutationFn = ApolloReactCommon.MutationFunction<TaskReorderMutation, TaskReorderMutationVariables>;
+
+/**
+ * __useTaskReorderMutation__
+ *
+ * To run a mutation, you first call `useTaskReorderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTaskReorderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [taskReorderMutation, { data, loading, error }] = useTaskReorderMutation({
+ *   variables: {
+ *      tasks: // value for 'tasks'
+ *   },
+ * });
+ */
+export function useTaskReorderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TaskReorderMutation, TaskReorderMutationVariables>) {
+        return ApolloReactHooks.useMutation<TaskReorderMutation, TaskReorderMutationVariables>(TaskReorderDocument, baseOptions);
+      }
+export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMutation>;
+export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
+export type TaskReorderMutationOptions = ApolloReactCommon.BaseMutationOptions<TaskReorderMutation, TaskReorderMutationVariables>;
 export const TaskDocument = gql`
     query Task($listId: ID!, $taskId: ID!) {
+  lists {
+    id
+    title
+  }
   list(id: $listId) {
     ...List
   }
@@ -674,39 +735,6 @@ export function useTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOpt
 export type TaskQueryHookResult = ReturnType<typeof useTaskQuery>;
 export type TaskLazyQueryHookResult = ReturnType<typeof useTaskLazyQuery>;
 export type TaskQueryResult = ApolloReactCommon.QueryResult<TaskQuery, TaskQueryVariables>;
-export const TaskReorderDocument = gql`
-    mutation TaskReorder($tasks: [TaskReorderInput!]!) {
-  taskReorder(tasks: $tasks) {
-    id
-    order
-  }
-}
-    `;
-export type TaskReorderMutationFn = ApolloReactCommon.MutationFunction<TaskReorderMutation, TaskReorderMutationVariables>;
-
-/**
- * __useTaskReorderMutation__
- *
- * To run a mutation, you first call `useTaskReorderMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useTaskReorderMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [taskReorderMutation, { data, loading, error }] = useTaskReorderMutation({
- *   variables: {
- *      tasks: // value for 'tasks'
- *   },
- * });
- */
-export function useTaskReorderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TaskReorderMutation, TaskReorderMutationVariables>) {
-        return ApolloReactHooks.useMutation<TaskReorderMutation, TaskReorderMutationVariables>(TaskReorderDocument, baseOptions);
-      }
-export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMutation>;
-export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
-export type TaskReorderMutationOptions = ApolloReactCommon.BaseMutationOptions<TaskReorderMutation, TaskReorderMutationVariables>;
 export const UpdateListDocument = gql`
     mutation UpdateList($list: UpdateListInput!) {
   updateList(list: $list) {
@@ -739,6 +767,39 @@ export function useUpdateListMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type UpdateListMutationHookResult = ReturnType<typeof useUpdateListMutation>;
 export type UpdateListMutationResult = ApolloReactCommon.MutationResult<UpdateListMutation>;
 export type UpdateListMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateListMutation, UpdateListMutationVariables>;
+export const UpdateTaskListDocument = gql`
+    mutation UpdateTaskList($id: ID!, $newListId: ID!) {
+  updateTaskList(id: $id, newListId: $newListId) {
+    ...Task
+  }
+}
+    ${TaskFragmentDoc}`;
+export type UpdateTaskListMutationFn = ApolloReactCommon.MutationFunction<UpdateTaskListMutation, UpdateTaskListMutationVariables>;
+
+/**
+ * __useUpdateTaskListMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskListMutation, { data, loading, error }] = useUpdateTaskListMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      newListId: // value for 'newListId'
+ *   },
+ * });
+ */
+export function useUpdateTaskListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTaskListMutation, UpdateTaskListMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTaskListMutation, UpdateTaskListMutationVariables>(UpdateTaskListDocument, baseOptions);
+      }
+export type UpdateTaskListMutationHookResult = ReturnType<typeof useUpdateTaskListMutation>;
+export type UpdateTaskListMutationResult = ApolloReactCommon.MutationResult<UpdateTaskListMutation>;
+export type UpdateTaskListMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTaskListMutation, UpdateTaskListMutationVariables>;
 export const UpdateTaskDocument = gql`
     mutation UpdateTask($task: UpdateTaskInput!) {
   updateTask(task: $task) {

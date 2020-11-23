@@ -2,6 +2,11 @@
 #import "./task-fragment.graphql"
 
 query Task($listId: ID!, $taskId: ID!) {
+  lists {
+    id
+    title
+  }
+
   list(id: $listId) {
     ...List
   }
