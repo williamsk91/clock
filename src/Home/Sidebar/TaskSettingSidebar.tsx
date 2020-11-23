@@ -52,7 +52,7 @@ export const TaskSidebarWithData = () => {
   const updateTask = useUpdateTask();
   const updateTaskList = useUpdateTaskList();
   const updateTaskListWithRedirect = (id: string, newListId: string) => {
-    updateTaskList(id, newListId);
+    updateTaskList(id, newListId, listId);
     history.push(homeTaskSettingRoute(newListId, id));
   };
 

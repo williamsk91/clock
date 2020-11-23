@@ -6,6 +6,7 @@ import {
   CreateTaskInput,
   DeleteTaskMutation,
   DeleteTaskMutationVariables,
+  List,
   ListDocument,
   ListQuery,
   ListQueryVariables,
@@ -68,7 +69,7 @@ export const useCreateTask = () => {
 };
 
 /**
- * Update the list the task belongs to
+ * Update the list the task belongs to with cache update
  */
 export const useUpdateTaskList = (
   options?: MutationHookOptions<
@@ -78,11 +79,52 @@ export const useUpdateTaskList = (
 ) => {
   const [updateTaskListMutation] = useUpdateTaskListMutation(options);
   const updateTaskList = useCallback(
-    (id: string, newListId: string) => {
+    // oldListId is used to update cache
+    (id: string, newListId: string, oldListId: string) => {
       updateTaskListMutation({
         variables: {
           id,
           newListId,
+        },
+        update: (cache, { data }) => {
+          const oldList = cache.readQuery<ListQuery, ListQueryVariables>({
+            query: ListDocument,
+            variables: { listId: oldListId },
+          })?.list;
+
+          const newList = cache.readQuery<ListQuery, ListQueryVariables>({
+            query: ListDocument,
+            variables: { listId: newListId },
+          })?.list;
+
+          const task = data?.updateTaskList;
+          if (!oldList || !newList || !task) return;
+
+          const updatedOldList: List = {
+            ...oldList,
+            tasks: oldList.tasks.filter((t) => t.id !== task.id),
+          };
+
+          const updatedNewList: List = {
+            ...newList,
+            tasks: [...newList.tasks, task],
+          };
+
+          cache.writeQuery<ListQuery, ListQueryVariables>({
+            query: ListDocument,
+            variables: { listId: oldListId },
+            data: {
+              list: updatedOldList,
+            },
+          });
+
+          cache.writeQuery<ListQuery, ListQueryVariables>({
+            query: ListDocument,
+            variables: { listId: newListId },
+            data: {
+              list: updatedNewList,
+            },
+          });
         },
       });
     },
