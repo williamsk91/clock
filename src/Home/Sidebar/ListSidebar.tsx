@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-
 import styled from "styled-components";
 
 import emptyListImg from "../../assets/undraw_cup_of_tea_6nqg.svg";
@@ -14,7 +13,7 @@ import {
   Text,
   homeListSettingRoute,
   homeTaskSettingRoute,
-  taskIsNotDeleted,
+  taskIsNotDeletedP,
   taskIsNotDoneP,
 } from "../../components";
 import {
@@ -103,7 +102,7 @@ export const ListSidebar = (props: Props) => {
   } = props;
 
   const notDoneTask = list.tasks
-    .filter(taskIsNotDeleted)
+    .filter(taskIsNotDeletedP)
     .filter(taskIsNotDoneP);
 
   return (

@@ -15,14 +15,17 @@ export const taskHasDateP: TaskFilter = (task) => !!task.start || !!task.end;
 export const taskIsNotDoneP: TaskFilter = (task) => !task.done;
 export const taskIsDoneP: TaskFilter = (task) => not(taskIsNotDoneP(task));
 
-export const taskIsNotDeleted: TaskFilter = (task) => !task.deleted;
+export const taskIsNotDeletedP: TaskFilter = (task) => !task.deleted;
 
 export const sameWeekTask = (task: Task, week: Date = new Date()): boolean =>
   isSameWeek(new Date(task.start as string), week, { weekStartsOn: 1 });
 
 // ------------------------- List -------------------------
 
-/** Apply filters to all tasks of list */
+/**
+ * Apply filters to all tasks of a list
+ * Note: use it with `map` method and not `filter` method
+ */
 export const applyFilterOnTask = (taskFilters: TaskFilter[]) => (
   list: List
 ): List => {

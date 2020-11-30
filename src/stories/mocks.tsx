@@ -63,6 +63,14 @@ export const getLists = (): List[] => [
     tasks: getTasks(),
     deleted: null,
   },
+  {
+    id: "listId4",
+    title: "Completed Tasks",
+    color: eventColors.cyan,
+    order: 3,
+    tasks: [getTask({ done: new Date().toISOString() })],
+    deleted: null,
+  },
 ];
 
 // ------------------------- Task -------------------------

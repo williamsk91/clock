@@ -1,11 +1,12 @@
 import "@fullcalendar/react";
 
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { Switch } from "antd";
 import {
   addHours,
   addMinutes,
@@ -21,9 +22,11 @@ import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
+import { Text } from "../Text";
 import {
+  applyFilterOnTask,
   taskHasDateP,
-  taskIsNotDeleted,
+  taskIsNotDeletedP,
   taskIsNotDoneP,
 } from "../utils/filter";
 import {
@@ -42,16 +45,23 @@ interface IProp {
 export const Calendar: FC<IProp> = (props) => {
   const { lists, updateTask, createTask } = props;
   const history = useHistory();
+
+  const [showCompletedTask, setShowCompletedTask] = useState(false);
+
   const calRef = useRef<FullCalendar>(null);
   const { setApi } = useCalendarContext();
 
-  const events: EventInput[] = lists.filter(listIsNotDeleted).flatMap((l) =>
-    l.tasks
-      .filter(taskIsNotDeleted)
-      .filter(taskHasDateP)
-      .filter(taskIsNotDoneP)
-      .map((t) => taskToEventInput(l, t))
+  const filteredLists: List[] = useMemo(
+    () =>
+      lists
+        .filter(listIsNotDeleted)
+        .filter(applyFilterOnTask([taskIsNotDeletedP, taskHasDateP])),
+    [lists]
   );
+
+  const events: EventInput[] = filteredLists
+    .map(applyFilterOnTask(showCompletedTask ? [] : [taskIsNotDoneP]))
+    .flatMap((l) => l.tasks.map((t) => taskToEventInput(l, t)));
 
   useEffect(() => {
     if (!calRef.current) return;
@@ -60,6 +70,13 @@ export const Calendar: FC<IProp> = (props) => {
 
   return (
     <Container>
+      <Setting>
+        <Text.Message>Show completed task</Text.Message>
+        <Switch
+          checked={showCompletedTask}
+          onChange={(checked) => setShowCompletedTask(checked)}
+        />
+      </Setting>
       <FullCalendar
         ref={calRef}
         height="100%"
@@ -131,6 +148,7 @@ export const Calendar: FC<IProp> = (props) => {
  */
 const Container = styled.div`
   height: 100%;
+  position: relative;
 
   /* toolbar */
   .fc-header-toolbar {
@@ -260,6 +278,21 @@ const Container = styled.div`
       padding: 0;
       border: none;
     }
+  }
+`;
+
+const Setting = styled.div`
+  position: absolute;
+  right: 24px;
+
+  padding: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    margin-left: 6px;
   }
 `;
 
