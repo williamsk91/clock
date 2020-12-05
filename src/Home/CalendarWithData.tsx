@@ -1,8 +1,14 @@
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
-import { Calendar, Error, Loading, routes } from "../components";
-import { useUpdateTask } from "../data/mutation/task";
+import {
+  Calendar,
+  Error,
+  Loading,
+  homeTaskSettingRoute,
+  routes,
+} from "../components";
+import { useCreateTask, useUpdateTask } from "../data/mutation/task";
 import { useCalendarListsQuery } from "../graphql/generated";
 
 /**
@@ -10,19 +16,38 @@ import { useCalendarListsQuery } from "../graphql/generated";
  */
 export const CalendarWithData = () => {
   const history = useHistory();
+  const match = useRouteMatch<{ listId: string }>({ path: routes.home.list });
 
   const { data, loading, error } = useCalendarListsQuery();
 
+  // Redirects to task setting on completion
+  const createTask = useCreateTask({
+    onCompleted: (completedData) => {
+      const listId = match?.params.listId ?? data?.lists[0]?.id;
+      if (!listId) return;
+
+      history.push(homeTaskSettingRoute(listId, completedData.createTask.id));
+    },
+  });
   const updateTask = useUpdateTask();
 
+  /**
+   * Create task on current list if `:listId` is in url.
+   *  Add it to the first queried list otherwise.
+   */
   const createCalendarTask = useCallback(
     (start: Date, end: Date, includeTime: boolean) => {
-      history.push(routes.home.newTask, {
-        date: {
-          start,
-          end,
-          includeTime,
-        },
+      const listId = match?.params.listId ?? data?.lists[0]?.id;
+      if (!listId) return;
+
+      createTask(listId, {
+        title: "Untitled",
+        done: null,
+        start: start.toISOString(),
+        end: end.toISOString(),
+        includeTime,
+        color: null,
+        repeat: null,
       });
     },
     [history]

@@ -118,10 +118,10 @@ export const Calendar: FC<IProp> = (props) => {
         selectMirror
         unselectAuto={false}
         snapDuration="00:30"
-        select={({ start, end, allDay }) =>
+        select={({ start, end, allDay }) => {
           // end is modified as by default FullCalendar treats end as exclusive
-          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay)
-        }
+          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay);
+        }}
         // Labels
         headerToolbar={{
           left: "prev,today,next",

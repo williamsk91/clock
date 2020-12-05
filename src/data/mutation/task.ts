@@ -4,6 +4,8 @@ import { MutationHookOptions } from "@apollo/client";
 import { cycleArray } from "../../components/utils/array";
 import {
   CreateTaskInput,
+  CreateTaskMutation,
+  CreateTaskMutationVariables,
   DeleteTaskMutation,
   DeleteTaskMutationVariables,
   List,
@@ -26,8 +28,10 @@ import {
 /**
  * Create task mutation with cache update
  */
-export const useCreateTask = () => {
-  const [createTaskMutation] = useCreateTaskMutation();
+export const useCreateTask = (
+  options?: MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>
+) => {
+  const [createTaskMutation] = useCreateTaskMutation(options);
   const createTask = useCallback(
     (listId: string, cti: CreateTaskInput) =>
       createTaskMutation({

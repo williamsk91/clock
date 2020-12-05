@@ -11,7 +11,6 @@ export const routes = {
     list: homeListRoute(":listId"),
     listSetting: homeListSettingRoute(":listId"),
     taskSetting: homeTaskSettingRoute(":listId", ":taskId"),
-    newTask: "/cal/newTask",
     completedTask: "/cal/completed",
   },
   data: "/data",
