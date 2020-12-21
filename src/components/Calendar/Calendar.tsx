@@ -55,7 +55,7 @@ export const Calendar: FC<IProp> = (props) => {
     () =>
       lists
         .filter(listIsNotDeleted)
-        .filter(applyFilterOnTask([taskIsNotDeletedP, taskHasDateP])),
+        .map(applyFilterOnTask([taskHasDateP, taskIsNotDeletedP])),
     [lists]
   );
 
