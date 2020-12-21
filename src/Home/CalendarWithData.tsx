@@ -50,7 +50,7 @@ export const CalendarWithData = () => {
         repeat: null,
       });
     },
-    [history]
+    [match, data, createTask]
   );
 
   if (loading) return <Loading />;
