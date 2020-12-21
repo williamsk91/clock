@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { EventColor } from "../components/Calendar/styles";
 import { ColorSelect, DatePicker, RepeatSelect } from "../components/Settings";

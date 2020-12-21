@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { format, isSameDay } from "date-fns/esm";
 
 import { Error, Loading, Spacer, Task, Text } from "../../components";

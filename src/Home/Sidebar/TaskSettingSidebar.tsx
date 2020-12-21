@@ -1,7 +1,7 @@
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   BookOutlined,

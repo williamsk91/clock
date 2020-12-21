@@ -1,6 +1,6 @@
 import "@fullcalendar/react";
 
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";

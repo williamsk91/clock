@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { DeleteOutlined, HighlightOutlined } from "@ant-design/icons";
 import { Button, Divider, Popconfirm } from "antd";

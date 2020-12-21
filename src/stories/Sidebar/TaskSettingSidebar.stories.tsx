@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { TaskSettingSidebar } from "../../Home/Sidebar/TaskSettingSidebar";
 import { getList, getLists, getTask } from "../mocks";

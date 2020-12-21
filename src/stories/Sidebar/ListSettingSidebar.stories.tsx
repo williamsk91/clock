@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { List } from "../../graphql/generated";
 import { ListSettingSidebar } from "../../Home/Sidebar/ListSettingSidebar";
