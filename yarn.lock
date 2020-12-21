@@ -2083,52 +2083,53 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fullcalendar/common@~5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.4.0.tgz#65474163e43bea4443b2577cd39d7021678237df"
-  integrity sha512-w6C5VLxZmS8AmbAIiIHy+p+S/G9wtsvFEgyM/Ijd+5/ENKV4bs8ieOsetdl79WUheRKg0oXiiG5fy1X3EFk/Gg==
+"@fullcalendar/common@~5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.5.0.tgz#02509c8d96bb0bb7fcf397ccf564ed271a6cee00"
+  integrity sha512-xHsHRI2xnC4vDPdRaOkt03SGIEsmlcSTI6RVInI2PQKi3n4otgM4ej3WL4B010uT4IzrBlUvNm8HHEo/o3g8Ug==
   dependencies:
+    ical.js "^1.4.0"
     tslib "^2.0.3"
 
-"@fullcalendar/daygrid@~5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.4.0.tgz#9e29089f58166cbfea980da1a69b55e157794ed6"
-  integrity sha512-UgBcEWNMFuhnwQNH0NP1qWo3swH3jAqXY7Y43eQakwwFbCuP/gBSmiOgkVnfK2SmPJTDMEnFR5jApcXPlpPXlQ==
+"@fullcalendar/daygrid@~5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.5.0.tgz#48f943d070a07f88cd6f8170fb757d3038239bd6"
+  integrity sha512-O/59C3ihElLsPnkjlD1xUgAf3v7WEARXVO+wZfASKtK14Ccux2MA9mWUA1+80m9q8on7SYL36ORhrea7GKy/qQ==
   dependencies:
-    "@fullcalendar/common" "~5.4.0"
+    "@fullcalendar/common" "~5.5.0"
     tslib "^2.0.3"
 
-"@fullcalendar/interaction@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-5.4.0.tgz#5d709a3381ca0670f6e629a4b19bdb4b9e18515c"
-  integrity sha512-Ve7i+kZ6ZwL84n2aSE762Pr5Sj9hFNKNVd+0wSGDpwgm4G4AWDfycHx0IyrbzqWCjcaP1aKChNYunkuPVl+rCg==
+"@fullcalendar/interaction@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-5.5.0.tgz#8fe3f2b89c55fad5835a9c74f7a95a7d97419afe"
+  integrity sha512-LKc4VeESBkBkrI/sAtV++f4qUleYyt7STBrnuc5Mpojv7jg5x5XZ1rfOarLwRbEYSvbo6CwccDrsaLTbC1Qk2A==
   dependencies:
-    "@fullcalendar/common" "~5.4.0"
+    "@fullcalendar/common" "~5.5.0"
     tslib "^2.0.3"
 
-"@fullcalendar/react@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.4.0.tgz#874fa7a72b92aec1d907e253f1d59b48ef1b9759"
-  integrity sha512-FtTuD40jdbSzttKmC6PHLnoJSNrw48oq/zbjZ2Qm/94YPEuGULJ0YMjftGTg6pGxBhJf7LiC1bU5eM92iwIYZA==
+"@fullcalendar/react@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.5.0.tgz#4a74e816ee67c4de59ca6bae1a658e6e72c7970a"
+  integrity sha512-ss109y/kYIb9mwmE9dZc5c2o5I4CoqREDqLNAur83CGC5NvCH8gRzZXEilZz1E6ORuziBEYkPPtREn7Mp+6lYg==
   dependencies:
-    "@fullcalendar/common" "~5.4.0"
+    "@fullcalendar/common" "~5.5.0"
     tslib "^2.0.3"
 
-"@fullcalendar/rrule@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-5.4.0.tgz#bb52a69aacb6278d6632bfa533082028bacd6c8b"
-  integrity sha512-VDIzLfYF/U7tY7UqK4LyqrDleSM4+7kA1ZUR5bqlJ2s5OBdYQHx2Bnk3/EY+ONAty9ktWVZO1DadZLuIBawaiw==
+"@fullcalendar/rrule@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-5.5.0.tgz#96fc019a1aaa02a45f0e75fd04992dbd8e7d6194"
+  integrity sha512-Eifzha9fu+KPZVZ7/Ff0K7yQIk6wz4LOkR749yMpzdiYFHliWHwdVaFHB3BQL2i8yI8TRbtbp0nU5f/k6F2NHA==
   dependencies:
-    "@fullcalendar/common" "~5.4.0"
+    "@fullcalendar/common" "~5.5.0"
     tslib "^2.0.3"
 
-"@fullcalendar/timegrid@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.4.0.tgz#7869d6c8ba625f4508bb2f4c4a3c3933527a0690"
-  integrity sha512-/b3ZeZVEZf2BxC8mJ6nHW2XZY9mKbN+RpZbdocEiQniGqYq0o3hqGz0FXMA+JSTE6lGjo747RE3b5p295avw7A==
+"@fullcalendar/timegrid@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.5.0.tgz#081dd3fc636e9291ab62b35786e2f0be7cc80a20"
+  integrity sha512-Y4k3/ux031pL7WQWJnvJbGcOua+zg1BGn08xeycgBICNqVMIhKm++uCnLzCvHGDV4Gp7oRjNAw/nJw4M1kMoXg==
   dependencies:
-    "@fullcalendar/common" "~5.4.0"
-    "@fullcalendar/daygrid" "~5.4.0"
+    "@fullcalendar/common" "~5.5.0"
+    "@fullcalendar/daygrid" "~5.5.0"
     tslib "^2.0.3"
 
 "@graphql-codegen/cli@1.17.6":
@@ -9354,6 +9355,11 @@ human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
+
+ical.js@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ical.js/-/ical.js-1.4.0.tgz#fc5619dc55fe03d909bf04362aa0677f4541b9d7"
+  integrity sha512-ltHZuOFNNjcyEYbzDgjemS7LWIFh2vydJeznxQHUh3dnarbxqOYsWONYteBVAq1MEOHnwXFGN2eskZReHclnrA==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"

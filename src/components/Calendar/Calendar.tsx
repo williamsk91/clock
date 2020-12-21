@@ -327,7 +327,7 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
           freq: task.repeat.freq,
           dtstart: task.start,
         }
-      : null,
+      : undefined,
     /**
      * Repeating task have requires special explicit duration.
      */
