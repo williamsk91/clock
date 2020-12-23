@@ -8,6 +8,7 @@ import {
   homeTaskSettingRoute,
   routes,
 } from "../components";
+import { useCalendarContext } from "../components/context/CalendarContext";
 import { useCreateTask, useUpdateTask } from "../data/mutation/task";
 import { useCalendarListsQuery } from "../graphql/generated";
 
@@ -17,6 +18,7 @@ import { useCalendarListsQuery } from "../graphql/generated";
 export const CalendarWithData = () => {
   const history = useHistory();
   const match = useRouteMatch<{ listId: string }>({ path: routes.home.list });
+  const { api } = useCalendarContext();
 
   const { data, loading, error } = useCalendarListsQuery();
 
@@ -27,6 +29,7 @@ export const CalendarWithData = () => {
       if (!listId) return;
 
       history.push(homeTaskSettingRoute(listId, completedData.createTask.id));
+      api?.unselect();
     },
   });
   const updateTask = useUpdateTask();
