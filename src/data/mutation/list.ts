@@ -25,12 +25,18 @@ export const useCreateList = () => {
         update: (cache, { data }) => {
           const cachedData = cache.readQuery<ListsQuery>({
             query: ListsDocument,
+            variables: {
+              withTasks: false,
+            },
           });
           const newListData = data?.createList;
           if (!cachedData || !newListData) return;
           const newLists = [...cachedData.lists, newListData];
           cache.writeQuery<ListsQuery>({
             query: ListsDocument,
+            variables: {
+              withTasks: false,
+            },
             data: {
               lists: newLists.map((l) => ({ ...l, tasks: [] })),
             },
