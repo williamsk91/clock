@@ -2,7 +2,9 @@ import { gql } from '@apollo/client';
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -614,7 +616,7 @@ ${ListFragmentDoc}`;
  *   },
  * });
  */
-export function useListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListQuery, ListQueryVariables>) {
+export function useListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ListQuery, ListQueryVariables>) {
         return ApolloReactHooks.useQuery<ListQuery, ListQueryVariables>(ListDocument, baseOptions);
       }
 export function useListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListQuery, ListQueryVariables>) {
@@ -651,7 +653,7 @@ ${TaskFragmentDoc}`;
  *   },
  * });
  */
-export function useListsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
+export function useListsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
         return ApolloReactHooks.useQuery<ListsQuery, ListsQueryVariables>(ListsDocument, baseOptions);
       }
 export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListsQuery, ListsQueryVariables>) {
@@ -726,7 +728,7 @@ ${TaskFragmentDoc}`;
  *   },
  * });
  */
-export function useTaskQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TaskQuery, TaskQueryVariables>) {
+export function useTaskQuery(baseOptions: ApolloReactHooks.QueryHookOptions<TaskQuery, TaskQueryVariables>) {
         return ApolloReactHooks.useQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
       }
 export function useTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TaskQuery, TaskQueryVariables>) {
