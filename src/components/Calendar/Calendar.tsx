@@ -20,6 +20,7 @@ import styled from "styled-components";
 
 import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
+import { repeatToRRule } from "../datetime";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
 import { Text } from "../Text";
@@ -320,14 +321,11 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
     allDay: !task.includeTime,
 
     /** Repeating tasks */
-    // dtstart is required
-    rrule: task.repeat
-      ? {
-          byweekday: task.repeat.byweekday,
-          freq: task.repeat.freq,
-          dtstart: task.start,
-        }
-      : undefined,
+    rrule:
+      task.repeat && task.start
+        ? repeatToRRule(task.repeat, new Date(task.start)).toString()
+        : undefined,
+
     /**
      * Repeating task have requires special explicit duration.
      */

@@ -44,6 +44,8 @@ interface Props {
  *
  *  1. PieChart - percentage of hours spent on different lists
  *  2. WeekChart - hours spend on each list on each day
+ *
+ * Note: this includes completed tasks but not deleted tasks
  */
 export const AnalyticsPage = (props: Props) => {
   const { lists } = props;

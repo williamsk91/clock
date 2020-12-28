@@ -1,10 +1,11 @@
 import React from "react";
 import { PieDatum, ResponsivePie } from "@nivo/pie";
-import { differenceInMinutes } from "date-fns";
+import { differenceInMinutes, endOfWeek, startOfWeek } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
+import { repeatToRRule } from "../datetime";
 import { chartTheme } from "./theme";
 
 interface Datum extends PieDatum {
@@ -76,7 +77,18 @@ const listToPieDatum = (list: List): Datum => ({
  */
 const listTaskHr = (list: List): number =>
   list.tasks.reduce((total, t) => {
-    if (t.end && t.start)
-      return total + differenceInMinutes(new Date(t.end), new Date(t.start));
-    return total;
+    if (!t.start || !t.end) return total;
+
+    const duration = differenceInMinutes(new Date(t.end), new Date(t.start));
+
+    if (t.repeat) {
+      const rrule = repeatToRRule(t.repeat, new Date(t.start));
+      const today = Date.now();
+      const start = startOfWeek(today, { weekStartsOn: 1 });
+      const end = endOfWeek(today, { weekStartsOn: 1 });
+      const occurences = rrule.between(start, end).length;
+      return total + occurences * duration;
+    }
+
+    return total + duration;
   }, 0);

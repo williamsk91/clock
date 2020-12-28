@@ -1,10 +1,11 @@
 import React from "react";
 import { BarDatum, ResponsiveBar } from "@nivo/bar";
-import { differenceInMinutes, getDay } from "date-fns";
+import { differenceInMinutes, endOfWeek, getDay, startOfWeek } from "date-fns";
 import styled from "styled-components";
 
 import { List } from "../../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
+import { repeatToRRule } from "../datetime";
 import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/filter";
 import { chartTheme } from "./theme";
@@ -107,11 +108,25 @@ const listDaysHours = (
     (days, t) => {
       if (!t.start || !t.end) return days;
 
-      const start = new Date(t.start);
-      const duration = differenceInMinutes(new Date(t.end), start) / 60;
-      const day = getDay(start);
+      const start = new Date(t.start as string);
+      const duration =
+        differenceInMinutes(new Date(t.end as string), start) / 60;
 
-      days[day] = days[day] + duration;
+      if (t.repeat) {
+        const rrule = repeatToRRule(t.repeat, new Date(t.start));
+        const today = Date.now();
+        const start = startOfWeek(today, { weekStartsOn: 1 });
+        const end = endOfWeek(today, { weekStartsOn: 1 });
+        const betweenDates = rrule.between(start, end);
+        betweenDates.forEach((d) => {
+          const day = getDay(d);
+          days[day] = days[day] + duration;
+        });
+      } else {
+        const day = getDay(start);
+        days[day] = days[day] + duration;
+      }
+
       return days;
     },
     [0, 0, 0, 0, 0, 0, 0]

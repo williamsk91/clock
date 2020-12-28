@@ -139,7 +139,6 @@ export const getTasks = (): Task[] => [
     end: setHours(new Date(), 7).toISOString(),
     includeTime: true,
     color: "red",
-
     order: 2,
     repeat: {
       freq: "daily",
@@ -181,6 +180,21 @@ export const getTasks = (): Task[] => [
     color: "black",
     order: 5,
     repeat: null,
+    deleted: null,
+  },
+  {
+    id: "6",
+    done: null,
+    title: "weekly",
+    start: setHours(new Date(), 14).toISOString(),
+    end: setHours(new Date(), 16).toISOString(),
+    includeTime: true,
+    color: "red",
+    order: 6,
+    repeat: {
+      freq: "weekly",
+      byweekday: [0, 2, 3, 6],
+    },
     deleted: null,
   },
 ];
