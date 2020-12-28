@@ -32,6 +32,8 @@ const SideBar = styled.div`
   width: 365px;
   height: 100vh;
 
+  overflow-y: auto;
+
   padding: 0 24px;
   box-sizing: border-box;
 
