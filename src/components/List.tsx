@@ -1,5 +1,4 @@
 import React from "react";
-
 import { SettingOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import styled from "styled-components";
@@ -14,6 +13,7 @@ interface IProp extends Omit<ListProps, "tasks"> {
   onTitleEdit?: (t: string) => void;
   onClick?: () => void;
   onClickSetting?: (id: string) => void;
+  settingIcon?: JSX.Element;
 }
 
 /**
@@ -21,7 +21,15 @@ interface IProp extends Omit<ListProps, "tasks"> {
  *  number of uncompleted tasks remaining.
  */
 export const List = (props: IProp) => {
-  const { id, title, color, onClick, onTitleEdit, onClickSetting } = props;
+  const {
+    id,
+    title,
+    color,
+    onClick,
+    onTitleEdit,
+    onClickSetting,
+    settingIcon,
+  } = props;
 
   const isEditable = !!onTitleEdit;
   const isClickable = !!onClick;
@@ -42,7 +50,7 @@ export const List = (props: IProp) => {
         />
         {onClickSetting && (
           <ActionButton
-            icon={<SettingIcon />}
+            icon={settingIcon ?? <SettingOutlined />}
             type="text"
             onClick={() => onClickSetting(id)}
           />
@@ -126,8 +134,9 @@ const ActionButton = styled(Button)`
   ${Container}:hover & {
     opacity: 100;
   }
-`;
 
-const SettingIcon = styled(SettingOutlined)`
-  font-size: 24px;
+  /* icon */
+  span {
+    font-size: 24px;
+  }
 `;

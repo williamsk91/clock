@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 import {
   Error,
@@ -89,6 +90,7 @@ export const ListsSidebar = (props: Props) => {
               })
             }
             onClickSetting={() => onClickSetting(l.id)}
+            settingIcon={<CaretRightOutlined />}
           />
           <Spacer spacing="12" />
         </React.Fragment>
