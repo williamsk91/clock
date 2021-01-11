@@ -1,4 +1,4 @@
-import React, { FC, createContext, useContext, useState } from "react";
+import { FC, createContext, useContext, useState } from "react";
 import { CalendarApi } from "@fullcalendar/react";
 
 interface ContextValue {
@@ -8,7 +8,7 @@ interface ContextValue {
 
 const CalendarContext = createContext<ContextValue>({
   api: null,
-  setApi: () => null
+  setApi: () => null,
 });
 
 export const CalendarProvider: FC = ({ children }) => {

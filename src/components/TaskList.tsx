@@ -8,27 +8,32 @@ import {
 import styled from "styled-components";
 
 import {
+  List,
   Task as TaskProps,
   TaskReorderInput,
   UpdateTaskInput,
 } from "../graphql/generated";
 import { ExternalDraggableTask } from "./Calendar/ExternalDraggableTask";
+import { EventColor } from "./Calendar/styles";
 import { Spacer } from "./Spacer";
 import { Task } from "./Task";
 
 interface Props {
+  list: List;
   tasks: TaskProps[];
   updateTask: (uti: UpdateTaskInput) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
 
-  goTask: (id: string) => void;
+  onClickSetting: (id: string) => void;
 }
 
 /**
  * A list of Tasks
  */
-export const TaskList = (props: Props) => {
-  const { tasks, updateTask, taskReorder, goTask } = props;
+export const Tasks = (props: Props) => {
+  const { list, updateTask, taskReorder, onClickSetting } = props;
+
+  const tasks = props.tasks.sort((a, b) => a.order - b.order);
 
   const onDragEnd = (result: DropResult) => {
     const destinationIndex = result.destination?.index;
@@ -61,15 +66,17 @@ export const TaskList = (props: Props) => {
                       style={getStyle(provided.draggableProps.style, snapshot)}
                     >
                       <>
-                        <ExternalDraggableTask task={t}>
+                        <ExternalDraggableTask list={list} task={t}>
                           <Task
+                            listId={list.id}
+                            listColor={list.color as EventColor | null}
                             key={i}
                             {...t}
                             updateTask={updateTask}
-                            goTask={goTask}
+                            onClickSetting={onClickSetting}
                           />
                         </ExternalDraggableTask>
-                        <Spacer spacing="6" />
+                        <Spacer spacing="12" />
                       </>
                     </div>
                   )}

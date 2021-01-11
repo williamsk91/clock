@@ -1,0 +1,7 @@
+#import "./list-fragment.graphql"
+
+mutation UpdateList($list: UpdateListInput!) {
+  updateList(list: $list) {
+    ...List
+  }
+}

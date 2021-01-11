@@ -102,7 +102,7 @@ export const parseDate = (s: string | null): Date | null => {
  */
 export const parseDefinedDate = (s: string): Date => new Date(s);
 
-const repeatToRRule = (r: Repeat): RRule => {
+export const repeatToRRule = (r: Repeat, start?: Date): RRule => {
   let freq;
   switch (r.freq) {
     case "daily":
@@ -119,8 +119,5 @@ const repeatToRRule = (r: Repeat): RRule => {
       break;
   }
 
-  return new RRule({
-    freq,
-    byweekday: r.byweekday,
-  });
+  return new RRule({ dtstart: start, freq, byweekday: r.byweekday });
 };

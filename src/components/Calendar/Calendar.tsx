@@ -1,12 +1,14 @@
 import "@fullcalendar/react";
 
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { Switch } from "antd";
 import {
+  addHours,
   addMinutes,
   differenceInDays,
   differenceInMinutes,
@@ -16,23 +18,51 @@ import {
 } from "date-fns";
 import styled from "styled-components";
 
-import { Task, UpdateTaskInput } from "../../graphql/generated";
+import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
-import { homeTaskRoute } from "../route";
+import { repeatToRRule } from "../datetime";
+import { listIsNotDeleted } from "../listFilter";
+import { homeTaskSettingRoute } from "../route";
+import { Text } from "../Text";
+import {
+  applyFilterOnTask,
+  taskHasDateP,
+  taskIsNotDeletedP,
+  taskIsNotDoneP,
+} from "../utils/filter";
+import {
+  EventColor,
+  defaultEventColor,
+  eventColors,
+  eventColors50,
+} from "./styles";
 
 interface IProp {
-  tasks: Task[];
+  lists: List[];
   updateTask: (uti: UpdateTaskInput) => void;
   createTask: (start: Date, end: Date, includeTime: boolean) => void;
 }
 
 export const Calendar: FC<IProp> = (props) => {
-  const { tasks, updateTask, createTask } = props;
+  const { lists, updateTask, createTask } = props;
   const history = useHistory();
+
+  const [showCompletedTask, setShowCompletedTask] = useState(false);
+
   const calRef = useRef<FullCalendar>(null);
   const { setApi } = useCalendarContext();
 
-  const events: EventInput[] = tasks.map(taskToEventInput);
+  const filteredLists: List[] = useMemo(
+    () =>
+      lists
+        .filter(listIsNotDeleted)
+        .map(applyFilterOnTask([taskHasDateP, taskIsNotDeletedP])),
+    [lists]
+  );
+
+  const events: EventInput[] = filteredLists
+    .map(applyFilterOnTask(showCompletedTask ? [] : [taskIsNotDoneP]))
+    .flatMap((l) => l.tasks.map((t) => taskToEventInput(l, t)));
 
   useEffect(() => {
     if (!calRef.current) return;
@@ -41,6 +71,13 @@ export const Calendar: FC<IProp> = (props) => {
 
   return (
     <Container>
+      <Setting>
+        <Text.Message>Show completed task</Text.Message>
+        <Switch
+          checked={showCompletedTask}
+          onChange={(checked) => setShowCompletedTask(checked)}
+        />
+      </Setting>
       <FullCalendar
         ref={calRef}
         height="100%"
@@ -73,17 +110,19 @@ export const Calendar: FC<IProp> = (props) => {
         // clicking
         eventClick={({ event }) => {
           calRef.current?.getApi().unselect();
-          history.push(homeTaskRoute(event.id));
+          history.push(
+            homeTaskSettingRoute(event.extendedProps.listId, event.id)
+          );
         }}
         // selecting - creating new task
         selectable
         selectMirror
         unselectAuto={false}
         snapDuration="00:30"
-        select={({ start, end, allDay }) =>
+        select={({ start, end, allDay }) => {
           // end is modified as by default FullCalendar treats end as exclusive
-          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay)
-        }
+          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay);
+        }}
         // Labels
         headerToolbar={{
           left: "prev,today,next",
@@ -110,6 +149,7 @@ export const Calendar: FC<IProp> = (props) => {
  */
 const Container = styled.div`
   height: 100%;
+  position: relative;
 
   /* toolbar */
   .fc-header-toolbar {
@@ -194,6 +234,7 @@ const Container = styled.div`
       :hover {
         text-decoration: none;
       }
+      border-width: 0 0 0 6px;
     }
 
     /* event */
@@ -202,6 +243,7 @@ const Container = styled.div`
       :hover {
         text-decoration: none;
       }
+      border-width: 0 0 0 6px;
       &.short-duration-event .fc-event-main {
         display: flex;
         .fc-event-time {
@@ -240,8 +282,24 @@ const Container = styled.div`
   }
 `;
 
+const Setting = styled.div`
+  position: absolute;
+  right: 24px;
+
+  padding: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    margin-left: 6px;
+  }
+`;
+
 // ------------------------- Helper Functions -------------------------
-export const taskToEventInput = (task: Task): EventInput => {
+
+export const taskToEventInput = (list: List, task: Task): EventInput => {
   const { id, title } = task;
 
   // classNames for styling
@@ -250,6 +308,8 @@ export const taskToEventInput = (task: Task): EventInput => {
     task.end &&
     differenceInMinutes(new Date(task.end), new Date(task.start)) <= 45 &&
     classNames.push("short-duration-event");
+
+  const colorSet = task.done ? eventColors50 : eventColors;
 
   return {
     id,
@@ -261,14 +321,11 @@ export const taskToEventInput = (task: Task): EventInput => {
     allDay: !task.includeTime,
 
     /** Repeating tasks */
-    // dtstart is required
-    rrule: task.repeat
-      ? {
-          byweekday: task.repeat.byweekday,
-          freq: task.repeat.freq,
-          dtstart: task.start,
-        }
-      : null,
+    rrule:
+      task.repeat && task.start
+        ? repeatToRRule(task.repeat, new Date(task.start)).toString()
+        : undefined,
+
     /**
      * Repeating task have requires special explicit duration.
      */
@@ -282,13 +339,15 @@ export const taskToEventInput = (task: Task): EventInput => {
     groupId: id,
 
     /** Style */
-    backgroundColor: task.color ?? undefined,
+    backgroundColor: colorSet[(task.color as EventColor) ?? defaultEventColor],
+    borderColor: colorSet[(list.color as EventColor) ?? defaultEventColor],
     classNames,
 
     /**
      * Extra props are required to get full information of the task.
-     * Check eventToTaskUpdateInput
+     * Check `eventToTaskUpdateInput`
      */
+    listId: list.id,
     done: task.done,
     order: task.order,
     repeat: task.repeat,
@@ -296,22 +355,33 @@ export const taskToEventInput = (task: Task): EventInput => {
   };
 };
 
-const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => ({
-  id: e.id,
-  title: e.title,
-  done: e.extendedProps?.done,
-  start: e.start?.toISOString() ?? null,
-  end: e.end?.toISOString() ?? null,
-  includeTime: !e.allDay,
-  color: e.extendedProps?.eventColor,
-  order: e.extendedProps.order,
-  repeat: e.extendedProps?.repeat
-    ? {
-        freq: e.extendedProps.repeat.freq,
-        byweekday: e.extendedProps.repeat.byweekday,
-      }
-    : null,
-});
+const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
+  const start = e.start?.toISOString() ?? null;
+  const end = e.end?.toISOString() ?? null;
+  /**
+   * Ensures that end is also defined when start is defined.
+   * Defaults to 1 hr after start
+   */
+  const validatedEnd =
+    end || (start ? addHours(new Date(start), 1).toString() : null);
+
+  return {
+    id: e.id,
+    title: e.title,
+    done: e.extendedProps?.done,
+    start,
+    end: validatedEnd,
+    includeTime: !e.allDay,
+    color: e.extendedProps?.eventColor,
+    order: e.extendedProps.order,
+    repeat: e.extendedProps?.repeat
+      ? {
+          freq: e.extendedProps.repeat.freq,
+          byweekday: e.extendedProps.repeat.byweekday,
+        }
+      : null,
+  };
+};
 
 /**
  * Get event duration.

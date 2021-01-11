@@ -1,23 +1,14 @@
-import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { CloseOutlined } from "@ant-design/icons";
+import { useContext } from "react";
 import { Button, Popconfirm } from "antd";
 
-import homeImg from "../assets/undraw_at_home_octe.svg";
+import { Text, TrackWithRoutes } from "../components";
 import { UserContext } from "../components/context/UserContext";
-import { routes } from "../components/route";
 import { Spacer } from "../components/Spacer";
-import { Mini } from "../components/styles/layout";
+import { FullPage } from "../components/styles/layout";
 import { apolloClient } from "../data/apollo";
 import { useDeleteUserMutation } from "../graphql/generated";
 
 export const SettingRoute = () => {
-  return <SettingPage />;
-};
-
-export const SettingPage = () => {
-  const history = useHistory();
-
   const { signOut, setSignedIn } = useContext(UserContext);
 
   const [deleteUser] = useDeleteUserMutation({
@@ -27,33 +18,45 @@ export const SettingPage = () => {
     },
   });
 
+  return <SettingPage signOut={signOut} deleteUser={deleteUser} />;
+};
+
+interface Props {
+  signOut: () => void;
+  deleteUser: () => void;
+}
+
+export const SettingPage = (props: Props) => {
+  const { signOut, deleteUser } = props;
+
   return (
-    <Mini.Container>
-      <Mini.Illustration src={homeImg} />
-      <Spacer spacing="24" />
-      <Button
-        icon={<CloseOutlined />}
-        type="link"
-        onClick={() => history.push(routes.home.index)}
-      >
-        Go back
-      </Button>
-      <Spacer spacing="12" />
-      <Popconfirm
-        title="This is not a reversible action!"
-        okText="Yes, delete my account forever"
-        onConfirm={() => deleteUser()}
-        okType="danger"
-        placement="right"
-      >
-        <Button type="link" danger>
-          Delete Account
+    <FullPage.Container>
+      <TrackWithRoutes />
+      <FullPage.Content>
+        <Text.Title>Settings</Text.Title>
+        <Spacer spacing="60" />
+
+        <Text.SubTitle>Accounts</Text.SubTitle>
+        <Spacer spacing="12" />
+        <Button type="primary" onClick={signOut}>
+          Sign out
         </Button>
-      </Popconfirm>
-      <Spacer spacing="12" />
-      <Button type="text" onClick={signOut}>
-        Sign out
-      </Button>
-    </Mini.Container>
+        <Spacer spacing="60" />
+
+        <Text.SubTitle>Danger Zone</Text.SubTitle>
+        <Spacer spacing="12" />
+        <Popconfirm
+          title="This is not a reversible action!"
+          okText="Yes, delete my account forever"
+          onConfirm={() => deleteUser()}
+          okType="danger"
+          placement="right"
+        >
+          <Button type="primary" danger>
+            Delete Account
+          </Button>
+        </Popconfirm>
+      </FullPage.Content>
+    </FullPage.Container>
   );
 };

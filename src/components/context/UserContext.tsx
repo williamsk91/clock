@@ -1,4 +1,4 @@
-import React, { FC, createContext, useState } from "react";
+import { FC, createContext, useState } from "react";
 import Cookies from "js-cookie";
 
 import { apolloClient } from "../../data/apollo";

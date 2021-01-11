@@ -11,4 +11,5 @@ fragment Task on Task {
     freq
     byweekday
   }
+  deleted
 }

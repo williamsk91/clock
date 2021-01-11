@@ -1,0 +1,11 @@
+#import "./task-fragment.graphql"
+#import "./list-fragment.graphql"
+
+query List($listId: ID!) {
+  list(id: $listId) {
+    tasks {
+      ...Task
+    }
+    ...List
+  }
+}

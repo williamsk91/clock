@@ -1,60 +1,126 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { SettingOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import { format } from "date-fns";
+import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import emptyListImg from "../../assets/undraw_cup_of_tea_6nqg.svg";
-import { NewTask } from "../../components/NewTask";
-import { homeTaskRoute, routes } from "../../components/route";
-import { Spacer } from "../../components/Spacer";
-import { isNotDoneP } from "../../components/taskFilter";
-import { TaskList } from "../../components/TaskList";
-import { Text } from "../../components/Text";
 import {
-  Task,
+  Error,
+  List,
+  Loading,
+  NewItem,
+  Spacer,
+  Tasks,
+  Text,
+  homeListSettingRoute,
+  homeTaskSettingRoute,
+  taskIsNotDeletedP,
+  taskIsNotDoneP,
+} from "../../components";
+import {
+  useCreateTask,
+  useTaskReorder,
+  useUpdateTask,
+} from "../../data/mutation/task";
+import {
+  List as ListType,
   TaskReorderInput,
   UpdateTaskInput,
+  useListQuery,
 } from "../../graphql/generated";
 
+/**
+ * Query task data and pass to `ListSidebar`
+ */
+export const ListSidebarWithData = () => {
+  const { listId } = useParams<{ listId: string }>();
+  const history = useHistory();
+
+  const { data, loading, error } = useListQuery({ variables: { listId } });
+
+  const createTask = useCreateTask();
+  const updateTask = useUpdateTask();
+  const taskReorder = useTaskReorder();
+
+  if (loading) return <Loading />;
+  if (error || !data) return <Error />;
+
+  const onClickListSetting = (listId: string) => {
+    history.push(homeListSettingRoute(listId));
+  };
+
+  const onClickTaskSetting = (taskId: string) => {
+    history.push(homeTaskSettingRoute(listId, taskId));
+  };
+
+  return (
+    <ListSidebar
+      list={data.list}
+      createTask={(t: string) =>
+        createTask(listId, {
+          title: t,
+          done: null,
+          start: null,
+          end: null,
+          includeTime: false,
+          color: null,
+          repeat: null,
+        })
+      }
+      updateTask={updateTask}
+      taskReorder={taskReorder}
+      onClickListSetting={onClickListSetting}
+      onClickTaskSetting={onClickTaskSetting}
+    />
+  );
+};
+
 interface Props {
-  tasks: Task[];
+  list: ListType;
+
   createTask: (t: string) => void;
   updateTask: (uti: UpdateTaskInput) => void;
   taskReorder: (tasks: TaskReorderInput[]) => void;
+
+  onClickListSetting: (id: string) => void;
+  onClickTaskSetting: (id: string) => void;
 }
 
+/**
+ * Displays:
+ *  1. Current list info
+ *  2. New task input
+ *  3. Uncompleted tasks
+ */
 export const ListSidebar = (props: Props) => {
-  const { tasks, createTask, updateTask, taskReorder } = props;
-  const history = useHistory();
+  const {
+    list,
+    createTask,
+    updateTask,
+    taskReorder,
+    onClickListSetting,
+    onClickTaskSetting,
+  } = props;
 
-  const notDoneTask = tasks.filter(isNotDoneP);
+  const notDoneTask = list.tasks
+    .filter(taskIsNotDeletedP)
+    .filter(taskIsNotDoneP);
 
   return (
     <Container>
-      <div>
-        <Button
-          onClick={() => history.push(routes.setting)}
-          type="text"
-          icon={<SettingOutlined />}
-        >
-          setting
-        </Button>
-        <Spacer spacing="12" />
-        <Today />
-        <Spacer spacing="24" />
-        <NewTask createTask={createTask} />
-        <Spacer spacing="12" />
-      </div>
+      <Spacer spacing="60" />
+      <List {...list} onClickSetting={onClickListSetting} />
+      <Spacer spacing="48" />
+      <NewItem placeholder="Add a new task" createItem={createTask} />
+      <Spacer spacing="12" />
       {notDoneTask.length === 0 ? (
         <EmptyList />
       ) : (
-        <TaskList
+        <Tasks
+          list={list}
           tasks={notDoneTask}
           updateTask={updateTask}
           taskReorder={taskReorder}
-          goTask={(id: string) => history.push(homeTaskRoute(id))}
+          onClickSetting={onClickTaskSetting}
         />
       )}
     </Container>
@@ -62,29 +128,10 @@ export const ListSidebar = (props: Props) => {
 };
 
 const Container = styled.div`
-  padding-top: 12px;
   height: 100%;
 
   display: flex;
   flex-direction: column;
-`;
-
-/**
- * Displays today as big heading
- */
-const Today = () => {
-  return (
-    <>
-      <TodayContainer>{format(new Date(), "dd")}</TodayContainer>
-      <TodayContainer>{format(new Date(), "MMMM")}</TodayContainer>
-    </>
-  );
-};
-
-const TodayContainer = styled.div`
-  font-size: 64px;
-  color: rgba(55, 53, 47, 0.85);
-  line-height: 1;
 `;
 
 const EmptyList = () => (
