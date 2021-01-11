@@ -79,7 +79,7 @@ export const Track = (props: Props) => {
   return (
     <Container>
       <Menu selectable={false}>
-        <MenuItem selected={false} icon={<CloudFilled />} />
+        <MenuItem selected={false} icon={<CloudFilled />} onClick={goHome} />
         <MenuItem
           onClick={goBack}
           selected={false}
