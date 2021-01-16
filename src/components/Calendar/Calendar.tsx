@@ -2,6 +2,7 @@ import "@fullcalendar/react";
 
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
@@ -254,6 +255,13 @@ const Container = styled.div`
       .fc-event-time {
         font-size: 12px;
       }
+
+      &.hide-time {
+        .fc-event-time {
+          display: none;
+        }
+      }
+
       font-size: 14px;
     }
 
@@ -302,12 +310,15 @@ const Setting = styled.div`
 export const taskToEventInput = (list: List, task: Task): EventInput => {
   const { id, title } = task;
 
+  const minuteDuration =
+    !!task.start &&
+    !!task.end &&
+    differenceInMinutes(new Date(task.end), new Date(task.start));
+
   // classNames for styling
   const classNames = [];
-  task.start &&
-    task.end &&
-    differenceInMinutes(new Date(task.end), new Date(task.start)) <= 45 &&
-    classNames.push("short-duration-event");
+  minuteDuration <= 45 &&
+    classNames.push(...["short-duration-event", "hide-time"]);
 
   const colorSet = task.done ? eventColors50 : eventColors;
 
