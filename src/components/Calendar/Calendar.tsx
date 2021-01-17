@@ -21,7 +21,6 @@ import styled from "styled-components";
 
 import { List, Task, UpdateTaskInput } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
-import { repeatToRRule } from "../datetime";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
 import { Text } from "../Text";
@@ -64,7 +63,7 @@ export const Calendar: FC<IProp> = (props) => {
   const events: EventInput[] = filteredLists
     .map(applyFilterOnTask(showCompletedTask ? [] : [taskIsNotDoneP]))
     .flatMap((l) => l.tasks.map((t) => taskToEventInput(l, t)));
-
+  console.log("events: ", events);
   useEffect(() => {
     if (!calRef.current) return;
     setApi(calRef.current.getApi());
@@ -80,6 +79,7 @@ export const Calendar: FC<IProp> = (props) => {
         />
       </Setting>
       <FullCalendar
+        timeZone=""
         ref={calRef}
         height="100%"
         initialView="timeGridWeek"
@@ -332,13 +332,10 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
     allDay: !task.includeTime,
 
     /** Repeating tasks */
-    rrule:
-      task.repeat && task.start
-        ? repeatToRRule(task.repeat, new Date(task.start)).toString()
-        : undefined,
+    rrule: taskToEventRRule(task),
 
     /**
-     * Repeating task have requires special explicit duration.
+     * Repeating task requires special explicit duration.
      */
     duration: eventDuration(
       task.start,
@@ -366,9 +363,53 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
   };
 };
 
+const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
+  if (!task.repeat || !task.start) return;
+
+  /**
+   * Converting start date in UTC to local time.
+   * If providing dtstart in UTC Fullcalendar should convert the time to used timezone.
+   * However, there is a bug that causes this conversion to not occur.
+   *
+   * This conversion should be removed if when passing task.start as dtstart the date displayed
+   * is correct and not offset by timezone.
+   *
+   * @issue https://github.com/fullcalendar/fullcalendar/issues/5993#issuecomment-738280358
+   */
+  const dtstart = new Date(
+    +new Date(task.start) - new Date().getTimezoneOffset() * 60000
+  );
+
+  return {
+    dtstart,
+    freq: "weekly",
+    byweekday: task.repeat.byweekday?.map((n) => {
+      switch (n) {
+        case 0:
+          return "MO";
+        case 1:
+          return "TU";
+        case 2:
+          return "WE";
+        case 3:
+          return "TH";
+        case 4:
+          return "FR";
+        case 5:
+          return "SA";
+        case 6:
+          return "SU";
+        default:
+          return "MO";
+      }
+    }),
+  };
+};
+
 const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
   const start = e.start?.toISOString() ?? null;
   const end = e.end?.toISOString() ?? null;
+
   /**
    * Ensures that end is also defined when start is defined.
    * Defaults to 1 hr after start
