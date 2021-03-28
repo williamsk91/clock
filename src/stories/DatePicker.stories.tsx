@@ -4,7 +4,7 @@ import { DatePicker } from "../components/DatePicker";
 
 export default { title: "Components / DatePicker", component: DatePicker };
 
-export const base = () => {
+const BaseStory = () => {
   const [date, setDate] = useState<Date | null>(new Date());
 
   return (
@@ -15,3 +15,5 @@ export const base = () => {
     />
   );
 };
+
+export const base = () => <BaseStory />;

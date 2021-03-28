@@ -35,7 +35,17 @@
     "storybook": "start-storybook -p 9009 -s public"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "overrides": [
+      {
+        "files": [
+          "src/stories/**/*.stories.tsx"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
   },
   "browserslist": {
     "production": [
@@ -54,11 +64,11 @@
     "@graphql-codegen/typescript": "1.19.0",
     "@graphql-codegen/typescript-operations": "1.17.13",
     "@graphql-codegen/typescript-react-apollo": "2.2.1",
-    "@storybook/addon-actions": "^6.1.15",
-    "@storybook/addon-links": "^6.1.15",
-    "@storybook/addons": "^6.1.15",
-    "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/react": "^6.1.15",
+    "@storybook/addon-actions": "^6.2.0-rc.10",
+    "@storybook/addon-links": "^6.2.0-rc.10",
+    "@storybook/addons": "^6.2.0-rc.10",
+    "@storybook/preset-create-react-app": "^3.1.7",
+    "@storybook/react": "^6.2.0-rc.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
