@@ -63,7 +63,6 @@ export const ListSidebarWithData = () => {
           end: null,
           includeTime: false,
           color: null,
-          repeat: null,
         })
       }
       updateTask={updateTask}

@@ -37,7 +37,14 @@ export const useCreateTask = (
       createTaskMutation({
         variables: {
           listId,
-          createTaskInput: cti,
+          createTaskInput: {
+            title: cti.title,
+            done: cti.done,
+            start: cti.start,
+            end: cti.end,
+            includeTime: cti.includeTime,
+            color: cti.color,
+          },
         },
         update: (cache, { data }) => {
           const cachedData = cache.readQuery<ListQuery, ListQueryVariables>({
@@ -139,7 +146,7 @@ export const useUpdateTaskList = (
 };
 
 /**
- * Update task with optimistic update
+ * Update task
  */
 export const useUpdateTask = () => {
   const [updateTaskMutation] = useUpdateTaskMutation();
@@ -147,19 +154,15 @@ export const useUpdateTask = () => {
     (updateTaskInput: UpdateTaskInput) => {
       updateTaskMutation({
         variables: {
-          task: updateTaskInput,
-        },
-        optimisticResponse: {
-          updateTask: {
-            __typename: "Task",
-            ...updateTaskInput,
-            deleted: null,
-            repeat: updateTaskInput.repeat
-              ? {
-                  __typename: "Repeat",
-                  ...updateTaskInput.repeat,
-                }
-              : null,
+          task: {
+            id: updateTaskInput.id,
+            title: updateTaskInput.title,
+            done: updateTaskInput.done,
+            start: updateTaskInput.start,
+            end: updateTaskInput.end,
+            includeTime: updateTaskInput.includeTime,
+            color: updateTaskInput.color,
+            order: updateTaskInput.order,
           },
         },
       });

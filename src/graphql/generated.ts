@@ -18,9 +18,21 @@ export type Scalars = {
 
 export type Repeat = {
   __typename?: 'Repeat';
-  freq: Scalars['String'];
-  byweekday: Maybe<Array<Scalars['Float']>>;
+  id: Scalars['ID'];
+  freq: RepeatFrequency;
+  start: Scalars['DateTime'];
+  end: Maybe<Scalars['DateTime']>;
+  byweekday: Maybe<Array<Scalars['String']>>;
+  exclude: Maybe<Array<Scalars['String']>>;
 };
+
+export enum RepeatFrequency {
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+  Yearly = 'Yearly'
+}
+
 
 export type Task = {
   __typename?: 'Task';
@@ -32,10 +44,9 @@ export type Task = {
   includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
-  repeat: Maybe<Repeat>;
   deleted: Maybe<Scalars['DateTime']>;
+  repeat: Maybe<Repeat>;
 };
-
 
 export type List = {
   __typename?: 'List';
@@ -58,12 +69,6 @@ export type TaskReorder = {
   order: Scalars['Float'];
 };
 
-/** Recurring task input data */
-export type RepeatInput = {
-  freq: Scalars['String'];
-  byweekday: Maybe<Array<Scalars['Float']>>;
-};
-
 /** New task data */
 export type UpdateTaskInput = {
   id: Scalars['ID'];
@@ -74,7 +79,6 @@ export type UpdateTaskInput = {
   includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
-  repeat: Maybe<RepeatInput>;
 };
 
 export type TaskReorderInput = {
@@ -89,7 +93,6 @@ export type CreateTaskInput = {
   end: Maybe<Scalars['DateTime']>;
   includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
-  repeat: Maybe<RepeatInput>;
 };
 
 export type CreateListInput = {
@@ -103,6 +106,14 @@ export type UpdateListInput = {
   title: Scalars['String'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
+};
+
+export type UpsertRepeatInput = {
+  freq: RepeatFrequency;
+  start: Scalars['DateTime'];
+  end: Maybe<Scalars['DateTime']>;
+  byweekday: Maybe<Array<Scalars['String']>>;
+  exclude: Maybe<Array<Scalars['String']>>;
 };
 
 export type Query = {
@@ -148,6 +159,7 @@ export type Mutation = {
   createList: List;
   updateList: List;
   deleteList: List;
+  setRepeat: Repeat;
 };
 
 
@@ -190,6 +202,12 @@ export type MutationUpdateListArgs = {
 
 export type MutationDeleteListArgs = {
   listId: Scalars['ID'];
+};
+
+
+export type MutationSetRepeatArgs = {
+  repeat: Maybe<UpsertRepeatInput>;
+  taskId: Scalars['ID'];
 };
 
 export type CalendarListsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -299,12 +317,26 @@ export type ListsQuery = (
   )> }
 );
 
+export type SetRepeatMutationVariables = Exact<{
+  taskId: Scalars['ID'];
+  repeat: Maybe<UpsertRepeatInput>;
+}>;
+
+
+export type SetRepeatMutation = (
+  { __typename?: 'Mutation' }
+  & { setRepeat: (
+    { __typename?: 'Repeat' }
+    & Pick<Repeat, 'id' | 'freq' | 'start' | 'end' | 'byweekday' | 'exclude'>
+  ) }
+);
+
 export type TaskFragment = (
   { __typename?: 'Task' }
   & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'color' | 'order' | 'deleted'>
   & { repeat: Maybe<(
     { __typename?: 'Repeat' }
-    & Pick<Repeat, 'freq' | 'byweekday'>
+    & Pick<Repeat, 'id' | 'freq' | 'start' | 'end' | 'byweekday' | 'exclude'>
   )> }
 );
 
@@ -417,8 +449,12 @@ export const TaskFragmentDoc = gql`
   color
   order
   repeat {
+    id
     freq
+    start
+    end
     byweekday
+    exclude
   }
   deleted
 }
@@ -662,6 +698,44 @@ export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type ListsQueryHookResult = ReturnType<typeof useListsQuery>;
 export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>;
 export type ListsQueryResult = ApolloReactCommon.QueryResult<ListsQuery, ListsQueryVariables>;
+export const SetRepeatDocument = gql`
+    mutation SetRepeat($taskId: ID!, $repeat: UpsertRepeatInput) {
+  setRepeat(taskId: $taskId, repeat: $repeat) {
+    id
+    freq
+    start
+    end
+    byweekday
+    exclude
+  }
+}
+    `;
+export type SetRepeatMutationFn = ApolloReactCommon.MutationFunction<SetRepeatMutation, SetRepeatMutationVariables>;
+
+/**
+ * __useSetRepeatMutation__
+ *
+ * To run a mutation, you first call `useSetRepeatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetRepeatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setRepeatMutation, { data, loading, error }] = useSetRepeatMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *      repeat: // value for 'repeat'
+ *   },
+ * });
+ */
+export function useSetRepeatMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetRepeatMutation, SetRepeatMutationVariables>) {
+        return ApolloReactHooks.useMutation<SetRepeatMutation, SetRepeatMutationVariables>(SetRepeatDocument, baseOptions);
+      }
+export type SetRepeatMutationHookResult = ReturnType<typeof useSetRepeatMutation>;
+export type SetRepeatMutationResult = ApolloReactCommon.MutationResult<SetRepeatMutation>;
+export type SetRepeatMutationOptions = ApolloReactCommon.BaseMutationOptions<SetRepeatMutation, SetRepeatMutationVariables>;
 export const TaskReorderDocument = gql`
     mutation TaskReorder($tasks: [TaskReorderInput!]!) {
   taskReorder(tasks: $tasks) {

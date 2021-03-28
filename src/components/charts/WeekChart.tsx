@@ -1,4 +1,3 @@
-import React from "react";
 import { BarDatum, ResponsiveBar } from "@nivo/bar";
 import { differenceInMinutes, endOfWeek, getDay, startOfWeek } from "date-fns";
 import styled from "styled-components";
@@ -113,7 +112,7 @@ const listDaysHours = (
         differenceInMinutes(new Date(t.end as string), start) / 60;
 
       if (t.repeat) {
-        const rrule = repeatToRRule(t.repeat, new Date(t.start));
+        const rrule = repeatToRRule(t.repeat);
         const today = Date.now();
         const start = startOfWeek(today, { weekStartsOn: 1 });
         const end = endOfWeek(today, { weekStartsOn: 1 });

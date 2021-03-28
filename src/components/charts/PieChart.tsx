@@ -1,4 +1,3 @@
-import React from "react";
 import { PieDatum, ResponsivePie } from "@nivo/pie";
 import { differenceInMinutes, endOfWeek, startOfWeek } from "date-fns";
 import styled from "styled-components";
@@ -82,7 +81,7 @@ const listTaskHr = (list: List): number =>
     const duration = differenceInMinutes(new Date(t.end), new Date(t.start));
 
     if (t.repeat) {
-      const rrule = repeatToRRule(t.repeat, new Date(t.start));
+      const rrule = repeatToRRule(t.repeat);
       const today = Date.now();
       const start = startOfWeek(today, { weekStartsOn: 1 });
       const end = endOfWeek(today, { weekStartsOn: 1 });

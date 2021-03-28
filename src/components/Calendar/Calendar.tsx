@@ -2,7 +2,6 @@ import "@fullcalendar/react";
 
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
@@ -63,7 +62,7 @@ export const Calendar: FC<IProp> = (props) => {
   const events: EventInput[] = filteredLists
     .map(applyFilterOnTask(showCompletedTask ? [] : [taskIsNotDoneP]))
     .flatMap((l) => l.tasks.map((t) => taskToEventInput(l, t)));
-  console.log("events: ", events);
+
   useEffect(() => {
     if (!calRef.current) return;
     setApi(calRef.current.getApi());
@@ -366,6 +365,7 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
 const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
   if (!task.repeat || !task.start) return;
 
+  const { start } = task.repeat;
   /**
    * Converting start date in UTC to local time.
    * If providing dtstart in UTC Fullcalendar should convert the time to used timezone.
@@ -377,32 +377,13 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
    * @issue https://github.com/fullcalendar/fullcalendar/issues/5993#issuecomment-738280358
    */
   const dtstart = new Date(
-    +new Date(task.start) - new Date().getTimezoneOffset() * 60000
+    +new Date(start) - new Date().getTimezoneOffset() * 60000
   );
 
   return {
     dtstart,
-    freq: "weekly",
-    byweekday: task.repeat.byweekday?.map((n) => {
-      switch (n) {
-        case 0:
-          return "MO";
-        case 1:
-          return "TU";
-        case 2:
-          return "WE";
-        case 3:
-          return "TH";
-        case 4:
-          return "FR";
-        case 5:
-          return "SA";
-        case 6:
-          return "SU";
-        default:
-          return "MO";
-      }
-    }),
+    freq: task.repeat.freq,
+    byweekday: task.repeat.byweekday,
   };
 };
 
@@ -426,12 +407,6 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
     includeTime: !e.allDay,
     color: e.extendedProps?.eventColor,
     order: e.extendedProps.order,
-    repeat: e.extendedProps?.repeat
-      ? {
-          freq: e.extendedProps.repeat.freq,
-          byweekday: e.extendedProps.repeat.byweekday,
-        }
-      : null,
   };
 };
 

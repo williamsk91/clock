@@ -1,4 +1,4 @@
-import { RepeatInput, Task, UpdateTaskInput } from "../../graphql/generated";
+import { Task, UpdateTaskInput } from "../../graphql/generated";
 
 /**
  * Demux an update task function to its individual task setting update
@@ -11,7 +11,6 @@ export const demuxUpdateTask = (
   updateDates: (dates: [Date | null, Date | null]) => void;
   setIncludeTime: (it: boolean) => void;
   setTitle: (t: string) => void;
-  updateRepeat: (r: RepeatInput | null) => void;
   updateColor: (r: string | null) => void;
 } => {
   const task = {
@@ -41,7 +40,6 @@ export const demuxUpdateTask = (
       }),
     setIncludeTime: (it: boolean) => updateTask({ ...task, includeTime: it }),
     setTitle: (t: string) => updateTask({ ...task, title: t }),
-    updateRepeat: (r: RepeatInput | null) => updateTask({ ...task, repeat: r }),
     updateColor: (c: string | null) => updateTask({ ...task, color: c }),
   };
 };

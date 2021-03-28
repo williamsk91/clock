@@ -14,18 +14,20 @@ import {
 import { Button, Divider, Popconfirm, Switch } from "antd";
 import styled from "styled-components";
 
+import { Text } from "../../components";
 import { EventColor } from "../../components/Calendar/styles";
 import { parseDate } from "../../components/datetime";
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
 import { homeListRoute, homeTaskSettingRoute } from "../../components/route";
 import { ColorSelect } from "../../components/Settings/ColorSelect";
-import { DatePicker } from "../../components/Settings/DatePicker";
+import { DateTimeRangePicker } from "../../components/Settings/DateTimeRangePicker";
 import { ListSelect } from "../../components/Settings/ListSelect";
 import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
 import { demuxUpdateTask } from "../../components/utils/task";
+import { useUpdateRepeat } from "../../data/mutation/repeat";
 import {
   useDeleteTask,
   useUpdateTask,
@@ -35,6 +37,7 @@ import {
   List,
   Task as TaskType,
   UpdateTaskInput,
+  UpsertRepeatInput,
   useTaskQuery,
 } from "../../graphql/generated";
 
@@ -50,6 +53,7 @@ export const TaskSidebarWithData = () => {
   });
 
   const updateTask = useUpdateTask();
+  const updateRepeat = useUpdateRepeat();
   const updateTaskList = useUpdateTaskList();
   const updateTaskListWithRedirect = (id: string, newListId: string) => {
     updateTaskList(id, newListId, listId);
@@ -69,6 +73,7 @@ export const TaskSidebarWithData = () => {
       availableLists={data.lists}
       task={data.task}
       updateTask={updateTask}
+      updateRepeat={updateRepeat}
       updateTaskList={updateTaskListWithRedirect}
       deleteTask={deleteTask}
     />
@@ -80,6 +85,7 @@ interface Props {
   availableLists: Pick<List, "id" | "title">[];
   task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
+  updateRepeat: (taskId: string, r: UpsertRepeatInput | null) => void;
   updateTaskList: (id: string, newListId: string) => void;
   deleteTask: (taskId: string) => void;
 }
@@ -93,6 +99,7 @@ export const TaskSettingSidebar = (props: Props) => {
     availableLists,
     task,
     updateTask,
+    updateRepeat,
     updateTaskList,
     deleteTask,
   } = props;
@@ -101,12 +108,10 @@ export const TaskSettingSidebar = (props: Props) => {
   const start = parseDate(task.start);
   const end = parseDate(task.end);
 
-  const {
-    updateDates,
-    setIncludeTime,
-    updateRepeat,
-    updateColor,
-  } = useMemo(() => demuxUpdateTask(task, updateTask), [task, updateTask]);
+  const { updateDates, setIncludeTime, updateColor } = useMemo(
+    () => demuxUpdateTask(task, updateTask),
+    [task, updateTask]
+  );
 
   return (
     <div>
@@ -137,7 +142,7 @@ export const TaskSettingSidebar = (props: Props) => {
           <ClockCircleOutlined />
         </IconContainer>
         <IncludeTimeRow>
-          <div>Include Time</div>
+          <Text.Main>Include Time</Text.Main>
           <Switch
             size="small"
             checked={includeTime}
@@ -152,7 +157,7 @@ export const TaskSettingSidebar = (props: Props) => {
         <IconContainer>
           <CalendarOutlined />
         </IconContainer>
-        <DatePicker
+        <DateTimeRangePicker
           value={[start, end]}
           onChange={([newStart, newEnd]) => updateDates([newStart, newEnd])}
           includeTime={includeTime}
@@ -169,7 +174,7 @@ export const TaskSettingSidebar = (props: Props) => {
             <RepeatSelect
               start={new Date(start)}
               repeat={repeat}
-              updateRepeat={updateRepeat}
+              updateRepeat={(uri) => updateRepeat(task.id, uri)}
             />
           </Section>
         </>

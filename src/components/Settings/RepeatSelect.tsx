@@ -1,17 +1,21 @@
-import React from "react";
-
 import { Select } from "antd";
-import { getDay } from "date-fns";
+import { addYears } from "date-fns";
 import styled from "styled-components";
 
-import { Repeat, RepeatInput } from "../../graphql/generated";
+import {
+  Repeat,
+  RepeatFrequency,
+  UpsertRepeatInput,
+} from "../../graphql/generated";
+import { DatePicker } from "../DatePicker";
 import { RoundCheck } from "../RoundCheck";
 import { Spacer } from "../Spacer";
+import { Text } from "../Text";
 
 interface Props {
   start: Date;
-  repeat: Repeat | null;
-  updateRepeat: (r: Repeat | null) => void;
+  repeat: Omit<Repeat, "id"> | null;
+  updateRepeat: (r: UpsertRepeatInput | null) => void;
 }
 
 /**
@@ -29,43 +33,63 @@ export const RepeatSelect = (props: Props) => {
           style={{ width: "100%" }}
           value={repeat?.freq}
           onChange={(value) => {
-            let byweekday: number[] | null = null;
-            if (value === "weekly") {
-              // date fns 0 is different from rrule 0
-              const weekday = getDay(start);
-              const startingWeekday = weekday === 0 ? 6 : weekday - 1;
+            if (!value) return updateRepeat(null);
 
-              byweekday = [startingWeekday];
+            let byweekday: string[] | null = null;
+            if (value === RepeatFrequency.Weekly) {
+              // date fns 0 is different from rrule 0
+              // const weekday = getDay(start);
+              // const startingWeekday = weekday === 0 ? 6 : weekday - 1;
+              byweekday = ["MO"];
             }
 
-            const newRepeat: RepeatInput | null = value
-              ? {
-                  freq: value,
-                  byweekday,
-                }
-              : null;
+            const newRepeat: UpsertRepeatInput = {
+              freq: value,
+              byweekday,
+              start: start.toISOString(),
+              end: repeat?.end ?? null,
+              exclude: repeat?.exclude ?? [],
+            };
 
             updateRepeat(newRepeat);
           }}
           placeholder="Repeat"
           allowClear
           options={[
-            { value: "daily", label: "Daily" },
-            { value: "weekly", label: "Weekly" },
-            { value: "monthly", label: "Monthly" },
-            { value: "yearly", label: "Yearly" },
+            { value: RepeatFrequency.Daily, label: "Daily" },
+            { value: RepeatFrequency.Weekly, label: "Weekly" },
+            { value: RepeatFrequency.Monthly, label: "Monthly" },
+            { value: RepeatFrequency.Yearly, label: "Yearly" },
           ]}
         />
       </RepeatSelectContainer>
-      {!!repeat?.byweekday && (
+      {repeat?.freq === RepeatFrequency.Weekly && !!repeat.byweekday && (
         <>
           <Spacer spacing="6" />
           <WeeklySelect
             checkedWeekdays={repeat.byweekday}
-            onChange={(byweekday) =>
-              updateRepeat({ freq: repeat.freq, byweekday })
-            }
+            onChange={(byweekday) => {
+              updateRepeat({ ...repeat, byweekday });
+            }}
           />
+        </>
+      )}
+      {!!repeat && (
+        <>
+          <Spacer spacing="12" />
+          <EndDateContainer>
+            <Text.Main>Until</Text.Main>
+            <DatePicker
+              value={repeat.end ? new Date(repeat.end) : null}
+              minDate={start}
+              maxDate={addYears(start, 100)}
+              onChange={(d) =>
+                updateRepeat({ ...repeat, end: d?.toISOString() ?? null })
+              }
+              format="yyyy MMM dd"
+              placeholder="forever"
+            />
+          </EndDateContainer>
         </>
       )}
     </div>
@@ -77,15 +101,15 @@ const RepeatSelectContainer = styled.div`
 `;
 
 interface WeeklySelectProps {
-  checkedWeekdays: number[];
-  onChange: (checkedWeekdays: number[]) => void;
+  checkedWeekdays: string[];
+  onChange: (checkedWeekdays: string[]) => void;
 }
 
 /**
  * Checkable weekday select to choose which weekday will the task repeat on.
  */
 const WeeklySelect = ({ checkedWeekdays, onChange }: WeeklySelectProps) => {
-  const checkProps = (weekday: number) => {
+  const checkProps = (weekday: string) => {
     const checked = checkedWeekdays.includes(weekday);
     return {
       checked,
@@ -100,13 +124,13 @@ const WeeklySelect = ({ checkedWeekdays, onChange }: WeeklySelectProps) => {
 
   return (
     <WeeklySelectContainer>
-      <RoundCheck text="Mo" {...checkProps(0)} />
-      <RoundCheck text="Tu" {...checkProps(1)} />
-      <RoundCheck text="We" {...checkProps(2)} />
-      <RoundCheck text="Th" {...checkProps(3)} />
-      <RoundCheck text="Fr" {...checkProps(4)} />
-      <RoundCheck text="Sa" {...checkProps(5)} />
-      <RoundCheck text="Su" {...checkProps(6)} />
+      <RoundCheck text="Mo" {...checkProps("MO")} />
+      <RoundCheck text="Tu" {...checkProps("TU")} />
+      <RoundCheck text="We" {...checkProps("WE")} />
+      <RoundCheck text="Th" {...checkProps("TH")} />
+      <RoundCheck text="Fr" {...checkProps("FR")} />
+      <RoundCheck text="Sa" {...checkProps("SA")} />
+      <RoundCheck text="Su" {...checkProps("SU")} />
     </WeeklySelectContainer>
   );
 };
@@ -115,4 +139,11 @@ const WeeklySelectContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 30px);
   grid-gap: 6px;
+`;
+
+const EndDateContainer = styled.div`
+  display: grid;
+  grid-gap: 6px;
+  grid-template-columns: auto auto;
+  align-items: center;
 `;

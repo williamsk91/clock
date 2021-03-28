@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { TaskSettingSidebar } from "../../Home/Sidebar/TaskSettingSidebar";
-import { getList, getLists, getTask } from "../mocks";
+import { getList, getLists, getRepeatWeekly, getTask } from "../mocks";
 import { SidebarOnlyLayout } from "../utils";
 
 export default {
@@ -10,17 +10,18 @@ export default {
 };
 
 const Base = () => {
-  const [task, setTask] = useState(
-    getTask({ repeat: { freq: "weekly", byweekday: [0, 2, 3] } })
-  );
+  const [task, setTask] = useState(getTask({ repeat: getRepeatWeekly() }));
   return (
     <TaskSettingSidebar
       list={getList()}
       availableLists={getLists()}
       task={task}
-      updateTask={(uti) => setTask({ ...uti, deleted: null })}
+      updateTask={(uti) => setTask({ ...task, ...uti, deleted: null })}
+      updateRepeat={(upsertRepeatInput) =>
+        console.log("upsertRepeatInput: ", upsertRepeatInput)
+      }
       updateTaskList={() => null}
-      deleteTask={() => console.log("delete task")}
+      deleteTask={(taskId) => console.log("taskId: ", taskId)}
     />
   );
 };

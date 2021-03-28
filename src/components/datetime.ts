@@ -1,7 +1,7 @@
 import { format, isSameDay, isSameYear } from "date-fns";
-import RRule, { Frequency } from "rrule";
+import RRule, { ByWeekday, Frequency } from "rrule";
 
-import { Repeat } from "../graphql/generated";
+import { Repeat, RepeatFrequency } from "../graphql/generated";
 
 /**
  * Set of helper function to deal with datetime
@@ -102,22 +102,26 @@ export const parseDate = (s: string | null): Date | null => {
  */
 export const parseDefinedDate = (s: string): Date => new Date(s);
 
-export const repeatToRRule = (r: Repeat, start?: Date): RRule => {
+export const repeatToRRule = (r: Repeat): RRule => {
   let freq;
   switch (r.freq) {
-    case "daily":
+    case RepeatFrequency.Daily:
       freq = 3;
       break;
-    case "weekly":
+    case RepeatFrequency.Weekly:
       freq = 2;
       break;
-    case "monthly":
+    case RepeatFrequency.Monthly:
       freq = 1;
       break;
-    case "yearly":
+    case RepeatFrequency.Yearly:
       freq = 0;
       break;
   }
 
-  return new RRule({ dtstart: start, freq, byweekday: r.byweekday });
+  return new RRule({
+    dtstart: new Date(r.start),
+    freq,
+    byweekday: r.byweekday as ByWeekday[],
+  });
 };

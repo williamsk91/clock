@@ -4,7 +4,7 @@ import * as faker from "faker";
 import { random } from "faker";
 
 import { eventColors } from "../components/Calendar/styles";
-import { List, Task } from "../graphql/generated";
+import { List, Repeat, RepeatFrequency, Task } from "../graphql/generated";
 
 // ------------------------- List -------------------------
 
@@ -84,10 +84,7 @@ export const getTask = (override?: Partial<Task>): Task => ({
   includeTime: true,
   color: null,
   order: 1,
-  repeat: {
-    freq: "daily",
-    byweekday: null,
-  },
+  repeat: getRepeatDaily(),
   deleted: null,
   ...override,
 });
@@ -110,10 +107,7 @@ export const getRandomTask = (): Task => {
     includeTime: faker.random.boolean(),
     color: null,
     order: 1,
-    repeat: {
-      freq: "daily",
-      byweekday: null,
-    },
+    repeat: getRepeatDaily(),
     deleted: null,
   };
 };
@@ -140,10 +134,7 @@ export const getTasks = (): Task[] => [
     includeTime: true,
     color: "red",
     order: 2,
-    repeat: {
-      freq: "daily",
-      byweekday: null,
-    },
+    repeat: getRepeatDaily(),
     deleted: null,
   },
   {
@@ -191,10 +182,29 @@ export const getTasks = (): Task[] => [
     includeTime: true,
     color: "red",
     order: 6,
-    repeat: {
-      freq: "weekly",
-      byweekday: [0, 2, 3, 6],
-    },
+    repeat: getRepeatWeekly(),
     deleted: null,
   },
 ];
+
+// ------------------------- Repeat -------------------------
+
+export const getRepeatDaily = (override?: Partial<Repeat>): Repeat => ({
+  id: "0",
+  freq: RepeatFrequency.Daily,
+  byweekday: [],
+  start: new Date().toISOString(),
+  end: addHours(new Date(), 3).toISOString(),
+  exclude: [],
+  ...override,
+});
+
+export const getRepeatWeekly = (override?: Partial<Repeat>): Repeat => ({
+  id: "1",
+  freq: RepeatFrequency.Daily,
+  byweekday: ["MO", "WE", "TH"],
+  start: new Date().toISOString(),
+  end: addHours(new Date(), 3).toISOString(),
+  exclude: [],
+  ...override,
+});

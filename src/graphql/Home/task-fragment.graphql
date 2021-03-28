@@ -8,8 +8,12 @@ fragment Task on Task {
   color
   order
   repeat {
+    id
     freq
+    start
+    end
     byweekday
+    exclude
   }
   deleted
 }

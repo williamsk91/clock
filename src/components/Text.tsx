@@ -14,6 +14,13 @@ const SubTitle = styled.p`
   margin: 0;
 `;
 
+const Main = styled.p`
+  font-size: 14px;
+  color: ${(p) => p.theme.text.main};
+
+  margin: 0;
+`;
+
 const Sub = styled.p`
   font-size: 10px;
   color: ${(p) => p.theme.text.main};
@@ -29,4 +36,4 @@ const Message = styled.p`
   margin: 0;
 `;
 
-export const Text = { Title, SubTitle, Sub, Message };
+export const Text = { Title, SubTitle, Main, Sub, Message };
