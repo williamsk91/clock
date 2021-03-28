@@ -1,8 +1,6 @@
 import "antd/dist/antd.css";
 
-import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-
 import { addDecorator, addParameters } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
 
@@ -20,12 +18,16 @@ addParameters({
   },
 });
 
-addDecorator((Story) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Story />
-      </Router>
-    </ThemeProvider>
-  );
-});
+/**
+ * This allows hooks on export
+ * @see https://github.com/storybookjs/storybook/issues/5721#issuecomment-739949349
+ */
+addDecorator((Story) => <Story />);
+
+addDecorator((Story) => (
+  <ThemeProvider theme={theme}>
+    <Router>
+      <Story />
+    </Router>
+  </ThemeProvider>
+));
