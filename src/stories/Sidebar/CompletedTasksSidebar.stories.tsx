@@ -1,4 +1,3 @@
-import React from "react";
 import * as faker from "faker";
 
 import { CompletedTasksSidebar } from "../../Home/Sidebar/CompletedTasksSidebar";

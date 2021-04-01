@@ -1,5 +1,3 @@
-import React from "react";
-
 import { PieChart, listsToPieData } from "../../components/charts/PieChart";
 import { getLists } from "../mocks";
 

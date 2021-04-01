@@ -1,5 +1,3 @@
-import React from "react";
-
 import { NewItem } from "../components/NewItem";
 import { Mini } from "../components/styles/layout";
 

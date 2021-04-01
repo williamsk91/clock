@@ -1,4 +1,3 @@
-import React from "react";
 import { Redirect, Switch } from "react-router-dom";
 
 import { TrackWithRoutes } from "../components";

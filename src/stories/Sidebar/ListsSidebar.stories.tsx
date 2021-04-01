@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ListsSidebar } from "../../Home/Sidebar/ListsSidebar";
 import { getLists } from "../mocks";
 import { SidebarOnlyLayout } from "../utils";

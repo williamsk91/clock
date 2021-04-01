@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Track } from "../components";
 import { FullPageLayout } from "./utils";
 

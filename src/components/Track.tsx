@@ -1,4 +1,3 @@
-import React from "react";
 import { matchPath, useHistory, useLocation } from "react-router-dom";
 import {
   CaretLeftFilled,

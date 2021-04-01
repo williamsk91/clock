@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 interface Props {
@@ -23,8 +22,8 @@ const Container = styled.div<{ checked: boolean }>`
   width: 30px;
   height: 30px;
 
-  background: ${p => (p.checked ? "#137cbd" : "initial")};
-  color: ${p => (p.checked ? "white" : "initial")};
+  background: ${(p) => (p.checked ? "#137cbd" : "initial")};
+  color: ${(p) => (p.checked ? "white" : "initial")};
   border-radius: 3px;
 
   display: flex;

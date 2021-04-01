@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Error } from "../components/flow/Error";
 import { Loading } from "../components/flow/Loading";
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Calendar } from "../components/Calendar/Calendar";
 import { getLists } from "./mocks";
 import { FullPageLayout } from "./utils";

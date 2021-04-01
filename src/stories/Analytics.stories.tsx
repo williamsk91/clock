@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AnalyticsPage } from "../Analytics/Analytics";
 import { getRandomLists } from "./mocks";
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Mini } from "../components/styles/layout";
 import { Task } from "../components/Task";
 import { getTask } from "./mocks";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { WeekChart, listsToWeekData } from "../../components/charts/WeekChart";
 import { getRandomLists } from "../mocks";
 

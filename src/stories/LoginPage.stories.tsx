@@ -1,5 +1,3 @@
-import React from "react";
-
 import { LoginPage } from "../Login/Login";
 
 export default { title: "Pages / Login" };
