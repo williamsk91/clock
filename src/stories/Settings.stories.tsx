@@ -1,13 +1,8 @@
 import { useState } from "react";
 
 import { EventColor } from "../components/Calendar/styles";
-import {
-  ColorSelect,
-  DateTimeRangePicker,
-  RepeatSelect,
-} from "../components/Settings";
+import { ColorSelect, DateTimeRangePicker } from "../components/Settings";
 import { Mini } from "../components/styles/layout";
-import { Repeat, RepeatFrequency } from "../graphql/generated";
 
 export default {
   title: "Components / Settings",
@@ -26,30 +21,6 @@ const ColorSelectStory = () => {
 };
 
 export const colorSelect = () => <ColorSelectStory />;
-
-const RepeatSelectStory = () => {
-  const [repeat, setRepeat] = useState<Repeat | null>({
-    id: "repeatId",
-    freq: RepeatFrequency.Weekly,
-    byweekday: ["MO", "WE", "TH"],
-    start: new Date().toISOString(),
-    end: new Date().toISOString(),
-    exclude: [],
-  });
-
-  return (
-    <RepeatSelect
-      start={new Date()}
-      repeat={repeat}
-      updateRepeat={(r) => {
-        if (!repeat) return setRepeat(null);
-        setRepeat({ ...repeat, ...r });
-      }}
-    />
-  );
-};
-
-export const repeatSelect = () => <RepeatSelectStory />;
 
 const DateTimeRangePickerStory = () => {
   const [start, setStart] = useState<Date | null>(new Date());
