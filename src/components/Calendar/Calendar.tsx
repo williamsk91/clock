@@ -364,7 +364,6 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
 const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
   if (!task.repeat || !task.start) return;
 
-  const { start } = task.repeat;
   /**
    * Converting start date in UTC to local time.
    * If providing dtstart in UTC Fullcalendar should convert the time to used timezone.
@@ -376,7 +375,7 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
    * @issue https://github.com/fullcalendar/fullcalendar/issues/5993#issuecomment-738280358
    */
   const dtstart = new Date(
-    +new Date(start) - new Date().getTimezoneOffset() * 60000
+    +new Date(task.start) - new Date().getTimezoneOffset() * 60000
   );
 
   return {
