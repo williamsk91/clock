@@ -1515,7 +1515,7 @@
     "@fullcalendar/common" "~5.6.0"
     tslib "^2.0.3"
 
-"@fullcalendar/interaction@^5.5.0":
+"@fullcalendar/interaction@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-5.6.0.tgz#4af3d976aea258a6e3354b3f7609f008b2c046fa"
   integrity sha512-2Jlr3e9hKanctmwXKio84Wv070bJn1Im+ZVWjdzUcF/wtUrsD1Kd5dcPBfl9jfTwl2jX/eCWBU3o6ZCLdgoaDg==
@@ -1523,7 +1523,7 @@
     "@fullcalendar/common" "~5.6.0"
     tslib "^2.0.3"
 
-"@fullcalendar/react@^5.5.0":
+"@fullcalendar/react@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.6.0.tgz#3ca8afe0284581f870fa29d44e178102103a4e25"
   integrity sha512-g6U3bFnJZH+dT4N+SqdXVEIV/FCI1ShZedCRCjKXdG2VpvhkcOPeUVRp9gHMKTsy2S4W76f/B/W3r9Av5Ebxdg==
@@ -1531,7 +1531,7 @@
     "@fullcalendar/common" "~5.6.0"
     tslib "^2.0.3"
 
-"@fullcalendar/rrule@^5.5.1":
+"@fullcalendar/rrule@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-5.6.0.tgz#3f88a09589b37f4f35944a08d0ef2887b08bb487"
   integrity sha512-y4nMqEfctg2djLSb5r+1/rH0fSLVUZl4XOMu3ncmlJrFcn8rmX5WP3G3rAy738Gv9eBBn0AGBsezkmHmWda9Og==
@@ -1539,7 +1539,7 @@
     "@fullcalendar/common" "~5.6.0"
     tslib "^2.0.3"
 
-"@fullcalendar/timegrid@^5.5.1":
+"@fullcalendar/timegrid@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.6.0.tgz#0e489d60f224042211e688d3273154964aab6b54"
   integrity sha512-NG55pzPvrzZEuVq+/Vn1ZbyKARVjsE6PzhiOHvJuyt3gzVPeWjXGUWjDN3BSDZ8p/4dthbF6H9mCPia977aV1g==
