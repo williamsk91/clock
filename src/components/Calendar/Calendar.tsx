@@ -78,7 +78,6 @@ export const Calendar: FC<IProp> = (props) => {
         />
       </Setting>
       <FullCalendar
-        timeZone=""
         ref={calRef}
         height="100%"
         initialView="timeGridWeek"
