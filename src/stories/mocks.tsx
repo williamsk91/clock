@@ -1,5 +1,5 @@
 import { addHours, addWeeks, setHours } from "date-fns";
-import { addDays } from "date-fns/esm";
+import { addDays, setMinutes } from "date-fns/esm";
 import * as faker from "faker";
 import { random } from "faker";
 
@@ -72,6 +72,66 @@ export const getLists = (): List[] => [
     deleted: null,
   },
 ];
+
+const taskRepeatTime = setMinutes(new Date(), 0);
+
+export const getRepeatList = (): List => ({
+  id: "list.repeat",
+  title: "repeat list",
+  color: null,
+  order: 1,
+  tasks: [
+    {
+      id: "task.repeat.daily",
+      done: null,
+      title: "daily",
+      start: setHours(taskRepeatTime, 9).toISOString(),
+      end: setHours(taskRepeatTime, 10).toISOString(),
+      includeTime: true,
+      color: "red",
+      order: 1,
+      repeat: getRepeatDaily(),
+      deleted: null,
+    },
+    {
+      id: "task.repeat.weekly",
+      done: null,
+      title: "weekly",
+      start: setHours(taskRepeatTime, 11).toISOString(),
+      end: setHours(taskRepeatTime, 12).toISOString(),
+      includeTime: true,
+      color: "blue",
+      order: 2,
+      repeat: getRepeatWeekly(),
+      deleted: null,
+    },
+    {
+      id: "task.repeat.monthly",
+      done: null,
+      title: "monthly",
+      start: setHours(taskRepeatTime, 13).toISOString(),
+      end: setHours(taskRepeatTime, 14).toISOString(),
+      includeTime: true,
+      color: "green",
+      order: 3,
+      repeat: getRepeatMonthly(),
+      deleted: null,
+    },
+    {
+      id: "task.repeat.yearly",
+      done: null,
+      title: "yearly",
+      start: setHours(taskRepeatTime, 15).toISOString(),
+      end: setHours(taskRepeatTime, 16).toISOString(),
+      includeTime: true,
+      color: "yellow",
+      order: 4,
+      repeat: getRepeatYearly(),
+      deleted: null,
+    },
+  ],
+  deleted: null,
+});
 
 // ------------------------- Task -------------------------
 
@@ -190,21 +250,41 @@ export const getTasks = (): Task[] => [
 // ------------------------- Repeat -------------------------
 
 export const getRepeatDaily = (override?: Partial<Repeat>): Repeat => ({
-  id: "0",
+  id: "repeat.daily",
   freq: RepeatFrequency.Daily,
-  byweekday: [],
-  start: new Date().toISOString(),
+  byweekday: null,
+  start: "",
   end: addHours(new Date(), 3).toISOString(),
   exclude: [],
   ...override,
 });
 
 export const getRepeatWeekly = (override?: Partial<Repeat>): Repeat => ({
-  id: "1",
-  freq: RepeatFrequency.Daily,
-  byweekday: ["MO", "WE", "TH"],
-  start: new Date().toISOString(),
+  id: "repeat.weekly",
+  freq: RepeatFrequency.Weekly,
+  byweekday: ["MO", "WE", "TH", "SU"],
+  start: "",
   end: addHours(new Date(), 3).toISOString(),
+  exclude: [],
+  ...override,
+});
+
+export const getRepeatMonthly = (override?: Partial<Repeat>): Repeat => ({
+  id: "repeat.monthly",
+  freq: RepeatFrequency.Monthly,
+  byweekday: null,
+  start: "",
+  end: null,
+  exclude: [],
+  ...override,
+});
+
+export const getRepeatYearly = (override?: Partial<Repeat>): Repeat => ({
+  id: "repeat.yearly",
+  freq: RepeatFrequency.Yearly,
+  byweekday: null,
+  start: "",
+  end: null,
   exclude: [],
   ...override,
 });
