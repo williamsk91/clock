@@ -382,6 +382,7 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
     dtstart,
     freq: task.repeat.freq,
     byweekday: task.repeat.byweekday,
+    until: task.repeat.end,
   };
 };
 
