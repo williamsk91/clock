@@ -23,11 +23,7 @@ import {
 import { List, useListsQuery } from "../graphql/generated";
 
 export const AnalyticsRoute = () => {
-  const { data, loading, error } = useListsQuery({
-    variables: {
-      withTasks: true,
-    },
-  });
+  const { data, loading, error } = useListsQuery({});
 
   if (loading) return <Loading />;
   if (error || !data) return <Error />;

@@ -25,9 +25,7 @@ import {
 export const ListsSidebarWithData = () => {
   const history = useHistory();
 
-  const { data, loading, error } = useListsQuery({
-    variables: { withTasks: false },
-  });
+  const { data, loading, error } = useListsQuery({});
 
   const createList = useCreateList();
   const updateList = useUpdateList();

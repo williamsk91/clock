@@ -5,6 +5,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -16,74 +17,9 @@ export type Scalars = {
   DateTime: string;
 };
 
-export type Repeat = {
-  __typename?: 'Repeat';
-  id: Scalars['ID'];
-  freq: RepeatFrequency;
-  start: Scalars['DateTime'];
-  end: Maybe<Scalars['DateTime']>;
-  byweekday: Maybe<Array<Scalars['String']>>;
-  exclude: Maybe<Array<Scalars['String']>>;
-};
-
-export enum RepeatFrequency {
-  Daily = 'Daily',
-  Weekly = 'Weekly',
-  Monthly = 'Monthly',
-  Yearly = 'Yearly'
-}
-
-
-export type Task = {
-  __typename?: 'Task';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  done: Maybe<Scalars['DateTime']>;
-  start: Maybe<Scalars['DateTime']>;
-  end: Maybe<Scalars['DateTime']>;
-  includeTime: Scalars['Boolean'];
-  color: Maybe<Scalars['String']>;
-  order: Scalars['Float'];
-  deleted: Maybe<Scalars['DateTime']>;
-  repeat: Maybe<Repeat>;
-};
-
-export type List = {
-  __typename?: 'List';
-  id: Scalars['ID'];
+export type CreateListInput = {
   title: Scalars['String'];
   color: Maybe<Scalars['String']>;
-  order: Scalars['Float'];
-  deleted: Maybe<Scalars['DateTime']>;
-  tasks: Array<Task>;
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
-};
-
-export type TaskReorder = {
-  __typename?: 'TaskReorder';
-  id: Scalars['ID'];
-  order: Scalars['Float'];
-};
-
-/** New task data */
-export type UpdateTaskInput = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  done: Maybe<Scalars['DateTime']>;
-  start: Maybe<Scalars['DateTime']>;
-  end: Maybe<Scalars['DateTime']>;
-  includeTime: Scalars['Boolean'];
-  color: Maybe<Scalars['String']>;
-  order: Scalars['Float'];
-};
-
-export type TaskReorderInput = {
-  id: Scalars['ID'];
-  order: Scalars['Float'];
 };
 
 export type CreateTaskInput = {
@@ -95,55 +31,15 @@ export type CreateTaskInput = {
   color: Maybe<Scalars['String']>;
 };
 
-export type CreateListInput = {
-  title: Scalars['String'];
-  color: Maybe<Scalars['String']>;
-};
 
-/** New list data */
-export type UpdateListInput = {
+export type List = {
+  __typename?: 'List';
   id: Scalars['ID'];
   title: Scalars['String'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
-};
-
-export type UpsertRepeatInput = {
-  freq: RepeatFrequency;
-  start: Scalars['DateTime'];
-  end: Maybe<Scalars['DateTime']>;
-  byweekday: Maybe<Array<Scalars['String']>>;
-  exclude: Maybe<Array<Scalars['String']>>;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  me: User;
-  task: Task;
+  deleted: Maybe<Scalars['DateTime']>;
   tasks: Array<Task>;
-  completedTasks: Array<Task>;
-  list: List;
-  lists: Array<List>;
-};
-
-
-export type QueryTaskArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryTasksArgs = {
-  listId: Scalars['ID'];
-};
-
-
-export type QueryCompletedTasksArgs = {
-  listId: Scalars['ID'];
-};
-
-
-export type QueryListArgs = {
-  id: Scalars['ID'];
 };
 
 export type Mutation = {
@@ -208,6 +104,111 @@ export type MutationDeleteListArgs = {
 export type MutationSetRepeatArgs = {
   repeat: Maybe<UpsertRepeatInput>;
   taskId: Scalars['ID'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  me: User;
+  task: Task;
+  tasks: Array<Task>;
+  completedTasks: Array<Task>;
+  list: List;
+  lists: Array<List>;
+};
+
+
+export type QueryTaskArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTasksArgs = {
+  listId: Scalars['ID'];
+};
+
+
+export type QueryCompletedTasksArgs = {
+  listId: Scalars['ID'];
+};
+
+
+export type QueryListArgs = {
+  id: Scalars['ID'];
+};
+
+export type Repeat = {
+  __typename?: 'Repeat';
+  id: Scalars['ID'];
+  freq: RepeatFrequency;
+  start: Scalars['DateTime'];
+  end: Maybe<Scalars['DateTime']>;
+  byweekday: Maybe<Array<Scalars['String']>>;
+  exclude: Maybe<Array<Scalars['String']>>;
+};
+
+export enum RepeatFrequency {
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+  Yearly = 'Yearly'
+}
+
+export type Task = {
+  __typename?: 'Task';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+  deleted: Maybe<Scalars['DateTime']>;
+  repeat: Maybe<Repeat>;
+};
+
+export type TaskReorder = {
+  __typename?: 'TaskReorder';
+  id: Scalars['ID'];
+  order: Scalars['Float'];
+};
+
+export type TaskReorderInput = {
+  id: Scalars['ID'];
+  order: Scalars['Float'];
+};
+
+/** New list data */
+export type UpdateListInput = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+};
+
+/** New task data */
+export type UpdateTaskInput = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  done: Maybe<Scalars['DateTime']>;
+  start: Maybe<Scalars['DateTime']>;
+  end: Maybe<Scalars['DateTime']>;
+  includeTime: Scalars['Boolean'];
+  color: Maybe<Scalars['String']>;
+  order: Scalars['Float'];
+};
+
+export type UpsertRepeatInput = {
+  freq: RepeatFrequency;
+  start: Scalars['DateTime'];
+  end: Maybe<Scalars['DateTime']>;
+  byweekday: Maybe<Array<Scalars['String']>>;
+  exclude: Maybe<Array<Scalars['String']>>;
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
 };
 
 export type CalendarListsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -341,7 +342,7 @@ export type TaskFragment = (
 );
 
 export type TaskReorderMutationVariables = Exact<{
-  tasks: Array<TaskReorderInput>;
+  tasks: Array<TaskReorderInput> | TaskReorderInput;
 }>;
 
 
@@ -487,10 +488,12 @@ ${ListFragmentDoc}`;
  * });
  */
 export function useCalendarListsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CalendarListsQuery, CalendarListsQueryVariables>) {
-        return ApolloReactHooks.useQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, options);
       }
 export function useCalendarListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CalendarListsQuery, CalendarListsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<CalendarListsQuery, CalendarListsQueryVariables>(CalendarListsDocument, options);
         }
 export type CalendarListsQueryHookResult = ReturnType<typeof useCalendarListsQuery>;
 export type CalendarListsLazyQueryHookResult = ReturnType<typeof useCalendarListsLazyQuery>;
@@ -522,7 +525,8 @@ export type CreateListMutationFn = ApolloReactCommon.MutationFunction<CreateList
  * });
  */
 export function useCreateListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateListMutation, CreateListMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateListMutation, CreateListMutationVariables>(CreateListDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateListMutation, CreateListMutationVariables>(CreateListDocument, options);
       }
 export type CreateListMutationHookResult = ReturnType<typeof useCreateListMutation>;
 export type CreateListMutationResult = ApolloReactCommon.MutationResult<CreateListMutation>;
@@ -555,7 +559,8 @@ export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTask
  * });
  */
 export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, options);
       }
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
@@ -587,7 +592,8 @@ export type DeleteListMutationFn = ApolloReactCommon.MutationFunction<DeleteList
  * });
  */
 export function useDeleteListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteListMutation, DeleteListMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, options);
       }
 export type DeleteListMutationHookResult = ReturnType<typeof useDeleteListMutation>;
 export type DeleteListMutationResult = ApolloReactCommon.MutationResult<DeleteListMutation>;
@@ -619,7 +625,8 @@ export type DeleteTaskMutationFn = ApolloReactCommon.MutationFunction<DeleteTask
  * });
  */
 export function useDeleteTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTaskMutation, DeleteTaskMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument, options);
       }
 export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
 export type DeleteTaskMutationResult = ApolloReactCommon.MutationResult<DeleteTaskMutation>;
@@ -653,10 +660,12 @@ ${ListFragmentDoc}`;
  * });
  */
 export function useListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ListQuery, ListQueryVariables>) {
-        return ApolloReactHooks.useQuery<ListQuery, ListQueryVariables>(ListDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<ListQuery, ListQueryVariables>(ListDocument, options);
       }
 export function useListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListQuery, ListQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ListQuery, ListQueryVariables>(ListDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<ListQuery, ListQueryVariables>(ListDocument, options);
         }
 export type ListQueryHookResult = ReturnType<typeof useListQuery>;
 export type ListLazyQueryHookResult = ReturnType<typeof useListLazyQuery>;
@@ -665,7 +674,7 @@ export const ListsDocument = gql`
     query Lists($withTasks: Boolean!) {
   lists {
     ...List
-    tasks @include(if: $withTasks) {
+    tasks {
       ...Task
     }
   }
@@ -690,10 +699,12 @@ ${TaskFragmentDoc}`;
  * });
  */
 export function useListsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
-        return ApolloReactHooks.useQuery<ListsQuery, ListsQueryVariables>(ListsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<ListsQuery, ListsQueryVariables>(ListsDocument, options);
       }
 export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListsQuery, ListsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ListsQuery, ListsQueryVariables>(ListsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<ListsQuery, ListsQueryVariables>(ListsDocument, options);
         }
 export type ListsQueryHookResult = ReturnType<typeof useListsQuery>;
 export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>;
@@ -731,7 +742,8 @@ export type SetRepeatMutationFn = ApolloReactCommon.MutationFunction<SetRepeatMu
  * });
  */
 export function useSetRepeatMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetRepeatMutation, SetRepeatMutationVariables>) {
-        return ApolloReactHooks.useMutation<SetRepeatMutation, SetRepeatMutationVariables>(SetRepeatDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<SetRepeatMutation, SetRepeatMutationVariables>(SetRepeatDocument, options);
       }
 export type SetRepeatMutationHookResult = ReturnType<typeof useSetRepeatMutation>;
 export type SetRepeatMutationResult = ApolloReactCommon.MutationResult<SetRepeatMutation>;
@@ -764,7 +776,8 @@ export type TaskReorderMutationFn = ApolloReactCommon.MutationFunction<TaskReord
  * });
  */
 export function useTaskReorderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TaskReorderMutation, TaskReorderMutationVariables>) {
-        return ApolloReactHooks.useMutation<TaskReorderMutation, TaskReorderMutationVariables>(TaskReorderDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<TaskReorderMutation, TaskReorderMutationVariables>(TaskReorderDocument, options);
       }
 export type TaskReorderMutationHookResult = ReturnType<typeof useTaskReorderMutation>;
 export type TaskReorderMutationResult = ApolloReactCommon.MutationResult<TaskReorderMutation>;
@@ -803,10 +816,12 @@ ${TaskFragmentDoc}`;
  * });
  */
 export function useTaskQuery(baseOptions: ApolloReactHooks.QueryHookOptions<TaskQuery, TaskQueryVariables>) {
-        return ApolloReactHooks.useQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<TaskQuery, TaskQueryVariables>(TaskDocument, options);
       }
 export function useTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TaskQuery, TaskQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<TaskQuery, TaskQueryVariables>(TaskDocument, options);
         }
 export type TaskQueryHookResult = ReturnType<typeof useTaskQuery>;
 export type TaskLazyQueryHookResult = ReturnType<typeof useTaskLazyQuery>;
@@ -838,7 +853,8 @@ export type UpdateListMutationFn = ApolloReactCommon.MutationFunction<UpdateList
  * });
  */
 export function useUpdateListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateListMutation, UpdateListMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument, options);
       }
 export type UpdateListMutationHookResult = ReturnType<typeof useUpdateListMutation>;
 export type UpdateListMutationResult = ApolloReactCommon.MutationResult<UpdateListMutation>;
@@ -871,7 +887,8 @@ export type UpdateTaskListMutationFn = ApolloReactCommon.MutationFunction<Update
  * });
  */
 export function useUpdateTaskListMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTaskListMutation, UpdateTaskListMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateTaskListMutation, UpdateTaskListMutationVariables>(UpdateTaskListDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateTaskListMutation, UpdateTaskListMutationVariables>(UpdateTaskListDocument, options);
       }
 export type UpdateTaskListMutationHookResult = ReturnType<typeof useUpdateTaskListMutation>;
 export type UpdateTaskListMutationResult = ApolloReactCommon.MutationResult<UpdateTaskListMutation>;
@@ -903,7 +920,8 @@ export type UpdateTaskMutationFn = ApolloReactCommon.MutationFunction<UpdateTask
  * });
  */
 export function useUpdateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, options);
       }
 export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
 export type UpdateTaskMutationResult = ApolloReactCommon.MutationResult<UpdateTaskMutation>;
@@ -932,7 +950,8 @@ export type DeleteUserMutationFn = ApolloReactCommon.MutationFunction<DeleteUser
  * });
  */
 export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
       }
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<DeleteUserMutation>;
@@ -961,7 +980,8 @@ export type SignOutMutationFn = ApolloReactCommon.MutationFunction<SignOutMutati
  * });
  */
 export function useSignOutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignOutMutation, SignOutMutationVariables>) {
-        return ApolloReactHooks.useMutation<SignOutMutation, SignOutMutationVariables>(SignOutDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<SignOutMutation, SignOutMutationVariables>(SignOutDocument, options);
       }
 export type SignOutMutationHookResult = ReturnType<typeof useSignOutMutation>;
 export type SignOutMutationResult = ApolloReactCommon.MutationResult<SignOutMutation>;

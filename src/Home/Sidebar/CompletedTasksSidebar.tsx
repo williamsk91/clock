@@ -8,9 +8,7 @@ import { useUpdateTask } from "../../data/mutation/task";
 import { List, UpdateTaskInput, useListsQuery } from "../../graphql/generated";
 
 export const CompletedTasksSidebarWithData = () => {
-  const { data, loading, error } = useListsQuery({
-    variables: { withTasks: true },
-  });
+  const { data, loading, error } = useListsQuery({});
 
   const updateTask = useUpdateTask();
 

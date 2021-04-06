@@ -3,7 +3,7 @@
 query Lists($withTasks: Boolean!) {
   lists {
     ...List
-    tasks @include(if: $withTasks) {
+    tasks {
       ...Task
     }
   }
