@@ -11,6 +11,14 @@ const DATE_FORMAT = "d MMM";
 const TIME_FORMAT = "HH:mm";
 
 /**
+ * Update only time component of `date`
+ */
+export const setTime = (date: Date, time: Date): Date =>
+  new Date(
+    date.setHours(time.getHours(), time.getMinutes(), time.getSeconds())
+  );
+
+/**
  * Format date to `date month` and add year if not in the same year.
  */
 const formatDate = (date: Date, now: Date = new Date()) =>
