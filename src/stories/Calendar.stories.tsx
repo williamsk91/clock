@@ -4,14 +4,17 @@ import { FullPageLayout } from "./utils";
 
 export default { title: "Calendar / Calendar" };
 
+const mutations = {
+  createCalendarTask: () => console.log("createCalendarTask"),
+  updateTask: () => console.log("updateTask"),
+  createTask: () => console.log("createTask"),
+  updateRepeat: () => console.log("updateRepeat"),
+};
+
 export const base = () => {
   return (
     <FullPageLayout>
-      <Calendar
-        lists={getLists()}
-        updateTask={(t) => console.log("t: ", t)}
-        createTask={(title) => console.log("title: ", title)}
-      />
+      <Calendar lists={getLists()} {...mutations} />
     </FullPageLayout>
   );
 };
@@ -19,11 +22,7 @@ export const base = () => {
 export const repeat = () => {
   return (
     <FullPageLayout>
-      <Calendar
-        lists={[getRepeatList()]}
-        updateTask={(t) => console.log("t: ", t)}
-        createTask={(title) => console.log("title: ", title)}
-      />
+      <Calendar lists={[getRepeatList()]} {...mutations} />
     </FullPageLayout>
   );
 };

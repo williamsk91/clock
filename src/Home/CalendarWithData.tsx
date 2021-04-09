@@ -9,6 +9,7 @@ import {
   routes,
 } from "../components";
 import { useCalendarContext } from "../components/context/CalendarContext";
+import { useUpdateRepeat } from "../data/mutation/repeat";
 import { useCreateTask, useUpdateTask } from "../data/mutation/task";
 import { useCalendarListsQuery } from "../graphql/generated";
 
@@ -22,8 +23,9 @@ export const CalendarWithData = () => {
 
   const { data, loading, error } = useCalendarListsQuery();
 
+  const createTask = useCreateTask();
   // Redirects to task setting on completion
-  const createTask = useCreateTask({
+  const createTaskWithRedirect = useCreateTask({
     onCompleted: (completedData) => {
       const listId = match?.params.listId ?? data?.lists[0]?.id;
       if (!listId) return;
@@ -33,6 +35,7 @@ export const CalendarWithData = () => {
     },
   });
   const updateTask = useUpdateTask();
+  const updateRepeat = useUpdateRepeat();
 
   /**
    * Create task on current list if `:listId` is in url.
@@ -43,7 +46,7 @@ export const CalendarWithData = () => {
       const listId = match?.params.listId ?? data?.lists[0]?.id;
       if (!listId) return;
 
-      createTask(listId, {
+      createTaskWithRedirect(listId, {
         title: "Untitled",
         done: null,
         start: start.toISOString(),
@@ -52,7 +55,7 @@ export const CalendarWithData = () => {
         color: null,
       });
     },
-    [match, data, createTask]
+    [match, data, createTaskWithRedirect]
   );
 
   if (loading) return <Loading />;
@@ -61,8 +64,10 @@ export const CalendarWithData = () => {
   return (
     <Calendar
       lists={data.lists}
+      createCalendarTask={createCalendarTask}
       updateTask={updateTask}
-      createTask={createCalendarTask}
+      createTask={createTask}
+      updateRepeat={updateRepeat}
     />
   );
 };

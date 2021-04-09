@@ -18,7 +18,13 @@ import {
 } from "date-fns";
 import styled from "styled-components";
 
-import { List, Task, UpdateTaskInput } from "../../graphql/generated";
+import {
+  CreateTaskInput,
+  List,
+  Task,
+  UpdateTaskInput,
+  UpsertRepeatInput,
+} from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { listIsNotDeleted } from "../listFilter";
 import { homeTaskSettingRoute } from "../route";
@@ -29,6 +35,8 @@ import {
   taskIsNotDeletedP,
   taskIsNotDoneP,
 } from "../utils/filter";
+import { repeatUpdateFromNow } from "./eventUpdate";
+import { parseTaskExdates } from "./repeatExclusion";
 import {
   EventColor,
   defaultEventColor,
@@ -38,12 +46,20 @@ import {
 
 interface IProp {
   lists: List[];
+  createCalendarTask: (start: Date, end: Date, includeTime: boolean) => void;
   updateTask: (uti: UpdateTaskInput) => void;
-  createTask: (start: Date, end: Date, includeTime: boolean) => void;
+  createTask: (listId: string, cti: CreateTaskInput) => void;
+  updateRepeat: (taskId: string, r: UpsertRepeatInput) => void;
 }
 
 export const Calendar: FC<IProp> = (props) => {
-  const { lists, updateTask, createTask } = props;
+  const {
+    lists,
+    updateTask,
+    updateRepeat,
+    createTask,
+    createCalendarTask,
+  } = props;
   const history = useHistory();
 
   const [showCompletedTask, setShowCompletedTask] = useState(false);
@@ -91,8 +107,15 @@ export const Calendar: FC<IProp> = (props) => {
         editable
         droppable
         // resizing & dragging
-        eventChange={({ event }) => {
-          updateTask(eventToTaskUpdateInput(event));
+        eventChange={(eventChange) => {
+          const mutations = {
+            updateTask,
+            updateRepeat,
+            createTask,
+          };
+          repeatUpdateFromNow(eventChange, mutations);
+
+          // updateTask(eventToTaskUpdateInput(event));
         }}
         // dropping - drop from task list
         eventReceive={({ event, view }) => {
@@ -120,7 +143,11 @@ export const Calendar: FC<IProp> = (props) => {
         snapDuration="00:30"
         select={({ start, end, allDay }) => {
           // end is modified as by default FullCalendar treats end as exclusive
-          createTask(start, allDay ? addMinutes(end, -1) : end, !allDay);
+          createCalendarTask(
+            start,
+            allDay ? addMinutes(end, -1) : end,
+            !allDay
+          );
         }}
         // Labels
         headerToolbar={{
@@ -331,6 +358,7 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
 
     /** Repeating tasks */
     rrule: taskToEventRRule(task),
+    exdate: parseTaskExdates(task),
 
     /**
      * Repeating task requires special explicit duration.
@@ -341,8 +369,6 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
       !!task.repeat,
       !task.includeTime
     ),
-    // this is to move recurring dates together
-    groupId: id,
 
     /** Style */
     backgroundColor: colorSet[(task.color as EventColor) ?? defaultEventColor],
@@ -351,13 +377,9 @@ export const taskToEventInput = (list: List, task: Task): EventInput => {
 
     /**
      * Extra props are required to get full information of the task.
-     * Check `eventToTaskUpdateInput`
      */
     listId: list.id,
-    done: task.done,
-    order: task.order,
-    repeat: task.repeat,
-    eventColor: task.color,
+    task,
   };
 };
 
@@ -400,12 +422,12 @@ const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
   return {
     id: e.id,
     title: e.title,
-    done: e.extendedProps?.done,
+    done: e.extendedProps?.task.done,
     start,
     end: validatedEnd,
     includeTime: !e.allDay,
-    color: e.extendedProps?.eventColor,
-    order: e.extendedProps.order,
+    color: e.extendedProps?.task.eventColor,
+    order: e.extendedProps?.task.order,
   };
 };
 
