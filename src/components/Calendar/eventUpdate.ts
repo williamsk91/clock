@@ -1,4 +1,5 @@
 import { EventChangeArg } from "@fullcalendar/common";
+import { addDays } from "date-fns";
 import format from "date-fns/format";
 
 import {
@@ -78,22 +79,31 @@ export const repeatUpdateFromNow: EventChangeUpdate = (
   const { oldEvent, event } = eventChange;
   const task: Task = event.extendedProps?.task;
 
+  if (!event.start || !event.end) return;
+
   if (!task.repeat?.freq) return;
   if (!oldEvent.start) return;
 
+  const newRepeat: UpsertRepeatInput = {
+    freq: task.repeat.freq,
+    start: task.repeat.start,
+    end: task.repeat.end,
+    byweekday: task.repeat.byweekday,
+    exclude: [],
+  };
+
+  const newTask: CreateTaskInput = {
+    ...task,
+    title: task.title + " (copy)",
+    start: event.start.toISOString(),
+    end: event.end.toISOString(),
+    repeat: newRepeat,
+  };
+  mutations.createTask("498baedd-25b1-4871-aada-b7f5fea2a46b", newTask);
+
   const upsertRepeat: UpsertRepeatInput = {
     ...task.repeat,
-    end: format(new Date(oldEvent.start), "yyyy-MM-dd"),
+    end: format(addDays(new Date(oldEvent.start), -1), "yyyy-MM-dd"),
   };
   mutations.updateRepeat(task.id, upsertRepeat);
-
-  if (!task.start || !event.start) return;
-  if (!task.end || !event.end) return;
-
-  const newTask = {
-    start: setTime(new Date(task.start), event.start).toISOString(),
-    end: setTime(new Date(task.end), event.end).toISOString(),
-  };
-  console.log("newTask: ", newTask);
-  // mutations.updateTask(updateTask);
 };
