@@ -396,15 +396,16 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
    *
    * @issue https://github.com/fullcalendar/fullcalendar/issues/5993#issuecomment-738280358
    */
-  const dtstart = new Date(
-    +new Date(task.start) - new Date().getTimezoneOffset() * 60000
-  );
+  const offsetTz = (d: Date) =>
+    new Date(+d - new Date().getTimezoneOffset() * 60000);
+  const dtstart = offsetTz(new Date(task.start));
+  const until = task.repeat.end ? offsetTz(new Date(task.repeat.end)) : null;
 
   return {
     dtstart,
     freq: task.repeat.freq,
     byweekday: task.repeat.byweekday,
-    until: task.repeat.end,
+    until,
   };
 };
 
