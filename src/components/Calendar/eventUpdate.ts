@@ -78,6 +78,7 @@ export const repeatUpdateFromNow: EventChangeUpdate = (
 ) => {
   const { oldEvent, event } = eventChange;
   const task: Task = event.extendedProps?.task;
+  const listId: string = event.extendedProps?.listId;
 
   if (!event.start || !event.end) return;
 
@@ -99,11 +100,46 @@ export const repeatUpdateFromNow: EventChangeUpdate = (
     end: event.end.toISOString(),
     repeat: newRepeat,
   };
-  mutations.createTask("498baedd-25b1-4871-aada-b7f5fea2a46b", newTask);
+  mutations.createTask(listId, newTask);
 
   const upsertRepeat: UpsertRepeatInput = {
     ...task.repeat,
     end: format(addDays(new Date(oldEvent.start), -1), "yyyy-MM-dd"),
   };
   mutations.updateRepeat(task.id, upsertRepeat);
+};
+
+/**
+ * When updating just one repeat instance
+ *
+ *  1. Add exdate to current task's repeat
+ *  2. Create a new task without from new time and without repeat
+ */
+export const repeatUpdateJustOne: EventChangeUpdate = (
+  eventChange,
+  mutations
+) => {
+  const { oldEvent, event } = eventChange;
+  const task: Task = event.extendedProps?.task;
+  const listId: string = event.extendedProps?.listId;
+
+  if (!task.repeat?.freq) return;
+  if (!event.start || !event.end) return;
+  if (!oldEvent.start) return;
+
+  const upsertRepeat: UpsertRepeatInput = {
+    ...task.repeat,
+    exclude: task.repeat.exclude
+      ? [...task.repeat.exclude, format(new Date(oldEvent.start), "yyy-MM-dd")]
+      : [format(new Date(oldEvent.start), "yyy-MM-dd")],
+  };
+  mutations.updateRepeat(task.id, upsertRepeat);
+
+  const newTask: CreateTaskInput = {
+    ...task,
+    start: event.start.toISOString(),
+    end: event.end.toISOString(),
+    repeat: null,
+  };
+  mutations.createTask(listId, newTask);
 };

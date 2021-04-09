@@ -35,7 +35,7 @@ import {
   taskIsNotDeletedP,
   taskIsNotDoneP,
 } from "../utils/filter";
-import { repeatUpdateFromNow } from "./eventUpdate";
+import { repeatUpdateJustOne } from "./eventUpdate";
 import { parseTaskExdates } from "./repeatExclusion";
 import {
   EventColor,
@@ -113,7 +113,7 @@ export const Calendar: FC<IProp> = (props) => {
             updateRepeat,
             createTask,
           };
-          repeatUpdateFromNow(eventChange, mutations);
+          repeatUpdateJustOne(eventChange, mutations);
 
           // updateTask(eventToTaskUpdateInput(event));
         }}
