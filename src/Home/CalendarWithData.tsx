@@ -53,6 +53,7 @@ export const CalendarWithData = () => {
         end: end.toISOString(),
         includeTime,
         color: null,
+        repeat: null,
       });
     },
     [match, data, createTaskWithRedirect]

@@ -29,6 +29,7 @@ export type CreateTaskInput = {
   end: Maybe<Scalars['DateTime']>;
   includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
+  repeat: Maybe<UpsertRepeatInput>;
 };
 
 
@@ -47,6 +48,7 @@ export type Mutation = {
   signOut: Scalars['Boolean'];
   /** Danger! Deletes a user account. */
   deleteUser: Scalars['Boolean'];
+  setRepeat: Repeat;
   createTask: Task;
   updateTaskList: Task;
   updateTask: Task;
@@ -55,7 +57,12 @@ export type Mutation = {
   createList: List;
   updateList: List;
   deleteList: List;
-  setRepeat: Repeat;
+};
+
+
+export type MutationSetRepeatArgs = {
+  repeat: Maybe<UpsertRepeatInput>;
+  taskId: Scalars['ID'];
 };
 
 
@@ -98,12 +105,6 @@ export type MutationUpdateListArgs = {
 
 export type MutationDeleteListArgs = {
   listId: Scalars['ID'];
-};
-
-
-export type MutationSetRepeatArgs = {
-  repeat: Maybe<UpsertRepeatInput>;
-  taskId: Scalars['ID'];
 };
 
 export type Query = {

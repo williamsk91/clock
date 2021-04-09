@@ -44,6 +44,7 @@ export const useCreateTask = (
             end: cti.end,
             includeTime: cti.includeTime,
             color: cti.color,
+            repeat: cti.repeat,
           },
         },
         update: (cache, { data }) => {
