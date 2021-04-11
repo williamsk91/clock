@@ -38,6 +38,12 @@ export const eventChange: EventChangeUpdate = (eventChange, mutations) => {
   repeatUpdateAll(eventChange, mutations);
 };
 
+export enum RepeatUpdateType {
+  ThisOne,
+  FromNow,
+  All,
+}
+
 /**
  * When updating all repeat instances
  *
