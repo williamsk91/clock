@@ -87,7 +87,9 @@ export const formatDatetime = (
     : "";
   const startString = formatSingleDatetime(start, includeTime, now);
 
-  const repeatText = repeat ? `, ${formatRRule(repeatToRRule(repeat))}` : "";
+  const repeatText = repeat
+    ? `, ${formatRRule(repeatToRRule(repeat, start))}`
+    : "";
 
   return startString + endString + repeatText;
 };
@@ -110,7 +112,7 @@ export const parseDate = (s: string | null): Date | null => {
  */
 export const parseDefinedDate = (s: string): Date => new Date(s);
 
-export const repeatToRRule = (r: Repeat): RRule => {
+export const repeatToRRule = (r: Repeat, start: Date): RRule => {
   let freq;
   switch (r.freq) {
     case RepeatFrequency.Daily:
@@ -128,7 +130,7 @@ export const repeatToRRule = (r: Repeat): RRule => {
   }
 
   return new RRule({
-    dtstart: new Date(r.start),
+    dtstart: start,
     freq,
     byweekday: r.byweekday as ByWeekday[],
   });

@@ -46,7 +46,6 @@ export const RepeatSelect = (props: Props) => {
             const newRepeat: UpsertRepeatInput = {
               freq: value,
               byweekday,
-              start: start.toISOString(),
               end: repeat?.end ?? null,
               exclude: repeat?.exclude ?? [],
             };

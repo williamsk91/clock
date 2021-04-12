@@ -133,7 +133,6 @@ const repeatUpdateFromNow: EventChangeUpdate = (eventChange, mutations) => {
 
   const newRepeat: UpsertRepeatInput = {
     freq: task.repeat.freq,
-    start: task.repeat.start,
     end: task.repeat.end,
     byweekday: task.repeat.byweekday,
     exclude: [],

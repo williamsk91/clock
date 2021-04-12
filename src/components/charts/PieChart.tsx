@@ -81,7 +81,7 @@ const listTaskHr = (list: List): number =>
     const duration = differenceInMinutes(new Date(t.end), new Date(t.start));
 
     if (t.repeat) {
-      const rrule = repeatToRRule(t.repeat);
+      const rrule = repeatToRRule(t.repeat, new Date(t.start));
       const today = Date.now();
       const start = startOfWeek(today, { weekStartsOn: 1 });
       const end = endOfWeek(today, { weekStartsOn: 1 });

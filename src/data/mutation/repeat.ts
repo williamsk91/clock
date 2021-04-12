@@ -21,7 +21,6 @@ export const useUpdateRepeat = () => {
           repeat: upsertRepeatInput
             ? {
                 freq: upsertRepeatInput.freq,
-                start: upsertRepeatInput.start,
                 end: upsertRepeatInput.end,
                 byweekday: upsertRepeatInput.byweekday,
                 exclude: upsertRepeatInput.exclude,

@@ -141,7 +141,6 @@ export type Repeat = {
   __typename?: 'Repeat';
   id: Scalars['ID'];
   freq: RepeatFrequency;
-  start: Scalars['DateTime'];
   end: Maybe<Scalars['DateTime']>;
   byweekday: Maybe<Array<Scalars['String']>>;
   exclude: Maybe<Array<Scalars['String']>>;
@@ -201,7 +200,6 @@ export type UpdateTaskInput = {
 
 export type UpsertRepeatInput = {
   freq: RepeatFrequency;
-  start: Scalars['DateTime'];
   end: Maybe<Scalars['DateTime']>;
   byweekday: Maybe<Array<Scalars['String']>>;
   exclude: Maybe<Array<Scalars['String']>>;
@@ -329,7 +327,7 @@ export type SetRepeatMutation = (
   { __typename?: 'Mutation' }
   & { setRepeat: (
     { __typename?: 'Repeat' }
-    & Pick<Repeat, 'id' | 'freq' | 'start' | 'end' | 'byweekday' | 'exclude'>
+    & Pick<Repeat, 'id' | 'freq' | 'end' | 'byweekday' | 'exclude'>
   ) }
 );
 
@@ -338,7 +336,7 @@ export type TaskFragment = (
   & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'color' | 'order' | 'deleted'>
   & { repeat: Maybe<(
     { __typename?: 'Repeat' }
-    & Pick<Repeat, 'id' | 'freq' | 'start' | 'end' | 'byweekday' | 'exclude'>
+    & Pick<Repeat, 'id' | 'freq' | 'end' | 'byweekday' | 'exclude'>
   )> }
 );
 
@@ -453,7 +451,6 @@ export const TaskFragmentDoc = gql`
   repeat {
     id
     freq
-    start
     end
     byweekday
     exclude
@@ -715,7 +712,6 @@ export const SetRepeatDocument = gql`
   setRepeat(taskId: $taskId, repeat: $repeat) {
     id
     freq
-    start
     end
     byweekday
     exclude

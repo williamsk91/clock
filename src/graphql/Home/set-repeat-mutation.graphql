@@ -2,7 +2,6 @@ mutation SetRepeat($taskId: ID!, $repeat: UpsertRepeatInput) {
   setRepeat(taskId: $taskId, repeat: $repeat) {
     id
     freq
-    start
     end
     byweekday
     exclude

@@ -112,7 +112,7 @@ const listDaysHours = (
         differenceInMinutes(new Date(t.end as string), start) / 60;
 
       if (t.repeat) {
-        const rrule = repeatToRRule(t.repeat);
+        const rrule = repeatToRRule(t.repeat, new Date(t.start));
         const today = Date.now();
         const start = startOfWeek(today, { weekStartsOn: 1 });
         const end = endOfWeek(today, { weekStartsOn: 1 });

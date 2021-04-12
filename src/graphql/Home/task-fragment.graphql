@@ -10,7 +10,6 @@ fragment Task on Task {
   repeat {
     id
     freq
-    start
     end
     byweekday
     exclude

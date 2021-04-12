@@ -38,7 +38,6 @@ export const daily = () => (
       id: "repeatId",
       freq: RepeatFrequency.Daily,
       byweekday: null,
-      start: new Date().toISOString(),
       end: new Date().toISOString(),
       exclude: [],
     }}
@@ -51,7 +50,6 @@ export const weekly = () => (
       id: "repeatId",
       freq: RepeatFrequency.Weekly,
       byweekday: ["MO", "WE", "TH"],
-      start: new Date().toISOString(),
       end: new Date().toISOString(),
       exclude: [],
     }}
@@ -64,7 +62,6 @@ export const monthly = () => (
       id: "repeatId",
       freq: RepeatFrequency.Monthly,
       byweekday: null,
-      start: new Date().toISOString(),
       end: new Date().toISOString(),
       exclude: [],
     }}
@@ -77,7 +74,6 @@ export const yearly = () => (
       id: "repeatId",
       freq: RepeatFrequency.Yearly,
       byweekday: null,
-      start: new Date().toISOString(),
       end: new Date().toISOString(),
       exclude: [],
     }}
@@ -90,7 +86,6 @@ export const noEnd = () => (
       id: "repeatId",
       freq: RepeatFrequency.Weekly,
       byweekday: ["MO"],
-      start: new Date().toISOString(),
       end: null,
       exclude: [],
     }}
