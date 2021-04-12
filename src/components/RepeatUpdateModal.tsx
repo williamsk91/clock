@@ -7,12 +7,12 @@ import { RepeatUpdateType } from "./Calendar/eventUpdate";
 interface Props {
   onCancel: () => void;
   onUpdate: (updateType: RepeatUpdateType) => void;
+  isVisible: boolean;
 }
 
 export const RepeatUpdateModal = (props: Props) => {
-  const { onCancel, onUpdate } = props;
+  const { onCancel, onUpdate, isVisible } = props;
 
-  const [isVisible, setIsVisible] = useState(true);
   const [updateType, setUpdateType] = useState(RepeatUpdateType.ThisOne);
 
   return (
@@ -21,12 +21,12 @@ export const RepeatUpdateModal = (props: Props) => {
       visible={isVisible}
       okText="update event"
       onCancel={() => {
-        setIsVisible(false);
         onCancel();
+        setUpdateType(RepeatUpdateType.ThisOne);
       }}
       onOk={() => {
-        setIsVisible(false);
         onUpdate(updateType);
+        setUpdateType(RepeatUpdateType.ThisOne);
       }}
       width={300}
       closable={false}

@@ -3,12 +3,11 @@ import "@fullcalendar/react";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar, { EventApi, EventInput } from "@fullcalendar/react";
+import FullCalendar, { EventChangeArg, EventInput } from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Switch } from "antd";
 import {
-  addHours,
   addMinutes,
   differenceInDays,
   differenceInMinutes,
@@ -27,6 +26,7 @@ import {
 } from "../../graphql/generated";
 import { useCalendarContext } from "../context/CalendarContext";
 import { listIsNotDeleted } from "../listFilter";
+import { RepeatUpdateModal } from "../RepeatUpdateModal";
 import { homeTaskSettingRoute } from "../route";
 import { Text } from "../Text";
 import {
@@ -35,7 +35,11 @@ import {
   taskIsNotDeletedP,
   taskIsNotDoneP,
 } from "../utils/filter";
-import { repeatUpdateJustOne } from "./eventUpdate";
+import {
+  eventToTaskUpdateInput,
+  eventUpdate,
+  repeatEventUpdate,
+} from "./eventUpdate";
 import { parseTaskExdates } from "./repeatExclusion";
 import {
   EventColor,
@@ -64,6 +68,12 @@ export const Calendar: FC<IProp> = (props) => {
 
   const [showCompletedTask, setShowCompletedTask] = useState(false);
 
+  const [isRepeatModalVisible, setIsRepeatModalVisible] = useState(false);
+  const [
+    repeatEventChange,
+    setrepeatEventChange,
+  ] = useState<EventChangeArg | null>(null);
+
   const calRef = useRef<FullCalendar>(null);
   const { setApi } = useCalendarContext();
 
@@ -79,93 +89,117 @@ export const Calendar: FC<IProp> = (props) => {
     .map(applyFilterOnTask(showCompletedTask ? [] : [taskIsNotDoneP]))
     .flatMap((l) => l.tasks.map((t) => taskToEventInput(l, t)));
 
+  const mutations = {
+    updateTask,
+    updateRepeat,
+    createTask,
+  };
+
   useEffect(() => {
     if (!calRef.current) return;
     setApi(calRef.current.getApi());
   }, [calRef, setApi]);
 
   return (
-    <Container>
-      <Setting>
-        <Text.Message>Show completed task</Text.Message>
-        <Switch
-          checked={showCompletedTask}
-          onChange={(checked) => setShowCompletedTask(checked)}
-        />
-      </Setting>
-      <FullCalendar
-        ref={calRef}
-        height="100%"
-        initialView="timeGridWeek"
-        plugins={[timeGridPlugin, rrule, interactionPlugin]}
-        // time-axis
-        slotDuration="01:00"
-        slotLabelFormat={{ hour: "numeric", minute: "numeric", hour12: false }}
-        // events
-        eventBorderColor="transparent"
-        events={events}
-        editable
-        droppable
-        // resizing & dragging
-        eventChange={(eventChange) => {
-          const mutations = {
-            updateTask,
-            updateRepeat,
-            createTask,
-          };
-          repeatUpdateJustOne(eventChange, mutations);
+    <>
+      <Container>
+        <Setting>
+          <Text.Message>Show completed task</Text.Message>
+          <Switch
+            checked={showCompletedTask}
+            onChange={(checked) => setShowCompletedTask(checked)}
+          />
+        </Setting>
+        <FullCalendar
+          ref={calRef}
+          height="100%"
+          initialView="timeGridWeek"
+          plugins={[timeGridPlugin, rrule, interactionPlugin]}
+          // time-axis
+          slotDuration="01:00"
+          slotLabelFormat={{
+            hour: "numeric",
+            minute: "numeric",
+            hour12: false,
+          }}
+          // events
+          eventBorderColor="transparent"
+          events={events}
+          editable
+          droppable
+          // resizing & dragging
+          eventChange={(eventChange) => {
+            if (eventChange.event.extendedProps.task.repeat) {
+              setrepeatEventChange(eventChange);
+              return setIsRepeatModalVisible(true);
+            }
 
-          // updateTask(eventToTaskUpdateInput(event));
+            eventUpdate(eventChange, mutations);
+          }}
+          // dropping - drop from task list
+          eventReceive={({ event, view }) => {
+            const updateInput = eventToTaskUpdateInput(event);
+            updateTask(updateInput);
+
+            /**
+             * Very bad hack to prevent duplicate events from rendering.
+             * To check if it safe to remove this try drag and drop an event
+             *  from TaskList to calendar. If there's only **1** event in the
+             *  calendar then it is safe to remove.
+             */
+            view.calendar.removeAllEvents();
+          }}
+          // clicking
+          eventClick={({ event }) => {
+            calRef.current?.getApi().unselect();
+            history.push(
+              homeTaskSettingRoute(event.extendedProps.listId, event.id)
+            );
+          }}
+          // selecting - creating new task
+          selectable
+          selectMirror
+          unselectAuto={false}
+          snapDuration="00:30"
+          select={({ start, end, allDay }) => {
+            // end is modified as by default FullCalendar treats end as exclusive
+            createCalendarTask(
+              start,
+              allDay ? addMinutes(end, -1) : end,
+              !allDay
+            );
+          }}
+          // Labels
+          headerToolbar={{
+            left: "prev,today,next",
+            right: undefined,
+          }}
+          nowIndicator
+          dayHeaderContent={({ date }) => (
+            <>
+              <p className="weekday">{format(date, "EEE")}</p>
+              <p className="day">{format(date, "d")}</p>
+            </>
+          )}
+          allDayText=""
+          // locale
+          firstDay={1}
+        />
+      </Container>
+      <RepeatUpdateModal
+        isVisible={isRepeatModalVisible}
+        onCancel={() => {
+          setIsRepeatModalVisible(false);
+          setrepeatEventChange(null);
         }}
-        // dropping - drop from task list
-        eventReceive={({ event, view }) => {
-          const updateInput = eventToTaskUpdateInput(event);
-          updateTask(updateInput);
-          /**
-           * Very bad hack to prevent duplicate events from rendering.
-           * To check if it safe to remove this try drag and drop an event
-           *  from TaskList to calendar. If there's only **1** event in the
-           *  calendar then it is safe to remove.
-           */
-          view.calendar.removeAllEvents();
+        onUpdate={(updateType) => {
+          setIsRepeatModalVisible(false);
+          repeatEventChange &&
+            repeatEventUpdate(repeatEventChange, mutations, updateType);
+          setrepeatEventChange(null);
         }}
-        // clicking
-        eventClick={({ event }) => {
-          calRef.current?.getApi().unselect();
-          history.push(
-            homeTaskSettingRoute(event.extendedProps.listId, event.id)
-          );
-        }}
-        // selecting - creating new task
-        selectable
-        selectMirror
-        unselectAuto={false}
-        snapDuration="00:30"
-        select={({ start, end, allDay }) => {
-          // end is modified as by default FullCalendar treats end as exclusive
-          createCalendarTask(
-            start,
-            allDay ? addMinutes(end, -1) : end,
-            !allDay
-          );
-        }}
-        // Labels
-        headerToolbar={{
-          left: "prev,today,next",
-          right: undefined,
-        }}
-        nowIndicator
-        dayHeaderContent={({ date }) => (
-          <>
-            <p className="weekday">{format(date, "EEE")}</p>
-            <p className="day">{format(date, "d")}</p>
-          </>
-        )}
-        allDayText=""
-        // locale
-        firstDay={1}
       />
-    </Container>
+    </>
   );
 };
 
@@ -406,29 +440,6 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
     freq: task.repeat.freq,
     byweekday: task.repeat.byweekday,
     until,
-  };
-};
-
-const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
-  const start = e.start?.toISOString() ?? null;
-  const end = e.end?.toISOString() ?? null;
-
-  /**
-   * Ensures that end is also defined when start is defined.
-   * Defaults to 1 hr after start
-   */
-  const validatedEnd =
-    end || (start ? addHours(new Date(start), 1).toString() : null);
-
-  return {
-    id: e.id,
-    title: e.title,
-    done: e.extendedProps?.task.done,
-    start,
-    end: validatedEnd,
-    includeTime: !e.allDay,
-    color: e.extendedProps?.task.eventColor,
-    order: e.extendedProps?.task.order,
   };
 };
 

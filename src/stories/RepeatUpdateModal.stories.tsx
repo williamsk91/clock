@@ -7,6 +7,7 @@ export default {
 
 export const base = () => (
   <RepeatUpdateModal
+    isVisible={true}
     onCancel={() => console.log("cancel")}
     onUpdate={() => console.log("update")}
   />

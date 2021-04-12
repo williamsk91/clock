@@ -1,5 +1,5 @@
-import { EventChangeArg } from "@fullcalendar/common";
-import { addDays } from "date-fns";
+import { EventApi, EventChangeArg } from "@fullcalendar/common";
+import { addDays, addHours } from "date-fns";
 import format from "date-fns/format";
 
 import {
@@ -21,6 +21,39 @@ type EventChangeUpdate = (
   mutations: EventChangeMutations
 ) => void;
 
+export const eventUpdate: EventChangeUpdate = (eventChange, mutations) => {
+  mutations.updateTask(eventToTaskUpdateInput(eventChange.event));
+};
+
+export const eventToTaskUpdateInput = (e: EventApi): UpdateTaskInput => {
+  const start = e.start?.toISOString() ?? null;
+  const end = e.end?.toISOString() ?? null;
+
+  /**
+   * Ensures that end is also defined when start is defined.
+   * Defaults to 1 hr after start
+   */
+  const validatedEnd =
+    end || (start ? addHours(new Date(start), 1).toString() : null);
+
+  return {
+    id: e.id,
+    title: e.title,
+    done: e.extendedProps?.task.done,
+    start,
+    end: validatedEnd,
+    includeTime: !e.allDay,
+    color: e.extendedProps?.task.eventColor,
+    order: e.extendedProps?.task.order,
+  };
+};
+
+export enum RepeatUpdateType {
+  ThisOne,
+  FromNow,
+  All,
+}
+
 /**
  * There are 3 main ways to update a task with repeat
  *
@@ -34,15 +67,25 @@ type EventChangeUpdate = (
  *  2. repeat update
  *  3. new task
  */
-export const eventChange: EventChangeUpdate = (eventChange, mutations) => {
-  repeatUpdateAll(eventChange, mutations);
-};
+export const repeatEventUpdate = (
+  eventChange: EventChangeArg,
+  mutations: EventChangeMutations,
+  repeatUpdateType: RepeatUpdateType
+) => {
+  switch (repeatUpdateType) {
+    case RepeatUpdateType.ThisOne:
+      repeatUpdateThisOne(eventChange, mutations);
+      break;
 
-export enum RepeatUpdateType {
-  ThisOne,
-  FromNow,
-  All,
-}
+    case RepeatUpdateType.FromNow:
+      repeatUpdateFromNow(eventChange, mutations);
+      break;
+
+    case RepeatUpdateType.All:
+      repeatUpdateAll(eventChange, mutations);
+      break;
+  }
+};
 
 /**
  * When updating all repeat instances
@@ -50,7 +93,7 @@ export enum RepeatUpdateType {
  *  1. Update only time component of `start` and `end`
  *  2. Clear any `exdates`
  */
-export const repeatUpdateAll: EventChangeUpdate = (eventChange, mutations) => {
+const repeatUpdateAll: EventChangeUpdate = (eventChange, mutations) => {
   const { event } = eventChange;
   const task: Task = event.extendedProps?.task;
 
@@ -78,10 +121,7 @@ export const repeatUpdateAll: EventChangeUpdate = (eventChange, mutations) => {
  *  1. Set end date to current task's repeat
  *  2. Create a new task with new repeat value
  */
-export const repeatUpdateFromNow: EventChangeUpdate = (
-  eventChange,
-  mutations
-) => {
+const repeatUpdateFromNow: EventChangeUpdate = (eventChange, mutations) => {
   const { oldEvent, event } = eventChange;
   const task: Task = event.extendedProps?.task;
   const listId: string = event.extendedProps?.listId;
@@ -121,10 +161,7 @@ export const repeatUpdateFromNow: EventChangeUpdate = (
  *  1. Add exdate to current task's repeat
  *  2. Create a new task without from new time and without repeat
  */
-export const repeatUpdateJustOne: EventChangeUpdate = (
-  eventChange,
-  mutations
-) => {
+const repeatUpdateThisOne: EventChangeUpdate = (eventChange, mutations) => {
   const { oldEvent, event } = eventChange;
   const task: Task = event.extendedProps?.task;
   const listId: string = event.extendedProps?.listId;
