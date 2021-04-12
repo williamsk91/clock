@@ -3,7 +3,11 @@ import "@fullcalendar/react";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar, { EventChangeArg, EventInput } from "@fullcalendar/react";
+import FullCalendar, {
+  EventChangeArg,
+  EventInput,
+  addDays,
+} from "@fullcalendar/react";
 import rrule from "@fullcalendar/rrule";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Switch } from "antd";
@@ -433,7 +437,9 @@ const taskToEventRRule = (task: Task): EventInput["rrule"] | undefined => {
   const offsetTz = (d: Date) =>
     new Date(+d - new Date().getTimezoneOffset() * 60000);
   const dtstart = offsetTz(new Date(task.start));
-  const until = task.repeat.end ? offsetTz(new Date(task.repeat.end)) : null;
+  const until = task.repeat.end
+    ? format(addDays(new Date(task.repeat.end), 1), "yyyy-MM-dd")
+    : null;
 
   return {
     dtstart,
