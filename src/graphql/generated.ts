@@ -300,9 +300,7 @@ export type ListQuery = (
   ) }
 );
 
-export type ListsQueryVariables = Exact<{
-  withTasks: Scalars['Boolean'];
-}>;
+export type ListsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListsQuery = (
@@ -669,7 +667,7 @@ export type ListQueryHookResult = ReturnType<typeof useListQuery>;
 export type ListLazyQueryHookResult = ReturnType<typeof useListLazyQuery>;
 export type ListQueryResult = ApolloReactCommon.QueryResult<ListQuery, ListQueryVariables>;
 export const ListsDocument = gql`
-    query Lists($withTasks: Boolean!) {
+    query Lists {
   lists {
     ...List
     tasks {
@@ -692,11 +690,10 @@ ${TaskFragmentDoc}`;
  * @example
  * const { data, loading, error } = useListsQuery({
  *   variables: {
- *      withTasks: // value for 'withTasks'
  *   },
  * });
  */
-export function useListsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
+export function useListsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListsQuery, ListsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<ListsQuery, ListsQueryVariables>(ListsDocument, options);
       }

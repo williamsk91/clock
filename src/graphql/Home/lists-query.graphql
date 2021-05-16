@@ -1,6 +1,6 @@
 #import "./list-fragment.graphql"
 
-query Lists($withTasks: Boolean!) {
+query Lists {
   lists {
     ...List
     tasks {
