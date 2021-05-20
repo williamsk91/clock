@@ -7,7 +7,7 @@ import { Menu } from "./Menu";
 
 interface Props {
   initialContent: Content;
-  onUpdate: (state: Content) => void;
+  onUpdate: (state: Object) => void;
 }
 
 export const Editor = (props: Props) => {

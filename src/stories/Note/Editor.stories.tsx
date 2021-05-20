@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Content } from "@tiptap/core";
 
 import { Editor } from "../../components/Note/Editor";
 
@@ -19,7 +18,7 @@ export const base = () => (
 );
 
 const WithDataStory = () => {
-  const [content, setContent] = useState<Content>(initialContent);
+  const [content, setContent] = useState<Object>(initialContent);
   return (
     <div>
       <Editor initialContent={initialContent} onUpdate={setContent} />

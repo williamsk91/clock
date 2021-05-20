@@ -19,6 +19,7 @@ import { EventColor } from "../../components/Calendar/styles";
 import { parseDate } from "../../components/datetime";
 import { Error } from "../../components/flow/Error";
 import { Loading } from "../../components/flow/Loading";
+import { Editor } from "../../components/Note/Editor";
 import { homeListRoute, homeTaskSettingRoute } from "../../components/route";
 import { ColorSelect } from "../../components/Settings/ColorSelect";
 import { DateTimeRangePicker } from "../../components/Settings/DateTimeRangePicker";
@@ -27,6 +28,7 @@ import { RepeatSelect } from "../../components/Settings/RepeatSelect";
 import { Spacer } from "../../components/Spacer";
 import { Task } from "../../components/Task";
 import { demuxUpdateTask } from "../../components/utils/task";
+import { useSetNote } from "../../data/mutation/note";
 import { useUpdateRepeat } from "../../data/mutation/repeat";
 import {
   useDeleteTask,
@@ -37,6 +39,7 @@ import {
   List,
   Task as TaskType,
   UpdateTaskInput,
+  UpsertNoteInput,
   UpsertRepeatInput,
   useTaskQuery,
 } from "../../graphql/generated";
@@ -54,6 +57,7 @@ export const TaskSidebarWithData = () => {
 
   const updateTask = useUpdateTask();
   const updateRepeat = useUpdateRepeat();
+  const setNote = useSetNote();
   const updateTaskList = useUpdateTaskList();
   const updateTaskListWithRedirect = (id: string, newListId: string) => {
     updateTaskList(id, newListId, listId);
@@ -74,6 +78,7 @@ export const TaskSidebarWithData = () => {
       task={data.task}
       updateTask={updateTask}
       updateRepeat={updateRepeat}
+      setNote={setNote}
       updateTaskList={updateTaskListWithRedirect}
       deleteTask={deleteTask}
     />
@@ -86,6 +91,7 @@ interface Props {
   task: TaskType;
   updateTask: (uti: UpdateTaskInput) => void;
   updateRepeat: (taskId: string, r: UpsertRepeatInput | null) => void;
+  setNote: (taskId: string, n: UpsertNoteInput | null) => void;
   updateTaskList: (id: string, newListId: string) => void;
   deleteTask: (taskId: string) => void;
 }
@@ -100,6 +106,7 @@ export const TaskSettingSidebar = (props: Props) => {
     task,
     updateTask,
     updateRepeat,
+    setNote,
     updateTaskList,
     deleteTask,
   } = props;
@@ -191,6 +198,15 @@ export const TaskSettingSidebar = (props: Props) => {
           updateColor={updateColor}
         />
       </Section>
+
+      <Spacer spacing="24" />
+
+      <Editor
+        initialContent={task.note?.body}
+        onUpdate={(body) => {
+          setNote(task.id, { body });
+        }}
+      />
 
       <Spacer spacing="24" />
 

@@ -15,6 +15,8 @@ export type Scalars = {
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: string;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
 };
 
 export type CreateListInput = {
@@ -31,6 +33,7 @@ export type CreateTaskInput = {
   color: Maybe<Scalars['String']>;
   repeat: Maybe<UpsertRepeatInput>;
 };
+
 
 
 export type List = {
@@ -57,6 +60,7 @@ export type Mutation = {
   createList: List;
   updateList: List;
   deleteList: List;
+  setNote: Note;
 };
 
 
@@ -105,6 +109,18 @@ export type MutationUpdateListArgs = {
 
 export type MutationDeleteListArgs = {
   listId: Scalars['ID'];
+};
+
+
+export type MutationSetNoteArgs = {
+  note: Maybe<UpsertNoteInput>;
+  taskId: Scalars['ID'];
+};
+
+export type Note = {
+  __typename?: 'Note';
+  id: Scalars['ID'];
+  body: Scalars['JSON'];
 };
 
 export type Query = {
@@ -165,6 +181,7 @@ export type Task = {
   order: Scalars['Float'];
   deleted: Maybe<Scalars['DateTime']>;
   repeat: Maybe<Repeat>;
+  note: Maybe<Note>;
 };
 
 export type TaskReorder = {
@@ -196,6 +213,10 @@ export type UpdateTaskInput = {
   includeTime: Scalars['Boolean'];
   color: Maybe<Scalars['String']>;
   order: Scalars['Float'];
+};
+
+export type UpsertNoteInput = {
+  body: Scalars['JSON'];
 };
 
 export type UpsertRepeatInput = {
@@ -317,6 +338,30 @@ export type ListsQuery = (
   )> }
 );
 
+export type NoteFragment = (
+  { __typename?: 'Note' }
+  & Pick<Note, 'id' | 'body'>
+);
+
+export type RepeatFragment = (
+  { __typename?: 'Repeat' }
+  & Pick<Repeat, 'id' | 'freq' | 'end' | 'byweekday' | 'exclude'>
+);
+
+export type SetNoteMutationVariables = Exact<{
+  taskId: Scalars['ID'];
+  note: Maybe<UpsertNoteInput>;
+}>;
+
+
+export type SetNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { setNote: (
+    { __typename?: 'Note' }
+    & NoteFragment
+  ) }
+);
+
 export type SetRepeatMutationVariables = Exact<{
   taskId: Scalars['ID'];
   repeat: Maybe<UpsertRepeatInput>;
@@ -327,7 +372,7 @@ export type SetRepeatMutation = (
   { __typename?: 'Mutation' }
   & { setRepeat: (
     { __typename?: 'Repeat' }
-    & Pick<Repeat, 'id' | 'freq' | 'end' | 'byweekday' | 'exclude'>
+    & RepeatFragment
   ) }
 );
 
@@ -336,7 +381,10 @@ export type TaskFragment = (
   & Pick<Task, 'id' | 'title' | 'done' | 'start' | 'end' | 'includeTime' | 'color' | 'order' | 'deleted'>
   & { repeat: Maybe<(
     { __typename?: 'Repeat' }
-    & Pick<Repeat, 'id' | 'freq' | 'end' | 'byweekday' | 'exclude'>
+    & RepeatFragment
+  )>, note: Maybe<(
+    { __typename?: 'Note' }
+    & NoteFragment
   )> }
 );
 
@@ -438,6 +486,21 @@ export const ListFragmentDoc = gql`
   deleted
 }
     `;
+export const RepeatFragmentDoc = gql`
+    fragment Repeat on Repeat {
+  id
+  freq
+  end
+  byweekday
+  exclude
+}
+    `;
+export const NoteFragmentDoc = gql`
+    fragment Note on Note {
+  id
+  body
+}
+    `;
 export const TaskFragmentDoc = gql`
     fragment Task on Task {
   id
@@ -449,15 +512,15 @@ export const TaskFragmentDoc = gql`
   color
   order
   repeat {
-    id
-    freq
-    end
-    byweekday
-    exclude
+    ...Repeat
+  }
+  note {
+    ...Note
   }
   deleted
 }
-    `;
+    ${RepeatFragmentDoc}
+${NoteFragmentDoc}`;
 export const CalendarListsDocument = gql`
     query CalendarLists {
   lists {
@@ -707,17 +770,47 @@ export function useListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type ListsQueryHookResult = ReturnType<typeof useListsQuery>;
 export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>;
 export type ListsQueryResult = ApolloReactCommon.QueryResult<ListsQuery, ListsQueryVariables>;
+export const SetNoteDocument = gql`
+    mutation SetNote($taskId: ID!, $note: UpsertNoteInput) {
+  setNote(taskId: $taskId, note: $note) {
+    ...Note
+  }
+}
+    ${NoteFragmentDoc}`;
+export type SetNoteMutationFn = ApolloReactCommon.MutationFunction<SetNoteMutation, SetNoteMutationVariables>;
+
+/**
+ * __useSetNoteMutation__
+ *
+ * To run a mutation, you first call `useSetNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setNoteMutation, { data, loading, error }] = useSetNoteMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *      note: // value for 'note'
+ *   },
+ * });
+ */
+export function useSetNoteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetNoteMutation, SetNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<SetNoteMutation, SetNoteMutationVariables>(SetNoteDocument, options);
+      }
+export type SetNoteMutationHookResult = ReturnType<typeof useSetNoteMutation>;
+export type SetNoteMutationResult = ApolloReactCommon.MutationResult<SetNoteMutation>;
+export type SetNoteMutationOptions = ApolloReactCommon.BaseMutationOptions<SetNoteMutation, SetNoteMutationVariables>;
 export const SetRepeatDocument = gql`
     mutation SetRepeat($taskId: ID!, $repeat: UpsertRepeatInput) {
   setRepeat(taskId: $taskId, repeat: $repeat) {
-    id
-    freq
-    end
-    byweekday
-    exclude
+    ...Repeat
   }
 }
-    `;
+    ${RepeatFragmentDoc}`;
 export type SetRepeatMutationFn = ApolloReactCommon.MutationFunction<SetRepeatMutation, SetRepeatMutationVariables>;
 
 /**

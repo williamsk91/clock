@@ -1,0 +1,7 @@
+fragment Repeat on Repeat {
+  id
+  freq
+  end
+  byweekday
+  exclude
+}
