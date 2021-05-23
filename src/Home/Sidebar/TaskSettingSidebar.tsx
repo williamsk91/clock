@@ -231,6 +231,8 @@ export const TaskSettingSidebar = (props: Props) => {
           </Popconfirm>
         </div>
       </Section>
+
+      <Spacer spacing="24" />
     </div>
   );
 };
