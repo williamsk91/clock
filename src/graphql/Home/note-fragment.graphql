@@ -1,0 +1,4 @@
+fragment Note on Note {
+  id
+  body
+}

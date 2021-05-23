@@ -91,6 +91,7 @@ export const getRepeatList = (): List => ({
       color: "red",
       order: 1,
       repeat: getRepeatDaily(),
+      note: null,
       deleted: null,
     },
     {
@@ -103,6 +104,7 @@ export const getRepeatList = (): List => ({
       color: "blue",
       order: 2,
       repeat: getRepeatWeekly(),
+      note: null,
       deleted: null,
     },
     {
@@ -115,6 +117,7 @@ export const getRepeatList = (): List => ({
       color: "green",
       order: 3,
       repeat: getRepeatMonthly(),
+      note: null,
       deleted: null,
     },
     {
@@ -127,6 +130,7 @@ export const getRepeatList = (): List => ({
       color: "yellow",
       order: 4,
       repeat: getRepeatYearly(),
+      note: null,
       deleted: null,
     },
   ],
@@ -145,6 +149,7 @@ export const getTask = (override?: Partial<Task>): Task => ({
   color: null,
   order: 1,
   repeat: getRepeatDaily(),
+  note: null,
   deleted: null,
   ...override,
 });
@@ -168,6 +173,7 @@ export const getRandomTask = (): Task => {
     color: null,
     order: 1,
     repeat: getRepeatDaily(),
+    note: null,
     deleted: null,
   };
 };
@@ -183,6 +189,7 @@ export const getTasks = (): Task[] => [
     color: null,
     order: 1,
     repeat: null,
+    note: null,
     deleted: null,
   },
   {
@@ -195,6 +202,7 @@ export const getTasks = (): Task[] => [
     color: "red",
     order: 2,
     repeat: getRepeatDaily(),
+    note: null,
     deleted: null,
   },
   {
@@ -207,6 +215,7 @@ export const getTasks = (): Task[] => [
     color: "magenta",
     order: 3,
     repeat: null,
+    note: null,
     deleted: null,
   },
   {
@@ -219,6 +228,7 @@ export const getTasks = (): Task[] => [
     color: "lime",
     order: 4,
     repeat: null,
+    note: null,
     deleted: null,
   },
   {
@@ -231,6 +241,7 @@ export const getTasks = (): Task[] => [
     color: "black",
     order: 5,
     repeat: null,
+    note: null,
     deleted: null,
   },
   {
@@ -243,6 +254,7 @@ export const getTasks = (): Task[] => [
     color: "red",
     order: 6,
     repeat: getRepeatWeekly(),
+    note: null,
     deleted: null,
   },
 ];

@@ -20,6 +20,9 @@ const Base = () => {
       updateRepeat={(upsertRepeatInput) =>
         console.log("upsertRepeatInput: ", upsertRepeatInput)
       }
+      setNote={(upsertNoteInput) =>
+        console.log("setNoteInput: ", upsertNoteInput)
+      }
       updateTaskList={() => null}
       deleteTask={(taskId) => console.log("taskId: ", taskId)}
     />

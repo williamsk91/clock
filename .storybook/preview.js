@@ -10,6 +10,23 @@ import { theme } from "../src/components/styles/theme";
 
 export const parameters = {
   layout: "fullscreen",
+  backgrounds: {
+    default: "white",
+    values: [
+      {
+        name: "white",
+        value: "#fff",
+      },
+      {
+        name: "black",
+        value: "#000",
+      },
+      {
+        name: "sidebar",
+        value: "#f7f8f7",
+      },
+    ],
+  },
 };
 
 addParameters({

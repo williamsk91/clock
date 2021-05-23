@@ -1,3 +1,5 @@
+import { eventColors } from "../Calendar/styles";
+
 export interface ITheme {
   name: Theme;
   text: {
@@ -5,6 +7,9 @@ export interface ITheme {
     title: string;
     main: string;
     disabled: string;
+  };
+  color: {
+    primary: string;
   };
 }
 
@@ -20,6 +25,9 @@ const lightTheme: ITheme = {
     title: "rgba(55, 53, 47, 0.85)",
     main: "rgba(55, 53, 47, 0.75)",
     disabled: "rgba(55, 53, 47, 0.50)",
+  },
+  color: {
+    primary: eventColors.red,
   },
 };
 

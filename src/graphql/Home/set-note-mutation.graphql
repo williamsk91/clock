@@ -1,0 +1,7 @@
+#import "./note-fragment.graphql"
+
+mutation SetNote($taskId: ID!, $note: UpsertNoteInput) {
+  setNote(taskId: $taskId, note: $note) {
+    ...Note
+  }
+}

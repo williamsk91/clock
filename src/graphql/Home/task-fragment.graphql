@@ -1,3 +1,6 @@
+#import "./repeat-fragment.graphql"
+#import "./note-fragment.graphql"
+
 fragment Task on Task {
   id
   title
@@ -8,11 +11,10 @@ fragment Task on Task {
   color
   order
   repeat {
-    id
-    freq
-    end
-    byweekday
-    exclude
+    ...Repeat
+  }
+  note {
+    ...Note
   }
   deleted
 }

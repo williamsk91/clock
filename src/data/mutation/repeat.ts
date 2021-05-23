@@ -11,11 +11,10 @@ import {
  * Update repeat
  */
 export const useUpdateRepeat = () => {
-  const [updateTaskMutation] = useSetRepeatMutation();
+  const [updateRepeatMutation] = useSetRepeatMutation();
   const updateRepeat = useCallback(
     (taskId: string, upsertRepeatInput: UpsertRepeatInput | null) => {
-      console.log("upsertRepeatInput: ", upsertRepeatInput);
-      updateTaskMutation({
+      updateRepeatMutation({
         variables: {
           taskId,
           repeat: upsertRepeatInput
@@ -50,7 +49,7 @@ export const useUpdateRepeat = () => {
         },
       });
     },
-    [updateTaskMutation]
+    [updateRepeatMutation]
   );
 
   return updateRepeat;
