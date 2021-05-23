@@ -12,6 +12,7 @@ import {
   RetweetOutlined,
 } from "@ant-design/icons";
 import { Button, Divider, Popconfirm, Switch } from "antd";
+import { throttle } from "lodash";
 import styled from "styled-components";
 
 import { Text } from "../../components";
@@ -120,6 +121,8 @@ export const TaskSettingSidebar = (props: Props) => {
     [task, updateTask]
   );
 
+  const throttledSetNote = throttle(setNote, 3000);
+
   return (
     <div>
       <Spacer spacing="60" />
@@ -204,7 +207,7 @@ export const TaskSettingSidebar = (props: Props) => {
       <Editor
         initialContent={task.note?.body}
         onUpdate={(body) => {
-          setNote(task.id, { body });
+          throttledSetNote(task.id, { body });
         }}
       />
 
