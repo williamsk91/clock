@@ -36,11 +36,13 @@ export const useUpdateRepeat = () => {
           const cachedTask = cache.readFragment<Task>({
             id: `Task:${taskId}`,
             fragment: TaskFragmentDoc,
+            fragmentName: "Task",
           });
 
           cache.writeFragment({
             id: `Task:${taskId}`,
             fragment: TaskFragmentDoc,
+            fragmentName: "Task",
             data: {
               ...cachedTask,
               repeat: data?.setRepeat ?? undefined,
