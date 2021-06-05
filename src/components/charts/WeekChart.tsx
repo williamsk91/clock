@@ -1,12 +1,12 @@
-import { BarDatum, ResponsiveBar } from "@nivo/bar";
-import { differenceInMinutes, endOfWeek, getDay, startOfWeek } from "date-fns";
+import { BarDatum, BarTooltipDatum, ResponsiveBar } from "@nivo/bar";
+import { differenceInMinutes, getDay } from "date-fns";
 import styled from "styled-components";
 
-import { List } from "../../graphql/generated";
+import { List, Maybe } from "../../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
-import { repeatToRRule } from "../datetime";
 import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/filter";
+import { ListTooltip, ListTooltipTask } from "./ListTooltip";
 import { chartTheme } from "./theme";
 
 interface Datum extends BarDatum {
@@ -41,6 +41,7 @@ export const WeekChart = (props: Props) => {
         enableGridY={false}
         axisBottom={{ tickSize: 0, tickPadding: 12 }}
         colors={(d) => d.data[d.id + "Color"] as string}
+        tooltip={WeekChartTooltip}
       />
     </Container>
   );
@@ -50,6 +51,13 @@ const Container = styled.div`
   min-width: 720px;
   height: 360px;
 `;
+
+const WeekChartTooltip = (props: BarTooltipDatum) => {
+  const listTitle = props.id as string;
+  const data = props.data[listTitle + "ExtraData"] as any;
+
+  return <ListTooltip listTitle={listTitle} tasks={data} />;
+};
 
 /**
  * Converts lists into data for WeekChart
@@ -82,23 +90,42 @@ export const listsToWeekData = (
 };
 
 const listToWeekDatum = (list: List, now: Date = new Date()): BarDatum[] => {
-  const dayHours = listDaysHours(list, now);
-  return dayHours.map((h) => ({
-    [list.title]: h,
-    [list.title + "Color"]: eventColors[
-      (list.color as EventColor) || defaultEventColor
-    ],
+  const listTaskWeekBins = listTaskDayHours(list, now);
+  const dayHours = listDaysHours(listTaskWeekBins);
+  return listTaskWeekBins.map((w, i) => ({
+    [list.title]: dayHours[i],
+    [list.title + "Color"]:
+      eventColors[(list.color as EventColor) || defaultEventColor],
+
+    /**
+     * list tasks and their hours
+     */
+    [list.title + "ExtraData"]: w as any,
   }));
 };
+
+type ListTooltipTaskDays = Record<string, ListTooltipTask>;
 
 /**
  * Bins list's tasks hours into different days starting from Monday
  */
-const listDaysHours = (
+const listDaysHours = (taskWeekBins: ListTooltipTaskDays[]): number[] => {
+  return taskWeekBins.map((t) =>
+    Object.values(t).reduce(
+      (totalDuration, taskDuration) => totalDuration + taskDuration.hours,
+      0
+    )
+  );
+};
+
+/**
+ * Bins list's tasks and their hours into different days starting from Monday
+ */
+const listTaskDayHours = (
   list: List,
   now: Date = new Date(),
   weekStartOn: number = 1
-): number[] => {
+): ListTooltipTaskDays[] => {
   const tasksThisWeek = list.tasks
     .filter(taskHasDateP)
     .filter((t) => sameWeekTask(t, now));
@@ -111,24 +138,30 @@ const listDaysHours = (
       const duration =
         differenceInMinutes(new Date(t.end as string), start) / 60;
 
-      if (t.repeat) {
-        const rrule = repeatToRRule(t.repeat, new Date(t.start));
-        const today = Date.now();
-        const start = startOfWeek(today, { weekStartsOn: 1 });
-        const end = endOfWeek(today, { weekStartsOn: 1 });
-        const betweenDates = rrule.between(start, end);
-        betweenDates.forEach((d) => {
-          const day = getDay(d);
-          days[day] = days[day] + duration;
-        });
-      } else {
-        const day = getDay(start);
-        days[day] = days[day] + duration;
-      }
+      // handle all day
+      // handle normal
+      // handle repeat
+      // if (t.repeat) {
+      // const rrule = repeatToRRule(t.repeat, new Date(t.start));
+      // const today = Date.now();
+      // const start = startOfWeek(today, { weekStartsOn: 1 });
+      // const end = endOfWeek(today, { weekStartsOn: 1 });
+      // const betweenDates = rrule.between(start, end);
+      // betweenDates.forEach((d) => {
+      //   const day = getDay(d);
+      //   days[day] = days[day] + duration;
+      // });
+      // } else {
+      const day = getDay(start);
+      days[day][t.title] = {
+        color: t.color as Maybe<EventColor>,
+        hours: duration,
+        // };
+      };
 
       return days;
     },
-    [0, 0, 0, 0, 0, 0, 0]
+    [{}, {}, {}, {}, {}, {}, {}] as ListTooltipTaskDays[]
   );
 
   return cycleArray(weekBins, -weekStartOn);
