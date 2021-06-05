@@ -1,9 +1,10 @@
 import { BarDatum, BarTooltipDatum, ResponsiveBar } from "@nivo/bar";
-import { differenceInMinutes, getDay } from "date-fns";
+import { differenceInMinutes, endOfWeek, getDay, startOfWeek } from "date-fns";
 import styled from "styled-components";
 
 import { List, Maybe } from "../../graphql/generated";
 import { EventColor, defaultEventColor, eventColors } from "../Calendar/styles";
+import { repeatToRRule } from "../datetime";
 import { cycleArray } from "../utils/array";
 import { sameWeekTask, taskHasDateP } from "../utils/filter";
 import { ListTooltip, ListTooltipTask } from "./ListTooltip";
@@ -138,26 +139,29 @@ const listTaskDayHours = (
       const duration =
         differenceInMinutes(new Date(t.end as string), start) / 60;
 
-      // handle all day
-      // handle normal
-      // handle repeat
-      // if (t.repeat) {
-      // const rrule = repeatToRRule(t.repeat, new Date(t.start));
-      // const today = Date.now();
-      // const start = startOfWeek(today, { weekStartsOn: 1 });
-      // const end = endOfWeek(today, { weekStartsOn: 1 });
-      // const betweenDates = rrule.between(start, end);
-      // betweenDates.forEach((d) => {
-      //   const day = getDay(d);
-      //   days[day] = days[day] + duration;
-      // });
-      // } else {
-      const day = getDay(start);
-      days[day][t.title] = {
-        color: t.color as Maybe<EventColor>,
-        hours: duration,
-        // };
-      };
+      // repeat
+      if (t.repeat) {
+        const rrule = repeatToRRule(t.repeat, new Date(t.start));
+        const today = Date.now();
+        const start = startOfWeek(today, { weekStartsOn: 1 });
+        const end = endOfWeek(today, { weekStartsOn: 1 });
+        const betweenDates = rrule.between(start, end);
+        betweenDates.forEach((d) => {
+          const day = getDay(d);
+          days[day][t.title] = {
+            color: t.color as Maybe<EventColor>,
+            hours: duration,
+          };
+        });
+
+        // handle normal
+      } else {
+        const day = getDay(start);
+        days[day][t.title] = {
+          color: t.color as Maybe<EventColor>,
+          hours: duration,
+        };
+      }
 
       return days;
     },
