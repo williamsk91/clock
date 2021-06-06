@@ -34,12 +34,12 @@ export const WeekChart = (props: Props) => {
         keys={keys}
         indexBy="day"
         theme={chartTheme}
-        margin={{ top: 40, bottom: 80 }}
-        padding={0.9}
+        margin={{ top: 40, bottom: 80, left: 80, right: 80 }}
+        padding={0.75}
         innerPadding={6}
         borderRadius={6}
         enableLabel={false}
-        enableGridY={false}
+        axisLeft={{ legend: "Hours", legendOffset: -60 }}
         axisBottom={{ tickSize: 0, tickPadding: 12 }}
         colors={(d) => d.data[d.id + "Color"] as string}
         tooltip={WeekChartTooltip}
@@ -49,7 +49,7 @@ export const WeekChart = (props: Props) => {
 };
 
 const Container = styled.div`
-  min-width: 720px;
+  max-width: 720px;
   height: 360px;
 `;
 
