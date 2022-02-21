@@ -3,7 +3,7 @@ import { addDays, setMinutes } from "date-fns/esm";
 import * as faker from "faker";
 import { random } from "faker";
 
-import { eventColors } from "../components/Calendar/styles";
+import { EventColor, eventColors } from "../components/Calendar/styles";
 import { List, Repeat, RepeatFrequency, Task } from "../graphql/generated";
 
 // ------------------------- List -------------------------
@@ -29,7 +29,7 @@ export const getRandomLists = (
 export const getRandomList = (override?: PartialList): List => ({
   id: faker.random.uuid(),
   title: faker.random.words(2),
-  color: null,
+  color: getRandomEventColor(),
   order: faker.random.number(),
   tasks: getRandomTasks(faker.random.number(10)).map((t) =>
     override ? { ...t, ...override.taskOverride?.() } : t
@@ -170,7 +170,7 @@ export const getRandomTask = (): Task => {
     start: start.toISOString(),
     end: end.toISOString(),
     includeTime: faker.random.boolean(),
-    color: null,
+    color: getRandomEventColor(),
     order: 1,
     repeat: getRepeatDaily(),
     note: null,
@@ -296,3 +296,12 @@ export const getRepeatYearly = (override?: Partial<Repeat>): Repeat => ({
   exclude: [],
   ...override,
 });
+
+// ------------------------- Others -------------------------
+
+export const getRandomEventColor = (): EventColor => {
+  const colors: EventColor[] = Object.keys(
+    eventColors
+  ) as unknown as EventColor[];
+  return colors[Math.floor(Math.random() * colors.length)];
+};

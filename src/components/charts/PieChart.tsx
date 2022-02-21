@@ -34,6 +34,7 @@ export const PieChart = (props: Props) => {
         radialLabelsSkipAngle={10}
         radialLabelsLinkStrokeWidth={2}
         radialLabelsLinkColor={{ from: "color" }}
+        radialLabelsLinkDiagonalLength={3}
         /**
          * Slice labels
          */
@@ -55,6 +56,7 @@ export const PieChart = (props: Props) => {
 };
 
 const Container = styled.div`
+  max-width: 720px;
   height: 360px;
 `;
 
